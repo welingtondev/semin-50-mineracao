@@ -1,16 +1,18 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Check, Crown, Award, Medal, Heart } from "lucide-react";
-import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { Check, Crown, Award, Medal, Heart, Sparkles } from "lucide-react";
+import { motion } from "framer-motion";
 
 const tiers = [
   {
     name: "Ouro",
     icon: Crown,
-    color: "border-semin-yellow bg-gradient-to-b from-semin-yellow/10 to-white",
+    gradient: "from-semin-yellow/20 via-yellow-50 to-white",
+    border: "border-semin-yellow",
     iconColor: "text-semin-yellow",
-    badge: "bg-semin-yellow text-semin-dark",
+    badge: "bg-gradient-to-r from-semin-yellow to-semin-orange text-white",
     featured: true,
+    glow: "shadow-semin-yellow/20",
     benefits: [
       "Logo em destaque em todos os materiais",
       "Espaço exclusivo para stand",
@@ -23,10 +25,12 @@ const tiers = [
   {
     name: "Prata",
     icon: Award,
-    color: "border-gray-300 bg-gradient-to-b from-gray-50 to-white",
+    gradient: "from-gray-100 via-gray-50 to-white",
+    border: "border-gray-300",
     iconColor: "text-gray-400",
     badge: "bg-gray-200 text-gray-700",
     featured: false,
+    glow: "",
     benefits: [
       "Logo nos materiais do evento",
       "Espaço para stand compartilhado",
@@ -38,10 +42,12 @@ const tiers = [
   {
     name: "Bronze",
     icon: Medal,
-    color: "border-amber-700/30 bg-gradient-to-b from-amber-50 to-white",
+    gradient: "from-amber-100/50 via-amber-50 to-white",
+    border: "border-amber-700/30",
     iconColor: "text-amber-700",
     badge: "bg-amber-100 text-amber-800",
     featured: false,
+    glow: "",
     benefits: [
       "Logo nos materiais do evento",
       "2 inscrições cortesia",
@@ -52,10 +58,12 @@ const tiers = [
   {
     name: "Apoiador",
     icon: Heart,
-    color: "border-semin-blue/20 bg-gradient-to-b from-semin-blue/5 to-white",
+    gradient: "from-semin-blue/5 via-blue-50/30 to-white",
+    border: "border-semin-blue/20",
     iconColor: "text-semin-blue",
     badge: "bg-semin-blue/10 text-semin-blue",
     featured: false,
+    glow: "",
     benefits: [
       "Logo no site do evento",
       "1 inscrição cortesia",
@@ -65,61 +73,85 @@ const tiers = [
 ];
 
 const SponsorsSection = () => {
-  const { ref, isVisible } = useScrollAnimation();
-
   return (
-    <section id="patrocinio" className="py-20 md:py-28 bg-white">
-      <div ref={ref} className="container mx-auto px-4">
-        <div
-          className={`text-center mb-14 transition-all duration-700 ${
-            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-          }`}
+    <section id="patrocinio" className="py-24 md:py-32 bg-white relative overflow-hidden">
+      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-semin-yellow via-semin-orange to-semin-yellow" />
+
+      <div className="container mx-auto px-4">
+        <motion.div
+          className="text-center mb-14"
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7 }}
         >
+          <span className="inline-block font-body text-xs uppercase tracking-[0.3em] text-semin-orange font-semibold mb-4">
+            Invista no futuro
+          </span>
           <h2 className="font-display text-3xl md:text-5xl font-bold text-semin-blue mb-4">
             Cotas de Patrocínio
           </h2>
+          <div className="w-16 h-1 bg-gradient-to-r from-semin-yellow to-semin-orange mx-auto mb-6 rounded-full" />
           <p className="font-body text-semin-blue/60 max-w-xl mx-auto">
-            Associe sua marca ao principal evento de mineração da UFBA e conecte-se com futuros profissionais e líderes do setor.
+            Associe sua marca ao principal evento de mineração da UFBA.
           </p>
-        </div>
+        </motion.div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
           {tiers.map((t, i) => (
-            <Card
+            <motion.div
               key={t.name}
-              className={`${t.color} border-2 shadow-sm hover:shadow-xl transition-all duration-500 ${
-                t.featured ? "lg:-mt-4 lg:mb-4 ring-2 ring-semin-yellow/30" : ""
-              } ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
-              style={{ transitionDelay: `${i * 120}ms` }}
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: i * 0.12 }}
+              className={t.featured ? "lg:-mt-4 lg:mb-4" : ""}
             >
-              <CardHeader className="text-center pb-2">
-                <div className={`inline-flex mx-auto mb-3 px-3 py-1 rounded-full text-xs font-bold ${t.badge}`}>
-                  {t.featured && "★ "}Cota {t.name}
-                </div>
-                <t.icon className={`h-10 w-10 mx-auto ${t.iconColor}`} />
-              </CardHeader>
-              <CardContent className="space-y-3 pt-0">
-                {t.benefits.map((b) => (
-                  <div key={b} className="flex items-start gap-2">
-                    <Check className="h-4 w-4 text-semin-yellow mt-0.5 shrink-0" />
-                    <span className="font-body text-sm text-semin-blue/70">{b}</span>
+              <Card
+                className={`bg-gradient-to-b ${t.gradient} border-2 ${t.border} shadow-sm hover:shadow-2xl ${t.glow} transition-all duration-500 hover:-translate-y-2 h-full ${
+                  t.featured ? "ring-2 ring-semin-yellow/30" : ""
+                }`}
+              >
+                <CardHeader className="text-center pb-2">
+                  {t.featured && (
+                    <div className="flex justify-center mb-2">
+                      <Sparkles className="h-4 w-4 text-semin-yellow" />
+                    </div>
+                  )}
+                  <div className={`inline-flex mx-auto mb-3 px-4 py-1.5 rounded-full text-xs font-bold ${t.badge} shadow-sm`}>
+                    {t.featured && "★ "}Cota {t.name}
                   </div>
-                ))}
-              </CardContent>
-            </Card>
+                  <t.icon className={`h-12 w-12 mx-auto ${t.iconColor} drop-shadow-sm`} />
+                </CardHeader>
+                <CardContent className="space-y-3 pt-0">
+                  {t.benefits.map((b) => (
+                    <div key={b} className="flex items-start gap-2">
+                      <Check className="h-4 w-4 text-semin-yellow mt-0.5 shrink-0" />
+                      <span className="font-body text-sm text-semin-blue/70">{b}</span>
+                    </div>
+                  ))}
+                </CardContent>
+              </Card>
+            </motion.div>
           ))}
         </div>
 
-        <div className="text-center mt-12">
+        <motion.div
+          className="text-center mt-14"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.5 }}
+        >
           <a href="mailto:semin@ufba.br">
             <Button
               size="lg"
-              className="bg-semin-yellow text-semin-dark hover:bg-semin-orange hover:text-white font-semibold text-lg px-10 py-6 shadow-lg shadow-semin-yellow/20"
+              className="bg-gradient-to-r from-semin-yellow to-semin-orange text-semin-dark hover:from-semin-orange hover:to-semin-yellow font-bold text-lg px-12 py-7 shadow-xl shadow-semin-yellow/25 transition-all duration-300 hover:shadow-semin-yellow/40 hover:scale-105"
             >
               Quero Patrocinar o SEMIN
             </Button>
           </a>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

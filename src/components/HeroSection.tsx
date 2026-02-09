@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Sparkles } from "lucide-react";
+import { motion } from "framer-motion";
 
 const Counter = ({ end, label, suffix = "" }: { end: number; label: string; suffix?: string }) => {
   const [count, setCount] = useState(0);
@@ -32,62 +33,146 @@ const Counter = ({ end, label, suffix = "" }: { end: number; label: string; suff
 
   return (
     <div ref={ref} className="text-center">
-      <div className="text-4xl md:text-5xl font-display font-bold text-semin-yellow">
+      <div className="text-5xl md:text-6xl font-display font-bold text-semin-yellow drop-shadow-[0_0_20px_rgba(210,155,33,0.3)]">
         {count}{suffix}
       </div>
-      <div className="text-white/70 font-body text-sm mt-1">{label}</div>
+      <div className="text-white/60 font-body text-sm mt-2 tracking-wide uppercase">{label}</div>
     </div>
   );
 };
 
-const HeroSection = () => {
-  const [visible, setVisible] = useState(false);
-  useEffect(() => {
-    const t = setTimeout(() => setVisible(true), 100);
-    return () => clearTimeout(t);
-  }, []);
+const FloatingParticle = ({ delay, x, y, size }: { delay: number; x: string; y: string; size: number }) => (
+  <motion.div
+    className="absolute rounded-full bg-semin-yellow/20"
+    style={{ left: x, top: y, width: size, height: size }}
+    animate={{
+      y: [0, -30, 0],
+      opacity: [0.2, 0.6, 0.2],
+      scale: [1, 1.3, 1],
+    }}
+    transition={{
+      duration: 4,
+      delay,
+      repeat: Infinity,
+      ease: "easeInOut",
+    }}
+  />
+);
 
+const HeroSection = () => {
   return (
     <section
       id="hero"
       className="relative min-h-screen flex items-center justify-center overflow-hidden bg-semin-dark"
     >
-      {/* Decorative elements */}
+      {/* Animated background */}
       <div className="absolute inset-0">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-semin-yellow/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-semin-orange/5 rounded-full blur-3xl" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] border border-semin-yellow/10 rounded-full" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] border border-semin-orange/10 rounded-full" />
+        <motion.div
+          className="absolute top-20 left-10 w-96 h-96 bg-semin-yellow/8 rounded-full blur-[100px]"
+          animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.6, 0.3] }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div
+          className="absolute bottom-20 right-10 w-[500px] h-[500px] bg-semin-orange/6 rounded-full blur-[120px]"
+          animate={{ scale: [1.2, 1, 1.2], opacity: [0.2, 0.5, 0.2] }}
+          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div
+          className="absolute top-1/3 left-1/4 w-72 h-72 bg-semin-blue/10 rounded-full blur-[80px]"
+          animate={{ x: [0, 50, 0], y: [0, -30, 0] }}
+          transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+        />
+
+        {/* Geometric rings */}
+        <motion.div
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] border border-semin-yellow/8 rounded-full"
+          animate={{ rotate: 360, scale: [1, 1.05, 1] }}
+          transition={{ rotate: { duration: 60, repeat: Infinity, ease: "linear" }, scale: { duration: 8, repeat: Infinity } }}
+        />
+        <motion.div
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] border border-semin-orange/8 rounded-full"
+          animate={{ rotate: -360 }}
+          transition={{ duration: 45, repeat: Infinity, ease: "linear" }}
+        />
+        <motion.div
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] border border-white/5 rounded-full"
+          animate={{ rotate: 360 }}
+          transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+        />
+
+        {/* Floating particles */}
+        <FloatingParticle delay={0} x="15%" y="25%" size={6} />
+        <FloatingParticle delay={1} x="75%" y="20%" size={4} />
+        <FloatingParticle delay={2} x="85%" y="60%" size={8} />
+        <FloatingParticle delay={0.5} x="25%" y="70%" size={5} />
+        <FloatingParticle delay={1.5} x="60%" y="80%" size={6} />
+        <FloatingParticle delay={3} x="40%" y="15%" size={4} />
+        <FloatingParticle delay={2.5} x="90%" y="40%" size={5} />
       </div>
 
       <div className="container mx-auto px-4 relative z-10 text-center">
-        <div
-          className={`transition-all duration-1000 ${
-            visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-          }`}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, ease: "easeOut" }}
         >
-          <div className="inline-block mb-6 px-4 py-2 border border-semin-yellow/30 rounded-full">
+          <motion.div
+            className="inline-flex items-center gap-2 mb-8 px-5 py-2.5 border border-semin-yellow/30 rounded-full bg-semin-yellow/5 backdrop-blur-sm"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.3, duration: 0.6 }}
+          >
+            <Sparkles className="h-4 w-4 text-semin-yellow" />
             <span className="text-semin-yellow font-body text-sm font-medium tracking-widest uppercase">
               Edição Comemorativa
             </span>
-          </div>
+          </motion.div>
 
-          <h1 className="font-display text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
-            SEMIN
-            <span className="block text-2xl md:text-3xl lg:text-4xl font-medium text-semin-cream mt-2">
-              Seminário de Mineração da UFBA
+          <motion.h1
+            className="font-display text-5xl md:text-7xl lg:text-8xl font-bold text-white mb-6 leading-tight"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4, duration: 0.8 }}
+          >
+            <span className="bg-gradient-to-r from-white via-semin-cream to-white bg-clip-text text-transparent">
+              SEMIN
             </span>
-          </h1>
+            <motion.span
+              className="block text-xl md:text-2xl lg:text-3xl font-medium text-semin-cream/80 mt-4 tracking-wide"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.8, duration: 0.8 }}
+            >
+              Seminário de Mineração da UFBA
+            </motion.span>
+          </motion.h1>
 
-          <p className="font-body text-lg md:text-xl text-white/60 max-w-2xl mx-auto mb-10 leading-relaxed">
+          <motion.div
+            className="w-20 h-1 bg-gradient-to-r from-semin-yellow to-semin-orange mx-auto mb-8 rounded-full"
+            initial={{ width: 0 }}
+            animate={{ width: 80 }}
+            transition={{ delay: 1, duration: 0.6 }}
+          />
+
+          <motion.p
+            className="font-body text-lg md:text-xl text-white/50 max-w-2xl mx-auto mb-12 leading-relaxed"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.9, duration: 0.8 }}
+          >
             50 anos da Engenharia de Minas: passado, presente e futuro da mineração
-          </p>
+          </motion.p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
+          <motion.div
+            className="flex flex-col sm:flex-row gap-4 justify-center mb-20"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.1, duration: 0.6 }}
+          >
             <a href="#inscricoes">
               <Button
                 size="lg"
-                className="bg-semin-yellow text-semin-dark hover:bg-semin-orange hover:text-white font-semibold text-lg px-8 py-6 shadow-lg shadow-semin-yellow/20"
+                className="bg-gradient-to-r from-semin-yellow to-semin-orange text-semin-dark hover:from-semin-orange hover:to-semin-yellow font-bold text-lg px-10 py-7 shadow-xl shadow-semin-yellow/25 transition-all duration-300 hover:shadow-semin-yellow/40 hover:scale-105"
               >
                 Inscreva-se
               </Button>
@@ -96,26 +181,33 @@ const HeroSection = () => {
               <Button
                 size="lg"
                 variant="outline"
-                className="border-semin-yellow/40 text-semin-yellow hover:bg-semin-yellow/10 font-semibold text-lg px-8 py-6"
+                className="border-2 border-semin-yellow/40 text-semin-yellow hover:bg-semin-yellow/10 hover:border-semin-yellow font-semibold text-lg px-10 py-7 transition-all duration-300 hover:scale-105"
               >
                 Seja um Patrocinador
               </Button>
             </a>
-          </div>
+          </motion.div>
 
-          <div className="flex justify-center gap-12 md:gap-20">
+          <motion.div
+            className="flex justify-center gap-16 md:gap-24"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.4, duration: 0.8 }}
+          >
             <Counter end={50} label="Anos de história" suffix="+" />
             <Counter end={12} label="Edições realizadas" />
             <Counter end={500} label="Participantes" suffix="+" />
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
-        <a
+        <motion.a
           href="#sobre"
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 text-white/40 hover:text-semin-yellow transition-colors animate-bounce"
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 text-white/30 hover:text-semin-yellow transition-colors"
+          animate={{ y: [0, 10, 0] }}
+          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
         >
           <ChevronDown className="h-8 w-8" />
-        </a>
+        </motion.a>
       </div>
     </section>
   );

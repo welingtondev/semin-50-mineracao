@@ -1,23 +1,23 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { motion } from "framer-motion";
 import { Clock } from "lucide-react";
 
 const schedule = {
   "Dia 1": [
-    { time: "08:00 - 09:00", title: "Credenciamento e Abertura Oficial", type: "cerimônia" },
-    { time: "09:00 - 10:30", title: "Panorama da Mineração no Brasil: 50 anos de evolução", type: "palestra" },
-    { time: "10:30 - 12:00", title: "Sustentabilidade e ESG na Indústria Mineral", type: "mesa-redonda" },
-    { time: "14:00 - 15:30", title: "Tecnologias de Lavra e Beneficiamento", type: "workshop" },
-    { time: "15:30 - 17:00", title: "Inteligência Artificial Aplicada à Mineração", type: "palestra" },
+    { time: "08:00 - 09:00", title: "XXXXXXX", type: "cerimônia" },
+    { time: "09:00 - 10:30", title: "XXXXXXX", type: "palestra" },
+    { time: "10:30 - 12:00", title: "XXXXXXX", type: "mesa-redonda" },
+    { time: "14:00 - 15:30", title: "XXXXXXX", type: "workshop" },
+    { time: "15:30 - 17:00", title: "XXXXXXX", type: "palestra" },
   ],
   "Dia 2": [
-    { time: "08:30 - 10:00", title: "Geotecnia e Segurança de Barragens", type: "palestra" },
-    { time: "10:00 - 12:00", title: "Carreira em Engenharia de Minas: desafios e oportunidades", type: "mesa-redonda" },
-    { time: "14:00 - 15:30", title: "Geoprocessamento e Modelagem 3D", type: "workshop" },
-    { time: "15:30 - 17:00", title: "Economia Mineral e Mercado Global", type: "palestra" },
-    { time: "17:00 - 18:00", title: "Encerramento e Confraternização", type: "cerimônia" },
+    { time: "08:30 - 10:00", title: "XXXXXXX", type: "palestra" },
+    { time: "10:00 - 12:00", title: "XXXXXXX", type: "mesa-redonda" },
+    { time: "14:00 - 15:30", title: "XXXXXXX", type: "workshop" },
+    { time: "15:30 - 17:00", title: "XXXXXXX", type: "palestra" },
+    { time: "17:00 - 18:00", title: "XXXXXXX", type: "cerimônia" },
   ],
 };
 
@@ -29,31 +29,37 @@ const typeColors: Record<string, string> = {
 };
 
 const ScheduleSection = () => {
-  const { ref, isVisible } = useScrollAnimation();
-
   return (
-    <section id="programacao" className="py-20 md:py-28 bg-white">
-      <div ref={ref} className="container mx-auto px-4">
-        <div
-          className={`text-center mb-14 transition-all duration-700 ${
-            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-          }`}
+    <section id="programacao" className="py-24 md:py-32 bg-white relative overflow-hidden">
+      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-semin-yellow via-semin-orange to-semin-yellow" />
+
+      <div className="container mx-auto px-4">
+        <motion.div
+          className="text-center mb-14"
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7 }}
         >
+          <span className="inline-block font-body text-xs uppercase tracking-[0.3em] text-semin-orange font-semibold mb-4">
+            Cronograma
+          </span>
           <h2 className="font-display text-3xl md:text-5xl font-bold text-semin-blue mb-4">
             Programação
           </h2>
+          <div className="w-16 h-1 bg-gradient-to-r from-semin-yellow to-semin-orange mx-auto mb-6 rounded-full" />
           <p className="font-body text-semin-blue/60 max-w-xl mx-auto">
             Confira o cronograma completo com palestras, mesas-redondas e workshops.
           </p>
-        </div>
+        </motion.div>
 
         <Tabs defaultValue="Dia 1" className="max-w-3xl mx-auto">
-          <TabsList className="w-full bg-semin-cream/50 mb-8">
+          <TabsList className="w-full bg-semin-cream/60 mb-8 p-1.5 rounded-xl">
             {Object.keys(schedule).map((day) => (
               <TabsTrigger
                 key={day}
                 value={day}
-                className="flex-1 font-body font-semibold data-[state=active]:bg-semin-blue data-[state=active]:text-white"
+                className="flex-1 font-body font-semibold rounded-lg data-[state=active]:bg-semin-blue data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-300"
               >
                 {day}
               </TabsTrigger>
@@ -63,26 +69,30 @@ const ScheduleSection = () => {
           {Object.entries(schedule).map(([day, items]) => (
             <TabsContent key={day} value={day} className="space-y-4">
               {items.map((item, i) => (
-                <Card
+                <motion.div
                   key={i}
-                  className={`border-l-4 border-l-semin-yellow border-t-0 border-r-0 border-b-0 shadow-sm hover:shadow-md transition-all duration-500 ${
-                    isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-                  }`}
-                  style={{ transitionDelay: `${i * 100}ms` }}
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.4, delay: i * 0.08 }}
                 >
-                  <CardContent className="p-5 flex flex-col sm:flex-row sm:items-center gap-3">
-                    <div className="flex items-center gap-2 text-semin-blue/60 min-w-[140px]">
-                      <Clock className="h-4 w-4" />
-                      <span className="font-body text-sm font-medium">{item.time}</span>
-                    </div>
-                    <div className="flex-1">
-                      <h4 className="font-body font-semibold text-semin-blue">{item.title}</h4>
-                    </div>
-                    <Badge className={`${typeColors[item.type]} border text-xs capitalize`}>
-                      {item.type}
-                    </Badge>
-                  </CardContent>
-                </Card>
+                  <Card className="border-l-4 border-l-semin-yellow border-t-0 border-r-0 border-b-0 shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 group">
+                    <CardContent className="p-5 flex flex-col sm:flex-row sm:items-center gap-3">
+                      <div className="flex items-center gap-2 text-semin-blue/50 min-w-[150px]">
+                        <Clock className="h-4 w-4 group-hover:text-semin-yellow transition-colors" />
+                        <span className="font-body text-sm font-medium">{item.time}</span>
+                      </div>
+                      <div className="flex-1">
+                        <h4 className="font-body font-semibold text-semin-blue group-hover:text-semin-orange transition-colors">
+                          {item.title}
+                        </h4>
+                      </div>
+                      <Badge className={`${typeColors[item.type]} border text-xs capitalize`}>
+                        {item.type}
+                      </Badge>
+                    </CardContent>
+                  </Card>
+                </motion.div>
               ))}
             </TabsContent>
           ))}
