@@ -1,112 +1,84 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
-import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { motion } from "framer-motion";
+import { User } from "lucide-react";
 
 const speakers = [
-  {
-    name: "Dra. Maria Helena Silva",
-    role: "Professora Titular",
-    org: "UFBA – Engenharia de Minas",
-    initials: "MH",
-    bio: "Especialista em beneficiamento mineral com mais de 25 anos de experiência acadêmica.",
-    topic: "Panorama da Mineração no Brasil",
-  },
-  {
-    name: "Eng. Carlos Augusto Menezes",
-    role: "Diretor de Operações",
-    org: "Vale S.A.",
-    initials: "CA",
-    bio: "Líder de projetos de grande porte em mineração de ferro no Brasil.",
-    topic: "Sustentabilidade e ESG",
-  },
-  {
-    name: "Dr. Roberto Figueiredo",
-    role: "Pesquisador Sênior",
-    org: "CETEM",
-    initials: "RF",
-    bio: "Referência em tecnologias de processamento mineral e economia circular.",
-    topic: "Tecnologias de Lavra e Beneficiamento",
-  },
-  {
-    name: "Profa. Ana Cláudia Santos",
-    role: "Coordenadora de Pesquisa",
-    org: "USP – Escola Politécnica",
-    initials: "AC",
-    bio: "Pesquisadora em geotecnia de barragens e segurança em minas.",
-    topic: "Geotecnia e Segurança de Barragens",
-  },
-  {
-    name: "Eng. João Pedro Alves",
-    role: "CTO",
-    org: "MineralTech Soluções",
-    initials: "JP",
-    bio: "Empreendedor com foco em IA e automação aplicada ao setor mineral.",
-    topic: "Inteligência Artificial na Mineração",
-  },
-  {
-    name: "Dra. Fernanda Oliveira",
-    role: "Consultora Ambiental",
-    org: "EcoMiner Consultoria",
-    initials: "FO",
-    bio: "Especialista em gestão ambiental e recuperação de áreas mineradas.",
-    topic: "Economia Mineral e Mercado Global",
-  },
+  { name: "XXXXXXX", role: "XXXXXXX", org: "XXXXXXX", initials: "XX", bio: "XXXXXXX", topic: "XXXXXXX" },
+  { name: "XXXXXXX", role: "XXXXXXX", org: "XXXXXXX", initials: "XX", bio: "XXXXXXX", topic: "XXXXXXX" },
+  { name: "XXXXXXX", role: "XXXXXXX", org: "XXXXXXX", initials: "XX", bio: "XXXXXXX", topic: "XXXXXXX" },
+  { name: "XXXXXXX", role: "XXXXXXX", org: "XXXXXXX", initials: "XX", bio: "XXXXXXX", topic: "XXXXXXX" },
+  { name: "XXXXXXX", role: "XXXXXXX", org: "XXXXXXX", initials: "XX", bio: "XXXXXXX", topic: "XXXXXXX" },
+  { name: "XXXXXXX", role: "XXXXXXX", org: "XXXXXXX", initials: "XX", bio: "XXXXXXX", topic: "XXXXXXX" },
 ];
 
 const SpeakersSection = () => {
-  const { ref, isVisible } = useScrollAnimation();
-
   return (
-    <section id="palestrantes" className="py-20 md:py-28 bg-semin-cream">
-      <div ref={ref} className="container mx-auto px-4">
-        <div
-          className={`text-center mb-14 transition-all duration-700 ${
-            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-          }`}
+    <section id="palestrantes" className="py-24 md:py-32 bg-semin-cream relative overflow-hidden">
+      <div className="absolute top-20 right-0 w-80 h-80 bg-semin-yellow/5 rounded-full blur-[100px]" />
+      <div className="absolute bottom-20 left-0 w-60 h-60 bg-semin-blue/5 rounded-full blur-[80px]" />
+
+      <div className="container mx-auto px-4 relative z-10">
+        <motion.div
+          className="text-center mb-14"
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7 }}
         >
+          <span className="inline-block font-body text-xs uppercase tracking-[0.3em] text-semin-orange font-semibold mb-4">
+            Quem estará lá
+          </span>
           <h2 className="font-display text-3xl md:text-5xl font-bold text-semin-blue mb-4">
             Palestrantes
           </h2>
+          <div className="w-16 h-1 bg-gradient-to-r from-semin-yellow to-semin-orange mx-auto mb-6 rounded-full" />
           <p className="font-body text-semin-blue/60 max-w-xl mx-auto">
             Conheça os especialistas que compartilharão conhecimento e experiência.
           </p>
-        </div>
+        </motion.div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
           {speakers.map((s, i) => (
-            <HoverCard key={s.name} openDelay={200}>
-              <HoverCardTrigger asChild>
-                <Card
-                  className={`bg-white border border-semin-blue/10 hover:border-semin-yellow/50 shadow-sm hover:shadow-lg cursor-pointer transition-all duration-500 group ${
-                    isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-                  }`}
-                  style={{ transitionDelay: `${i * 100}ms` }}
-                >
-                  <CardContent className="p-6 text-center">
-                    <Avatar className="h-20 w-20 mx-auto mb-4 ring-2 ring-semin-yellow/30 group-hover:ring-semin-yellow transition-all">
-                      <AvatarFallback className="bg-semin-blue text-white font-display text-xl font-bold">
-                        {s.initials}
-                      </AvatarFallback>
-                    </Avatar>
-                    <h3 className="font-display text-lg font-semibold text-semin-blue">{s.name}</h3>
-                    <p className="font-body text-sm text-semin-orange font-medium">{s.role}</p>
-                    <p className="font-body text-xs text-semin-blue/50 mt-1">{s.org}</p>
-                  </CardContent>
-                </Card>
-              </HoverCardTrigger>
-              <HoverCardContent className="w-80 bg-white border-semin-blue/10">
-                <div className="space-y-2">
-                  <h4 className="font-display font-semibold text-semin-blue">{s.name}</h4>
-                  <p className="font-body text-sm text-semin-blue/70">{s.bio}</p>
-                  <div className="pt-2 border-t border-semin-cream">
-                    <p className="font-body text-xs text-semin-orange font-semibold">
-                      Tema: {s.topic}
-                    </p>
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 30, scale: 0.95 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: i * 0.1 }}
+            >
+              <HoverCard openDelay={200}>
+                <HoverCardTrigger asChild>
+                  <Card className="bg-white/80 backdrop-blur-sm border border-semin-blue/10 hover:border-semin-yellow/50 shadow-sm hover:shadow-2xl cursor-pointer transition-all duration-500 group hover:-translate-y-2">
+                    <CardContent className="p-8 text-center">
+                      <div className="relative mx-auto mb-5 w-24 h-24">
+                        <div className="absolute inset-0 rounded-full bg-gradient-to-br from-semin-yellow to-semin-orange opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-md" />
+                        <Avatar className="relative h-24 w-24 mx-auto ring-3 ring-semin-blue/10 group-hover:ring-semin-yellow/50 transition-all duration-500">
+                          <AvatarFallback className="bg-gradient-to-br from-semin-blue to-semin-dark text-white font-display text-xl font-bold">
+                            <User className="h-10 w-10" />
+                          </AvatarFallback>
+                        </Avatar>
+                      </div>
+                      <h3 className="font-display text-lg font-semibold text-semin-blue group-hover:text-semin-orange transition-colors">{s.name}</h3>
+                      <p className="font-body text-sm text-semin-orange font-medium mt-1">{s.role}</p>
+                      <p className="font-body text-xs text-semin-blue/40 mt-1">{s.org}</p>
+                    </CardContent>
+                  </Card>
+                </HoverCardTrigger>
+                <HoverCardContent className="w-80 bg-white/95 backdrop-blur-sm border-semin-blue/10 shadow-xl">
+                  <div className="space-y-2">
+                    <h4 className="font-display font-semibold text-semin-blue">{s.name}</h4>
+                    <p className="font-body text-sm text-semin-blue/70">{s.bio}</p>
+                    <div className="pt-2 border-t border-semin-cream">
+                      <p className="font-body text-xs text-semin-orange font-semibold">
+                        Tema: {s.topic}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              </HoverCardContent>
-            </HoverCard>
+                </HoverCardContent>
+              </HoverCard>
+            </motion.div>
           ))}
         </div>
       </div>
