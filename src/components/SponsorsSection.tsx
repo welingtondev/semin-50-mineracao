@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Check, Crown, Award, Medal, Heart, Sparkles } from "lucide-react";
+import { Check, Crown, Award, Medal, Heart, Sparkles, Gem, Mountain } from "lucide-react";
 import { motion } from "framer-motion";
 
 const tiers = [
@@ -76,6 +76,11 @@ const SponsorsSection = () => {
   return (
     <section id="patrocinio" className="py-24 md:py-32 bg-white relative overflow-hidden">
       <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-semin-yellow via-semin-orange to-semin-yellow" />
+      
+      {/* Mining decorations */}
+      <div className="absolute bottom-10 right-10 opacity-[0.02]">
+        <Mountain className="w-48 h-48 text-semin-blue" />
+      </div>
 
       <div className="container mx-auto px-4">
         <motion.div
@@ -85,13 +90,18 @@ const SponsorsSection = () => {
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
         >
-          <span className="inline-block font-body text-xs uppercase tracking-[0.3em] text-semin-orange font-semibold mb-4">
+          <span className="inline-flex items-center gap-2 font-body text-xs uppercase tracking-[0.3em] text-semin-orange font-semibold mb-4">
+            <Gem className="h-3.5 w-3.5" />
             Invista no futuro
           </span>
           <h2 className="font-display text-3xl md:text-5xl font-bold text-semin-blue mb-4">
             Cotas de Patrocínio
           </h2>
-          <div className="w-16 h-1 bg-gradient-to-r from-semin-yellow to-semin-orange mx-auto mb-6 rounded-full" />
+          <div className="flex items-center justify-center gap-3 mb-6">
+            <div className="w-12 h-[2px] bg-gradient-to-r from-transparent to-semin-yellow rounded-full" />
+            <Gem className="h-4 w-4 text-semin-yellow" />
+            <div className="w-12 h-[2px] bg-gradient-to-l from-transparent to-semin-yellow rounded-full" />
+          </div>
           <p className="font-body text-semin-blue/60 max-w-xl mx-auto">
             Associe sua marca ao principal evento de mineração da UFBA.
           </p>
@@ -146,8 +156,9 @@ const SponsorsSection = () => {
           <a href="mailto:semin@ufba.br">
             <Button
               size="lg"
-              className="bg-gradient-to-r from-semin-yellow to-semin-orange text-semin-dark hover:from-semin-orange hover:to-semin-yellow font-bold text-lg px-12 py-7 shadow-xl shadow-semin-yellow/25 transition-all duration-300 hover:shadow-semin-yellow/40 hover:scale-105"
+              className="bg-gradient-to-r from-semin-yellow to-semin-orange text-semin-dark hover:from-semin-orange hover:to-semin-yellow font-bold text-lg px-12 py-7 shadow-xl shadow-semin-yellow/25 transition-all duration-300 hover:shadow-semin-yellow/40 hover:scale-105 group"
             >
+              <Gem className="h-5 w-5 mr-2 group-hover:rotate-12 transition-transform" />
               Quero Patrocinar o SEMIN
             </Button>
           </a>

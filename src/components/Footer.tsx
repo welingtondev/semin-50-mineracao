@@ -1,17 +1,25 @@
-import { Mail, Instagram, Linkedin, ArrowUp } from "lucide-react";
+import { Mail, Instagram, Linkedin, ArrowUp, Mountain, Pickaxe } from "lucide-react";
 import { motion } from "framer-motion";
 
 const footerLinks = [
   { label: "Programação", href: "#programacao" },
   { label: "Palestrantes", href: "#palestrantes" },
+  { label: "Galeria", href: "#galeria" },
   { label: "Patrocínio", href: "#patrocinio" },
   { label: "Inscrições", href: "#inscricoes" },
 ];
 
 const Footer = () => (
-  <footer className="bg-semin-dark py-14 md:py-20 relative">
+  <footer className="bg-semin-dark py-14 md:py-20 relative overflow-hidden">
     {/* Top gradient line */}
     <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-semin-yellow via-semin-orange to-semin-yellow" />
+
+    {/* Mining mountain silhouette */}
+    <div className="absolute bottom-0 left-0 w-full opacity-[0.03]">
+      <svg viewBox="0 0 1440 160" className="w-full" preserveAspectRatio="none">
+        <path d="M0,100 L150,60 L300,110 L450,40 L600,90 L750,30 L900,80 L1050,50 L1200,100 L1350,60 L1440,80 L1440,160 L0,160Z" fill="hsl(40 73% 48%)" />
+      </svg>
+    </div>
 
     {/* Back to top */}
     <motion.a
@@ -23,17 +31,21 @@ const Footer = () => (
       <ArrowUp className="h-5 w-5 text-semin-dark" />
     </motion.a>
 
-    <div className="container mx-auto px-4">
+    <div className="container mx-auto px-4 relative z-10">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-12">
         {/* Brand */}
         <div>
-          <h3 className="font-display text-3xl font-bold bg-gradient-to-r from-white to-semin-cream bg-clip-text text-transparent mb-2">
-            SEMIN
-          </h3>
+          <div className="flex items-center gap-3 mb-2">
+            <Pickaxe className="h-6 w-6 text-semin-yellow/40" />
+            <h3 className="font-display text-3xl font-bold bg-gradient-to-r from-white to-semin-cream bg-clip-text text-transparent">
+              SEMIN
+            </h3>
+          </div>
           <p className="font-body text-sm text-white/40">
             Seminário de Mineração da UFBA
           </p>
-          <p className="font-body text-xs text-semin-yellow/60 mt-2 border-l-2 border-semin-yellow/30 pl-3">
+          <p className="font-body text-xs text-semin-yellow/60 mt-2 border-l-2 border-semin-yellow/30 pl-3 flex items-center gap-2">
+            <Mountain className="h-3 w-3" />
             Edição Comemorativa – 50 anos da Engenharia de Minas
           </p>
         </div>
