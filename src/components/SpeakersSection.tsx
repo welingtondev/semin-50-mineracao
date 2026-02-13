@@ -1,8 +1,8 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
-import { motion } from "framer-motion";
 import { User, Mountain, Gem } from "lucide-react";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 const speakers = [
   { name: "XXXXXXX", role: "XXXXXXX", org: "XXXXXXX", initials: "XX", bio: "XXXXXXX", topic: "XXXXXXX" },
@@ -14,24 +14,15 @@ const speakers = [
 ];
 
 const SpeakersSection = () => {
+  const { ref, isVisible } = useScrollAnimation();
+
   return (
     <section id="palestrantes" className="py-24 md:py-32 bg-semin-cream relative overflow-hidden">
       <div className="absolute top-20 right-0 w-80 h-80 bg-semin-yellow/5 rounded-full blur-[100px]" />
       <div className="absolute bottom-20 left-0 w-60 h-60 bg-semin-blue/5 rounded-full blur-[80px]" />
-      
-      {/* Mining decoration */}
-      <div className="absolute top-10 left-10 opacity-[0.03]">
-        <Mountain className="w-40 h-40 text-semin-blue" />
-      </div>
 
-      <div className="container mx-auto px-4 relative z-10">
-        <motion.div
-          className="text-center mb-14"
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7 }}
-        >
+      <div ref={ref} className="container mx-auto px-4 relative z-10">
+        <div className={`text-center mb-14 transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
           <span className="inline-flex items-center gap-2 font-body text-xs uppercase tracking-[0.3em] text-semin-orange font-semibold mb-4">
             <Gem className="h-3.5 w-3.5" />
             Quem estará lá
@@ -47,28 +38,21 @@ const SpeakersSection = () => {
           <p className="font-body text-semin-blue/60 max-w-xl mx-auto">
             Conheça os especialistas que compartilharão conhecimento e experiência no setor mineral.
           </p>
-        </motion.div>
+        </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
           {speakers.map((s, i) => (
-            <motion.div
+            <div
               key={i}
-              initial={{ opacity: 0, y: 30, scale: 0.95 }}
-              whileInView={{ opacity: 1, y: 0, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.1 }}
+              className={`transition-all duration-500 ${isVisible ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-6 scale-95"}`}
+              style={{ transitionDelay: `${i * 80 + 200}ms` }}
             >
               <HoverCard openDelay={200}>
                 <HoverCardTrigger asChild>
-                  <Card className="bg-white/80 backdrop-blur-sm border border-semin-blue/10 hover:border-semin-yellow/50 shadow-sm hover:shadow-2xl cursor-pointer transition-all duration-500 group hover:-translate-y-2 relative overflow-hidden">
-                    {/* Subtle pickaxe watermark */}
-                    <div className="absolute -bottom-4 -right-4 opacity-0 group-hover:opacity-[0.04] transition-opacity duration-500">
-                      <Gem className="w-24 h-24 text-semin-orange" />
-                    </div>
-                    <CardContent className="p-8 text-center relative">
+                  <Card className="bg-white/80 backdrop-blur-sm border border-semin-blue/10 hover:border-semin-yellow/50 shadow-sm hover:shadow-2xl cursor-pointer transition-all duration-300 group hover:-translate-y-2">
+                    <CardContent className="p-8 text-center">
                       <div className="relative mx-auto mb-5 w-24 h-24">
-                        <div className="absolute inset-0 rounded-full bg-gradient-to-br from-semin-yellow to-semin-orange opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-md" />
-                        <Avatar className="relative h-24 w-24 mx-auto ring-3 ring-semin-blue/10 group-hover:ring-semin-yellow/50 transition-all duration-500">
+                        <Avatar className="relative h-24 w-24 mx-auto ring-3 ring-semin-blue/10 group-hover:ring-semin-yellow/50 transition-all duration-300">
                           <AvatarFallback className="bg-gradient-to-br from-semin-blue to-semin-dark text-white font-display text-xl font-bold">
                             <User className="h-10 w-10" />
                           </AvatarFallback>
@@ -93,7 +77,7 @@ const SpeakersSection = () => {
                   </div>
                 </HoverCardContent>
               </HoverCard>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>
