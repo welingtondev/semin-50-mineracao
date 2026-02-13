@@ -8,6 +8,7 @@ const links = [
   { label: "Sobre", href: "#sobre" },
   { label: "Programação", href: "#programacao" },
   { label: "Palestrantes", href: "#palestrantes" },
+  { label: "Galeria", href: "#galeria" },
   { label: "Patrocínio", href: "#patrocinio" },
   { label: "Inscrições", href: "#inscricoes" },
 ];
