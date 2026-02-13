@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Check, Crown, Award, Medal, Heart, Sparkles, Gem, Mountain } from "lucide-react";
-import { motion } from "framer-motion";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 const tiers = [
   {
@@ -73,23 +73,17 @@ const tiers = [
 ];
 
 const SponsorsSection = () => {
+  const { ref, isVisible } = useScrollAnimation();
+
   return (
     <section id="patrocinio" className="py-24 md:py-32 bg-white relative overflow-hidden">
       <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-semin-yellow via-semin-orange to-semin-yellow" />
-      
-      {/* Mining decorations */}
       <div className="absolute bottom-10 right-10 opacity-[0.02]">
         <Mountain className="w-48 h-48 text-semin-blue" />
       </div>
 
-      <div className="container mx-auto px-4">
-        <motion.div
-          className="text-center mb-14"
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7 }}
-        >
+      <div ref={ref} className="container mx-auto px-4">
+        <div className={`text-center mb-14 transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
           <span className="inline-flex items-center gap-2 font-body text-xs uppercase tracking-[0.3em] text-semin-orange font-semibold mb-4">
             <Gem className="h-3.5 w-3.5" />
             Invista no futuro
@@ -105,20 +99,17 @@ const SponsorsSection = () => {
           <p className="font-body text-semin-blue/60 max-w-xl mx-auto">
             Associe sua marca ao principal evento de mineração da UFBA.
           </p>
-        </motion.div>
+        </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
           {tiers.map((t, i) => (
-            <motion.div
+            <div
               key={t.name}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.12 }}
-              className={t.featured ? "lg:-mt-4 lg:mb-4" : ""}
+              className={`transition-all duration-500 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"} ${t.featured ? "lg:-mt-4 lg:mb-4" : ""}`}
+              style={{ transitionDelay: `${i * 100 + 200}ms` }}
             >
               <Card
-                className={`bg-gradient-to-b ${t.gradient} border-2 ${t.border} shadow-sm hover:shadow-2xl ${t.glow} transition-all duration-500 hover:-translate-y-2 h-full ${
+                className={`bg-gradient-to-b ${t.gradient} border-2 ${t.border} shadow-sm hover:shadow-2xl ${t.glow} transition-all duration-300 hover:-translate-y-2 h-full ${
                   t.featured ? "ring-2 ring-semin-yellow/30" : ""
                 }`}
               >
@@ -142,17 +133,11 @@ const SponsorsSection = () => {
                   ))}
                 </CardContent>
               </Card>
-            </motion.div>
+            </div>
           ))}
         </div>
 
-        <motion.div
-          className="text-center mt-14"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.5 }}
-        >
+        <div className={`text-center mt-14 transition-all duration-500 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`} style={{ transitionDelay: "600ms" }}>
           <a href="mailto:semin@ufba.br">
             <Button
               size="lg"
@@ -162,7 +147,7 @@ const SponsorsSection = () => {
               Quero Patrocinar o SEMIN
             </Button>
           </a>
-        </motion.div>
+        </div>
       </div>
     </section>
   );
