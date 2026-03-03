@@ -1,82 +1,65 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { User, Mountain, Gem } from "lucide-react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 const speakers = [
-  { name: "XXXXXXX", role: "XXXXXXX", org: "XXXXXXX", initials: "XX", bio: "XXXXXXX", topic: "XXXXXXX" },
-  { name: "XXXXXXX", role: "XXXXXXX", org: "XXXXXXX", initials: "XX", bio: "XXXXXXX", topic: "XXXXXXX" },
-  { name: "XXXXXXX", role: "XXXXXXX", org: "XXXXXXX", initials: "XX", bio: "XXXXXXX", topic: "XXXXXXX" },
-  { name: "XXXXXXX", role: "XXXXXXX", org: "XXXXXXX", initials: "XX", bio: "XXXXXXX", topic: "XXXXXXX" },
-  { name: "XXXXXXX", role: "XXXXXXX", org: "XXXXXXX", initials: "XX", bio: "XXXXXXX", topic: "XXXXXXX" },
-  { name: "XXXXXXX", role: "XXXXXXX", org: "XXXXXXX", initials: "XX", bio: "XXXXXXX", topic: "XXXXXXX" },
+  { name: "XXXXXXX", role: "XXXXXXX", org: "XXXXXXX", initials: "XX" },
+  { name: "XXXXXXX", role: "XXXXXXX", org: "XXXXXXX", initials: "XX" },
+  { name: "XXXXXXX", role: "XXXXXXX", org: "XXXXXXX", initials: "XX" },
+  { name: "XXXXXXX", role: "XXXXXXX", org: "XXXXXXX", initials: "XX" },
+  { name: "XXXXXXX", role: "XXXXXXX", org: "XXXXXXX", initials: "XX" },
+  { name: "XXXXXXX", role: "XXXXXXX", org: "XXXXXXX", initials: "XX" },
 ];
 
 const SpeakersSection = () => {
   const { ref, isVisible } = useScrollAnimation();
 
   return (
-    <section id="palestrantes" className="py-24 md:py-32 bg-semin-cream relative overflow-hidden">
-      <div className="absolute top-20 right-0 w-80 h-80 bg-semin-yellow/5 rounded-full blur-[100px]" />
-      <div className="absolute bottom-20 left-0 w-60 h-60 bg-semin-blue/5 rounded-full blur-[80px]" />
+    <section id="palestrantes" className="py-16 md:py-32 bg-semin-cream relative overflow-hidden">
+      <div className="absolute top-20 right-0 w-40 md:w-80 h-40 md:h-80 bg-semin-yellow/5 rounded-full blur-[80px] md:blur-[100px]" />
+      <div className="absolute bottom-20 left-0 w-32 md:w-60 h-32 md:h-60 bg-semin-blue/5 rounded-full blur-[60px] md:blur-[80px]" />
 
       <div ref={ref} className="container mx-auto px-4 relative z-10">
-        <div className={`text-center mb-14 transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
-          <span className="inline-flex items-center gap-2 font-body text-xs uppercase tracking-[0.3em] text-semin-orange font-semibold mb-4">
-            <Gem className="h-3.5 w-3.5" />
+        <div className={`text-center mb-10 md:mb-14 transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
+          <span className="inline-flex items-center gap-2 font-body text-[10px] md:text-xs uppercase tracking-[0.3em] text-semin-orange font-semibold mb-3 md:mb-4">
+            <Gem className="h-3 w-3 md:h-3.5 md:w-3.5" />
             Quem estará lá
           </span>
-          <h2 className="font-display text-3xl md:text-5xl font-bold text-semin-blue mb-4">
+          <h2 className="font-display text-2xl sm:text-3xl md:text-5xl font-bold text-semin-blue mb-3 md:mb-4">
             Palestrantes
           </h2>
-          <div className="flex items-center justify-center gap-3 mb-6">
-            <div className="w-12 h-[2px] bg-gradient-to-r from-transparent to-semin-yellow rounded-full" />
-            <Mountain className="h-4 w-4 text-semin-yellow/60" />
-            <div className="w-12 h-[2px] bg-gradient-to-l from-transparent to-semin-yellow rounded-full" />
+          <div className="flex items-center justify-center gap-3 mb-4 md:mb-6">
+            <div className="w-8 md:w-12 h-[2px] bg-gradient-to-r from-transparent to-semin-yellow rounded-full" />
+            <Mountain className="h-3.5 w-3.5 md:h-4 md:w-4 text-semin-yellow/60" />
+            <div className="w-8 md:w-12 h-[2px] bg-gradient-to-l from-transparent to-semin-yellow rounded-full" />
           </div>
-          <p className="font-body text-semin-blue/60 max-w-xl mx-auto">
+          <p className="font-body text-sm md:text-base text-semin-blue/60 max-w-xl mx-auto">
             Conheça os especialistas que compartilharão conhecimento e experiência no setor mineral.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-6 max-w-5xl mx-auto">
           {speakers.map((s, i) => (
             <div
               key={i}
               className={`transition-all duration-500 ${isVisible ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-6 scale-95"}`}
               style={{ transitionDelay: `${i * 80 + 200}ms` }}
             >
-              <HoverCard openDelay={200}>
-                <HoverCardTrigger asChild>
-                  <Card className="bg-white/80 backdrop-blur-sm border border-semin-blue/10 hover:border-semin-yellow/50 shadow-sm hover:shadow-2xl cursor-pointer transition-all duration-300 group hover:-translate-y-2">
-                    <CardContent className="p-8 text-center">
-                      <div className="relative mx-auto mb-5 w-24 h-24">
-                        <Avatar className="relative h-24 w-24 mx-auto ring-3 ring-semin-blue/10 group-hover:ring-semin-yellow/50 transition-all duration-300">
-                          <AvatarFallback className="bg-gradient-to-br from-semin-blue to-semin-dark text-white font-display text-xl font-bold">
-                            <User className="h-10 w-10" />
-                          </AvatarFallback>
-                        </Avatar>
-                      </div>
-                      <h3 className="font-display text-lg font-semibold text-semin-blue group-hover:text-semin-orange transition-colors">{s.name}</h3>
-                      <p className="font-body text-sm text-semin-orange font-medium mt-1">{s.role}</p>
-                      <p className="font-body text-xs text-semin-blue/40 mt-1">{s.org}</p>
-                    </CardContent>
-                  </Card>
-                </HoverCardTrigger>
-                <HoverCardContent className="w-80 bg-white/95 backdrop-blur-sm border-semin-blue/10 shadow-xl">
-                  <div className="space-y-2">
-                    <h4 className="font-display font-semibold text-semin-blue">{s.name}</h4>
-                    <p className="font-body text-sm text-semin-blue/70">{s.bio}</p>
-                    <div className="pt-2 border-t border-semin-cream">
-                      <p className="font-body text-xs text-semin-orange font-semibold flex items-center gap-1.5">
-                        <Gem className="h-3 w-3" />
-                        Tema: {s.topic}
-                      </p>
-                    </div>
+              <Card className="bg-white/80 backdrop-blur-sm border border-semin-blue/10 hover:border-semin-yellow/50 shadow-sm hover:shadow-2xl transition-all duration-300 group hover:-translate-y-1 md:hover:-translate-y-2 active:scale-[0.98]">
+                <CardContent className="p-4 md:p-8 text-center">
+                  <div className="relative mx-auto mb-3 md:mb-5 w-16 h-16 md:w-24 md:h-24">
+                    <Avatar className="relative h-16 w-16 md:h-24 md:w-24 mx-auto ring-2 md:ring-3 ring-semin-blue/10 group-hover:ring-semin-yellow/50 transition-all duration-300">
+                      <AvatarFallback className="bg-gradient-to-br from-semin-blue to-semin-dark text-white font-display text-base md:text-xl font-bold">
+                        <User className="h-6 w-6 md:h-10 md:w-10" />
+                      </AvatarFallback>
+                    </Avatar>
                   </div>
-                </HoverCardContent>
-              </HoverCard>
+                  <h3 className="font-display text-sm md:text-lg font-semibold text-semin-blue group-hover:text-semin-orange transition-colors">{s.name}</h3>
+                  <p className="font-body text-xs md:text-sm text-semin-orange font-medium mt-0.5 md:mt-1">{s.role}</p>
+                  <p className="font-body text-[10px] md:text-xs text-semin-blue/40 mt-0.5 md:mt-1">{s.org}</p>
+                </CardContent>
+              </Card>
             </div>
           ))}
         </div>
