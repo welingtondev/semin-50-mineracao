@@ -68,7 +68,7 @@ const Navbar = () => {
           <SheetContent side="right" className="bg-semin-dark/98 backdrop-blur-xl border-semin-blue/20 w-[280px] p-0">
             <div className="flex flex-col h-full pt-16 pb-8 px-6">
               <div className="flex items-center gap-2 mb-10">
-                <img src={seminLogo} alt="SEMIN 2026" className="h-12 w-auto" />
+                <img src={seminLogo} alt="SEMIN 2026" className="h-16 w-auto" />
               </div>
               <div className="flex flex-col gap-1 flex-1">
                 {links.map((l, i) => (
