@@ -123,14 +123,14 @@ const SponsorLogosSection = () => {
         {/* Organizadores (antigo Apoio Institucional) — por último */}
         <div className={`mt-16 md:mt-20 transition-all duration-700 delay-500 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
           <div className="flex items-center justify-center gap-3 mb-6">
-            <div className="h-px flex-1 max-w-[60px] md:max-w-[100px] bg-gradient-to-r from-transparent to-white/10" />
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/15 bg-white/5">
-              <Heart className="h-3.5 w-3.5 text-semin-yellow" />
-              <span className="font-body text-xs md:text-sm uppercase tracking-[0.15em] font-bold text-white/80">
+            <div className="h-px flex-1 max-w-[60px] md:max-w-[100px] bg-gradient-to-r from-transparent to-semin-blue/15" />
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-semin-blue/15 bg-semin-blue/5">
+              <Heart className="h-3.5 w-3.5 text-semin-blue" />
+              <span className="font-body text-xs md:text-sm uppercase tracking-[0.15em] font-bold text-semin-blue">
                 Apoio Institucional
               </span>
             </div>
-            <div className="h-px flex-1 max-w-[60px] md:max-w-[100px] bg-gradient-to-l from-transparent to-white/10" />
+            <div className="h-px flex-1 max-w-[60px] md:max-w-[100px] bg-gradient-to-l from-transparent to-semin-blue/15" />
           </div>
           <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12">
             {organizadores.map((sponsor) => (
