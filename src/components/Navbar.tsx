@@ -37,7 +37,7 @@ const Navbar = () => {
     >
       <div className="container mx-auto flex items-center justify-between px-4">
         <a href="#" className="flex items-center gap-2">
-          <img src={seminLogo} alt="SEMIN 2026" className="h-10 md:h-12 w-auto" />
+          <img src={seminLogo} alt="SEMIN 2026" className="h-14 md:h-16 w-auto" />
         </a>
 
         {/* Desktop */}
