@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { Menu, Pickaxe } from "lucide-react";
+import { Menu } from "lucide-react";
+import seminLogo from "@/assets/semin_logo.png";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { motion } from "framer-motion";
@@ -36,10 +37,7 @@ const Navbar = () => {
     >
       <div className="container mx-auto flex items-center justify-between px-4">
         <a href="#" className="flex items-center gap-2">
-          <Pickaxe className="h-5 w-5 md:h-6 md:w-6 text-semin-yellow" />
-          <span className="font-display text-xl md:text-2xl font-bold bg-gradient-to-r from-white to-semin-cream bg-clip-text text-transparent tracking-wider">
-            SEMIN
-          </span>
+          <img src={seminLogo} alt="SEMIN 2026" className="h-10 md:h-12 w-auto" />
         </a>
 
         {/* Desktop */}
@@ -70,8 +68,7 @@ const Navbar = () => {
           <SheetContent side="right" className="bg-semin-dark/98 backdrop-blur-xl border-semin-blue/20 w-[280px] p-0">
             <div className="flex flex-col h-full pt-16 pb-8 px-6">
               <div className="flex items-center gap-2 mb-10">
-                <Pickaxe className="h-5 w-5 text-semin-yellow" />
-                <span className="font-display text-xl font-bold text-white">SEMIN</span>
+                <img src={seminLogo} alt="SEMIN 2026" className="h-12 w-auto" />
               </div>
               <div className="flex flex-col gap-1 flex-1">
                 {links.map((l, i) => (

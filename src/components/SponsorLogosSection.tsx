@@ -1,17 +1,22 @@
-import { Crown, Award, Medal, Heart } from "lucide-react";
+import { Heart, Mountain } from "lucide-react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import ufbaLogo from "@/assets/ufba_logo.png";
+import sindimibaLogo from "@/assets/sindimiba-logo.png";
 
 type SponsorLogo = {
   name: string;
   logo?: string;
 };
 
-const sponsorsByTier: { tier: string; icon: React.ElementType; color: string; borderColor: string; sponsors: SponsorLogo[] }[] = [
+const institutionalSponsors: SponsorLogo[] = [
+  { name: "UFBA", logo: ufbaLogo },
+  { name: "SINDIMIBA", logo: sindimibaLogo },
+];
+
+const sponsorsByTier: { tier: string; label: string; sponsors: SponsorLogo[] }[] = [
   {
     tier: "Ouro",
-    icon: Crown,
-    color: "text-semin-yellow",
-    borderColor: "border-semin-yellow/20",
+    label: "🥇 Ouro",
     sponsors: [
       { name: "Patrocinador Ouro 1" },
       { name: "Patrocinador Ouro 2" },
@@ -19,9 +24,7 @@ const sponsorsByTier: { tier: string; icon: React.ElementType; color: string; bo
   },
   {
     tier: "Prata",
-    icon: Award,
-    color: "text-gray-400",
-    borderColor: "border-gray-200",
+    label: "🥈 Prata",
     sponsors: [
       { name: "Patrocinador Prata 1" },
       { name: "Patrocinador Prata 2" },
@@ -30,27 +33,12 @@ const sponsorsByTier: { tier: string; icon: React.ElementType; color: string; bo
   },
   {
     tier: "Bronze",
-    icon: Medal,
-    color: "text-amber-700",
-    borderColor: "border-amber-200",
+    label: "🥉 Bronze",
     sponsors: [
       { name: "Patrocinador Bronze 1" },
       { name: "Patrocinador Bronze 2" },
       { name: "Patrocinador Bronze 3" },
       { name: "Patrocinador Bronze 4" },
-    ],
-  },
-  {
-    tier: "Apoiadores",
-    icon: Heart,
-    color: "text-semin-blue",
-    borderColor: "border-semin-blue/10",
-    sponsors: [
-      { name: "Apoiador 1" },
-      { name: "Apoiador 2" },
-      { name: "Apoiador 3" },
-      { name: "Apoiador 4" },
-      { name: "Apoiador 5" },
     ],
   },
 ];
@@ -59,7 +47,6 @@ const logoSizes: Record<string, string> = {
   Ouro: "w-32 h-20 md:w-48 md:h-28",
   Prata: "w-28 h-16 md:w-40 md:h-24",
   Bronze: "w-24 h-14 md:w-32 md:h-20",
-  Apoiadores: "w-20 h-12 md:w-28 md:h-16",
 };
 
 const SponsorLogosSection = () => {
@@ -70,37 +57,66 @@ const SponsorLogosSection = () => {
       <div ref={ref} className="container mx-auto px-4">
         <div className="text-center mb-10 md:mb-14">
           <h2 className="font-display text-xl sm:text-2xl md:text-4xl font-bold text-semin-blue mb-3">
-            Nossos Patrocinadores
+            Nossos Patrocinadores & Apoiadores
           </h2>
-          <div className="w-12 md:w-16 h-[2px] bg-gradient-to-r from-semin-yellow to-semin-orange mx-auto rounded-full" />
+          <div className="flex items-center justify-center gap-3 mb-2">
+            <div className="w-8 md:w-12 h-[2px] bg-gradient-to-r from-transparent to-semin-yellow rounded-full" />
+            <Mountain className="h-3.5 w-3.5 md:h-4 md:w-4 text-semin-yellow/60" />
+            <div className="w-8 md:w-12 h-[2px] bg-gradient-to-l from-transparent to-semin-yellow rounded-full" />
+          </div>
         </div>
 
+        {/* Apoio Institucional */}
+        <div className={`mb-12 md:mb-16 transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
+          <div className="flex items-center justify-center gap-2 mb-6">
+            <Heart className="h-3.5 w-3.5 md:h-4 md:w-4 text-semin-blue" />
+            <span className="font-body text-[10px] md:text-xs uppercase tracking-[0.2em] font-semibold text-semin-blue">
+              Apoio Institucional
+            </span>
+            <Heart className="h-3.5 w-3.5 md:h-4 md:w-4 text-semin-blue" />
+          </div>
+          <div className="flex flex-wrap justify-center items-center gap-6 md:gap-10">
+            {institutionalSponsors.map((sponsor) => (
+              <div
+                key={sponsor.name}
+                className="w-36 h-20 md:w-52 md:h-28 rounded-xl bg-white border border-semin-blue/10 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center p-3 md:p-5 active:scale-95"
+              >
+                <img
+                  src={sponsor.logo}
+                  alt={sponsor.name}
+                  className="max-w-full max-h-full object-contain"
+                  loading="lazy"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Patrocinadores por tier */}
         <div
-          className={`space-y-10 md:space-y-14 transition-all duration-700 ${
+          className={`space-y-10 md:space-y-14 transition-all duration-700 delay-200 ${
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
           }`}
         >
           {sponsorsByTier.map((group) => (
             <div key={group.tier}>
               <div className="flex items-center justify-center gap-2 mb-4 md:mb-6">
-                <group.icon className={`h-3.5 w-3.5 md:h-4 md:w-4 ${group.color}`} />
-                <span className={`font-body text-[10px] md:text-xs uppercase tracking-[0.2em] font-semibold ${group.color}`}>
-                  {group.tier}
+                <span className="font-body text-xs md:text-sm uppercase tracking-[0.2em] font-semibold text-semin-blue/70">
+                  {group.label}
                 </span>
-                <group.icon className={`h-3.5 w-3.5 md:h-4 md:w-4 ${group.color}`} />
               </div>
 
               <div className="flex flex-wrap justify-center items-center gap-3 md:gap-6">
                 {group.sponsors.map((sponsor) => (
                   <div
                     key={sponsor.name}
-                    className={`${logoSizes[group.tier]} rounded-lg md:rounded-xl bg-white border ${group.borderColor} shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center p-2 md:p-4 group active:scale-95`}
+                    className={`${logoSizes[group.tier]} rounded-lg md:rounded-xl bg-white border border-semin-blue/10 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center p-2 md:p-4 active:scale-95`}
                   >
                     {sponsor.logo ? (
                       <img
                         src={sponsor.logo}
                         alt={sponsor.name}
-                        className="max-w-full max-h-full object-contain grayscale group-hover:grayscale-0 transition-all duration-300"
+                        className="max-w-full max-h-full object-contain"
                         loading="lazy"
                       />
                     ) : (
