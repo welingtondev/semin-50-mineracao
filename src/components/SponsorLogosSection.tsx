@@ -59,7 +59,7 @@ const SponsorLogosSection = () => {
   const { ref, isVisible } = useScrollAnimation(0.1);
 
   return (
-    <section className="py-14 md:py-28 bg-semin-cream/50 relative">
+    <section className="py-14 md:py-28 bg-semin-dark relative overflow-hidden">
       <div ref={ref} className="container mx-auto px-4">
         <div className="text-center mb-10 md:mb-14">
           <span className="inline-flex items-center gap-2 font-body text-[10px] md:text-xs uppercase tracking-[0.3em] text-semin-orange font-semibold mb-3">
