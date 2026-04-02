@@ -127,7 +127,7 @@ const SponsorLogosSection = () => {
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-semin-blue/15 bg-semin-blue/5">
               <Heart className="h-3.5 w-3.5 text-semin-blue" />
               <span className="font-body text-xs md:text-sm uppercase tracking-[0.15em] font-bold text-semin-blue">
-                Organizadores
+                Apoio Institucional
               </span>
             </div>
             <div className="h-px flex-1 max-w-[60px] md:max-w-[100px] bg-gradient-to-l from-transparent to-semin-blue/10" />
