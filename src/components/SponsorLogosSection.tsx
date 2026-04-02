@@ -66,7 +66,7 @@ const SponsorLogosSection = () => {
             <Gem className="h-3 w-3 md:h-3.5 md:w-3.5" />
             Quem faz o SEMIN acontecer
           </span>
-          <h2 className="font-display text-xl sm:text-2xl md:text-4xl font-bold text-white mb-3">
+          <h2 className="font-display text-xl sm:text-2xl md:text-4xl font-bold text-semin-blue mb-3">
             Patrocinadores & Apoiadores
           </h2>
           <div className="flex items-center justify-center gap-3 mb-2">
