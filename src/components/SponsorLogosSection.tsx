@@ -130,7 +130,7 @@ const SponsorLogosSection = () => {
                 Apoio Institucional
               </span>
             </div>
-            <div className="h-px flex-1 max-w-[60px] md:max-w-[100px] bg-gradient-to-l from-transparent to-semin-blue/10" />
+            <div className="h-px flex-1 max-w-[60px] md:max-w-[100px] bg-gradient-to-l from-transparent to-white/10" />
           </div>
           <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12">
             {organizadores.map((sponsor) => (
