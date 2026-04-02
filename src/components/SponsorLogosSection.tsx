@@ -109,7 +109,7 @@ const SponsorLogosSection = () => {
                         loading="lazy"
                       />
                     ) : (
-                      <span className="font-body text-[10px] md:text-xs text-white/30 text-center leading-tight">
+                      <span className="font-body text-[10px] md:text-xs text-semin-blue/25 text-center leading-tight">
                         {sponsor.name}
                       </span>
                     )}
