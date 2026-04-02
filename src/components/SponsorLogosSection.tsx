@@ -59,14 +59,14 @@ const SponsorLogosSection = () => {
   const { ref, isVisible } = useScrollAnimation(0.1);
 
   return (
-    <section className="py-14 md:py-28 bg-semin-cream/50 relative">
+    <section className="py-14 md:py-28 bg-semin-dark relative overflow-hidden">
       <div ref={ref} className="container mx-auto px-4">
         <div className="text-center mb-10 md:mb-14">
           <span className="inline-flex items-center gap-2 font-body text-[10px] md:text-xs uppercase tracking-[0.3em] text-semin-orange font-semibold mb-3">
             <Gem className="h-3 w-3 md:h-3.5 md:w-3.5" />
             Quem faz o SEMIN acontecer
           </span>
-          <h2 className="font-display text-xl sm:text-2xl md:text-4xl font-bold text-semin-blue mb-3">
+          <h2 className="font-display text-xl sm:text-2xl md:text-4xl font-bold text-white mb-3">
             Patrocinadores & Apoiadores
           </h2>
           <div className="flex items-center justify-center gap-3 mb-2">
@@ -85,21 +85,21 @@ const SponsorLogosSection = () => {
           {sponsorsByTier.map((group, gi) => (
             <div key={group.tier} style={{ transitionDelay: `${gi * 150}ms` }}>
               <div className="flex items-center justify-center gap-3 mb-6 md:mb-8">
-                <div className="h-px flex-1 max-w-[60px] md:max-w-[100px] bg-gradient-to-r from-transparent to-semin-blue/10" />
+                <div className="h-px flex-1 max-w-[60px] md:max-w-[100px] bg-gradient-to-r from-transparent to-white/10" />
                 <div className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full border ${group.accent}`}>
                   <group.icon className="h-4 w-4" />
                   <span className="font-body text-xs md:text-sm uppercase tracking-[0.15em] font-bold">
                     {group.label}
                   </span>
                 </div>
-                <div className="h-px flex-1 max-w-[60px] md:max-w-[100px] bg-gradient-to-l from-transparent to-semin-blue/10" />
+                <div className="h-px flex-1 max-w-[60px] md:max-w-[100px] bg-gradient-to-l from-transparent to-white/10" />
               </div>
 
               <div className="flex flex-wrap justify-center items-center gap-4 md:gap-8">
                 {group.sponsors.map((sponsor) => (
                   <div
                     key={sponsor.name}
-                    className={`${logoSizes[group.tier]} rounded-2xl bg-white/80 backdrop-blur-sm border border-semin-blue/8 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex items-center justify-center p-3 md:p-5 active:scale-95 group`}
+                    className={`${logoSizes[group.tier]} rounded-2xl bg-white/10 backdrop-blur-sm border border-white/10 shadow-sm hover:shadow-xl hover:bg-white/20 hover:-translate-y-1 transition-all duration-300 flex items-center justify-center p-3 md:p-5 active:scale-95 group`}
                   >
                     {sponsor.logo ? (
                       <img
@@ -109,7 +109,7 @@ const SponsorLogosSection = () => {
                         loading="lazy"
                       />
                     ) : (
-                      <span className="font-body text-[10px] md:text-xs text-semin-blue/25 text-center leading-tight">
+                      <span className="font-body text-[10px] md:text-xs text-white/30 text-center leading-tight">
                         {sponsor.name}
                       </span>
                     )}
@@ -123,14 +123,14 @@ const SponsorLogosSection = () => {
         {/* Organizadores (antigo Apoio Institucional) — por último */}
         <div className={`mt-16 md:mt-20 transition-all duration-700 delay-500 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
           <div className="flex items-center justify-center gap-3 mb-6">
-            <div className="h-px flex-1 max-w-[60px] md:max-w-[100px] bg-gradient-to-r from-transparent to-semin-blue/10" />
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-semin-blue/15 bg-semin-blue/5">
-              <Heart className="h-3.5 w-3.5 text-semin-blue" />
-              <span className="font-body text-xs md:text-sm uppercase tracking-[0.15em] font-bold text-semin-blue">
+            <div className="h-px flex-1 max-w-[60px] md:max-w-[100px] bg-gradient-to-r from-transparent to-white/10" />
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/15 bg-white/5">
+              <Heart className="h-3.5 w-3.5 text-semin-yellow" />
+              <span className="font-body text-xs md:text-sm uppercase tracking-[0.15em] font-bold text-white/80">
                 Apoio Institucional
               </span>
             </div>
-            <div className="h-px flex-1 max-w-[60px] md:max-w-[100px] bg-gradient-to-l from-transparent to-semin-blue/10" />
+            <div className="h-px flex-1 max-w-[60px] md:max-w-[100px] bg-gradient-to-l from-transparent to-white/10" />
           </div>
           <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12">
             {organizadores.map((sponsor) => (
