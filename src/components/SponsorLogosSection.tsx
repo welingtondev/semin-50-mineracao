@@ -99,7 +99,7 @@ const SponsorLogosSection = () => {
                 {group.sponsors.map((sponsor) => (
                   <div
                     key={sponsor.name}
-                    className={`${logoSizes[group.tier]} rounded-2xl bg-white/10 backdrop-blur-sm border border-white/10 shadow-sm hover:shadow-xl hover:bg-white/20 hover:-translate-y-1 transition-all duration-300 flex items-center justify-center p-3 md:p-5 active:scale-95 group`}
+                    className={`${logoSizes[group.tier]} rounded-2xl bg-white/90 backdrop-blur-sm border border-semin-blue/8 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex items-center justify-center p-3 md:p-5 active:scale-95 group`}
                   >
                     {sponsor.logo ? (
                       <img
