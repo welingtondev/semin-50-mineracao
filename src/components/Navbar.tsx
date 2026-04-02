@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { Menu, Pickaxe } from "lucide-react";
+import { Menu } from "lucide-react";
+import seminLogo from "@/assets/semin_logo.png";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { motion } from "framer-motion";

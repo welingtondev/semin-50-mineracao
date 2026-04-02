@@ -56,21 +56,19 @@ const GallerySection = () => {
           </p>
 
           <div className="flex justify-center gap-2 md:gap-3">
-            {([["all", "Todos"], ["image", "Fotos"], ["video", "Vídeos"]] as const).map(([key, label]) => (
+            {([["all", "Todos", Camera], ["image", "Fotos", Image], ["video", "Vídeos", Video]] as const).map(([key, label, Icon]) => (
               <Button
                 key={key}
                 size="sm"
                 variant={filter === key ? "default" : "outline"}
                 onClick={() => setFilter(key)}
-                className={`text-xs md:text-sm px-3 md:px-4 py-2 ${
+                className={`text-xs md:text-sm px-3 md:px-4 py-2 gap-1.5 ${
                   filter === key
-                    ? "bg-gradient-to-r from-semin-yellow to-semin-orange text-semin-dark font-semibold"
-                    : "border-white/20 text-white/60 hover:border-semin-yellow/50 hover:text-semin-yellow"
+                    ? "bg-gradient-to-r from-semin-yellow to-semin-orange text-semin-dark font-semibold border-0"
+                    : "border-white/20 text-white/60 hover:border-semin-yellow/50 hover:text-semin-yellow bg-transparent"
                 }`}
               >
-                {key === "image" && <Image className="h-3 w-3 md:h-3.5 md:w-3.5 mr-1" />}
-                {key === "video" && <Video className="h-3 w-3 md:h-3.5 md:w-3.5 mr-1" />}
-                {key === "all" && <Camera className="h-3 w-3 md:h-3.5 md:w-3.5 mr-1" />}
+                <Icon className="h-3 w-3 md:h-3.5 md:w-3.5" />
                 {label}
               </Button>
             ))}
