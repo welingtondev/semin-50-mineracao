@@ -85,7 +85,7 @@ const SponsorLogosSection = () => {
           {sponsorsByTier.map((group, gi) => (
             <div key={group.tier} style={{ transitionDelay: `${gi * 150}ms` }}>
               <div className="flex items-center justify-center gap-3 mb-6 md:mb-8">
-                <div className="h-px flex-1 max-w-[60px] md:max-w-[100px] bg-gradient-to-r from-transparent to-semin-blue/10" />
+                <div className="h-px flex-1 max-w-[60px] md:max-w-[100px] bg-gradient-to-r from-transparent to-white/10" />
                 <div className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full border ${group.accent}`}>
                   <group.icon className="h-4 w-4" />
                   <span className="font-body text-xs md:text-sm uppercase tracking-[0.15em] font-bold">
