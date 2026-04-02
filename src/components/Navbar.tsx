@@ -36,10 +36,7 @@ const Navbar = () => {
     >
       <div className="container mx-auto flex items-center justify-between px-4">
         <a href="#" className="flex items-center gap-2">
-          <Pickaxe className="h-5 w-5 md:h-6 md:w-6 text-semin-yellow" />
-          <span className="font-display text-xl md:text-2xl font-bold bg-gradient-to-r from-white to-semin-cream bg-clip-text text-transparent tracking-wider">
-            SEMIN
-          </span>
+          <img src={seminLogo} alt="SEMIN 2026" className="h-10 md:h-12 w-auto" />
         </a>
 
         {/* Desktop */}
