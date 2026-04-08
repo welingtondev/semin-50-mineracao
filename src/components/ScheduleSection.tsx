@@ -5,27 +5,37 @@ import { Clock, Pickaxe, Gem } from "lucide-react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 const schedule = {
-  "Dia 1": [
-    { time: "08:00 - 09:00", title: "XXXXXXX", type: "cerimônia" },
-    { time: "09:00 - 10:30", title: "XXXXXXX", type: "palestra" },
-    { time: "10:30 - 12:00", title: "XXXXXXX", type: "mesa-redonda" },
-    { time: "14:00 - 15:30", title: "XXXXXXX", type: "workshop" },
-    { time: "15:30 - 17:00", title: "XXXXXXX", type: "palestra" },
+  "09/Nov": [
+    { time: "08:00 - 12:00", title: "Minicursos e Capacitação Prática", type: "workshop" },
+    { time: "14:00 - 18:00", title: "Workshops de Otimização", type: "workshop" },
   ],
-  "Dia 2": [
-    { time: "08:30 - 10:00", title: "XXXXXXX", type: "palestra" },
-    { time: "10:00 - 12:00", title: "XXXXXXX", type: "mesa-redonda" },
-    { time: "14:00 - 15:30", title: "XXXXXXX", type: "workshop" },
-    { time: "15:30 - 17:00", title: "XXXXXXX", type: "palestra" },
-    { time: "17:00 - 18:00", title: "XXXXXXX", type: "cerimônia" },
+  "10/Nov": [
+    { time: "08:00 - 12:00", title: "Minicursos Avançados", type: "workshop" },
+    { time: "14:00 - 18:00", title: "Capacitação Tecnológica", type: "workshop" },
+  ],
+  "11/Nov": [
+    { time: "08:00 - 08:15", title: "Abertura Oficial e Boas-vindas", type: "cerimônia" },
+    { time: "08:15 - 12:00", title: "Sessões de Palestras Temáticas e Cases Reais", type: "palestra" },
+    { time: "12:00 - 14:00", title: "Intervalo para Almoço", type: "intervalo" },
+    { time: "14:00 - 16:00", title: "Continuação das Temáticas Técnicas", type: "palestra" },
+    { time: "16:00 - 17:20", title: "Painel de Debates Guiado", type: "painel" },
+    { time: "17:20 - 17:30", title: "Agradecimentos e Encerramento", type: "cerimônia" },
+  ],
+  "12/Nov": [
+    { time: "08:00 - 12:00", title: "Palestras Especiais de Ex-Alunos", type: "palestra" },
+    { time: "12:00 - 14:00", title: "Intervalo para Almoço", type: "intervalo" },
+    { time: "14:00 - 16:00", title: "Temáticas de Inovação e Mercado", type: "palestra" },
+    { time: "16:00 - 17:20", title: "Painel de Debates de Novos Empreendimentos", type: "painel" },
+    { time: "17:20 - 17:30", title: "Agradecimentos Finais", type: "cerimônia" },
   ],
 };
 
 const typeColors: Record<string, string> = {
   palestra: "bg-semin-yellow/20 text-semin-orange border-semin-yellow/30",
-  "mesa-redonda": "bg-semin-blue/10 text-semin-blue border-semin-blue/20",
+  painel: "bg-semin-blue/10 text-semin-blue border-semin-blue/20",
   workshop: "bg-emerald-100 text-emerald-700 border-emerald-200",
   cerimônia: "bg-semin-cream text-semin-dark border-semin-orange/20",
+  intervalo: "bg-zinc-100 text-zinc-500 border-zinc-200",
 };
 
 const ScheduleSection = () => {
@@ -49,13 +59,13 @@ const ScheduleSection = () => {
             <Gem className="h-3.5 w-3.5 md:h-4 md:w-4 text-semin-yellow" />
             <div className="w-8 md:w-12 h-[2px] bg-gradient-to-l from-transparent to-semin-yellow rounded-full" />
           </div>
-          <p className="font-body text-sm md:text-base text-semin-blue/60 max-w-xl mx-auto">
-            Confira o cronograma completo com palestras, mesas-redondas e workshops.
+          <p className="font-body text-sm md:text-base text-semin-blue/70 max-w-2xl mx-auto leading-relaxed">
+            O evento será realizado de <b>9 a 12 de Novembro</b> (com atividades especiais no dia 13), no tradicional Auditório Leopoldo Amaral da Escola Politécnica da UFBA. Nossa grade é construída em eixos temáticos focados em inovação e na trajetória de excelência dos nossos ex-alunos.
           </p>
         </div>
 
-        <Tabs defaultValue="Dia 1" className="max-w-3xl mx-auto">
-          <TabsList className="w-full bg-semin-cream/60 mb-6 md:mb-8 p-1 md:p-1.5 rounded-xl">
+        <Tabs defaultValue="11/Nov" className="max-w-4xl mx-auto">
+          <TabsList className="w-full bg-semin-cream/70 backdrop-blur-sm mb-6 md:mb-8 p-1 md:p-1.5 rounded-xl ring-1 ring-black/[0.04]">
             {Object.keys(schedule).map((day) => (
               <TabsTrigger
                 key={day}
@@ -75,7 +85,7 @@ const ScheduleSection = () => {
                   className={`transition-all duration-500 ${isVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-4"}`}
                   style={{ transitionDelay: `${i * 60 + 200}ms` }}
                 >
-                  <Card className="border-l-4 border-l-semin-yellow border-t-0 border-r-0 border-b-0 shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 group active:scale-[0.99]">
+                  <Card className="border-l-4 border-l-semin-yellow border-t-0 border-r-0 border-b-0 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group active:scale-[0.99] ring-1 ring-black/[0.03]">
                     <CardContent className="p-4 md:p-5 flex flex-col sm:flex-row sm:items-center gap-2 md:gap-3">
                       <div className="flex items-center gap-2 text-semin-blue/50 sm:min-w-[150px]">
                         <Clock className="h-3.5 w-3.5 md:h-4 md:w-4 group-hover:text-semin-yellow transition-colors shrink-0" />

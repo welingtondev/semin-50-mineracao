@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
 
 @layer base {
   :root {
@@ -36,11 +35,11 @@
 
     --radius: 0.5rem;
 
-    --semin-yellow: 40 73% 48%;
-    --semin-orange: 30 100% 38%;
-    --semin-cream: 33 62% 82%;
-    --semin-blue: 207 28% 28%;
-    --semin-dark: 210 8% 16%;
+    --semin-yellow: 42 82% 52%;
+    --semin-orange: 28 90% 42%;
+    --semin-cream: 36 55% 88%;
+    --semin-blue: 215 32% 22%;
+    --semin-dark: 220 15% 10%;
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
@@ -97,9 +96,23 @@
     @apply border-border;
   }
 
+  html {
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
   body {
     @apply bg-background text-foreground font-sans;
     font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background-color: hsl(40 73% 48% / 0.25);
+    color: hsl(215 32% 22%);
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -120,3 +133,78 @@
 html {
   scroll-behavior: smooth;
 }
+
+/* ── Premium CTA animations ── */
+@keyframes shine {
+  0% { transform: translateX(-100%) skewX(-15deg); }
+  100% { transform: translateX(250%) skewX(-15deg); }
+}
+
+@keyframes glow-pulse {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.05); }
+}
+
+@keyframes float-subtle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+.cta-shine {
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-shine::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 40%;
+  height: 200%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.25),
+    transparent
+  );
+  animation: shine 3s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.cta-glow {
+  animation: glow-pulse 2.5s ease-in-out infinite;
+}
+
+.cta-float {
+  animation: float-subtle 3s ease-in-out infinite;
+}
+
+/* ── Floating gem decorations ── */
+@keyframes float-gem-1 {
+  0%, 100% { transform: translateY(0) rotate(0deg); opacity: 1; }
+  50% { transform: translateY(-12px) rotate(8deg); opacity: 0.7; }
+}
+
+@keyframes float-gem-2 {
+  0%, 100% { transform: translateY(0) rotate(0deg); opacity: 1; }
+  50% { transform: translateY(-8px) rotate(-6deg); opacity: 0.6; }
+}
+
+@keyframes float-gem-3 {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-15px) scale(1.1); }
+}
+
+.float-gem-1 {
+  animation: float-gem-1 6s ease-in-out infinite;
+}
+
+.float-gem-2 {
+  animation: float-gem-2 8s ease-in-out infinite 1s;
+}
+
+.float-gem-3 {
+  animation: float-gem-3 7s ease-in-out infinite 2s;
+}
+

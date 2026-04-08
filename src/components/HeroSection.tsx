@@ -1,7 +1,10 @@
 import { useEffect, useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { ChevronDown, Mountain, Pickaxe, Gem, HardHat } from "lucide-react";
+import { ChevronDown, Mountain, Pickaxe, Gem, HardHat, ArrowRight } from "lucide-react";
+
 import { motion } from "framer-motion";
+import { RegistrationModal } from "./RegistrationModal";
+import { SponsorModal } from "./SponsorModal";
 
 const Counter = ({ end, label, suffix = "" }: { end: number; label: string; suffix?: string }) => {
   const [count, setCount] = useState(0);
@@ -33,23 +36,38 @@ const Counter = ({ end, label, suffix = "" }: { end: number; label: string; suff
 
   return (
     <div ref={ref} className="text-center">
-      <div className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-display font-bold text-semin-yellow drop-shadow-[0_0_20px_rgba(210,155,33,0.3)]">
+      <div className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-display font-bold text-semin-yellow drop-shadow-[0_0_20px_rgba(210,155,33,0.3)]">
         {count}{suffix}
       </div>
-      <div className="text-white/60 font-body text-[10px] sm:text-xs md:text-sm mt-1.5 md:mt-2 tracking-wide uppercase">{label}</div>
+      <div className="text-white/50 font-body text-[9px] sm:text-xs md:text-sm mt-1 md:mt-2 tracking-wider uppercase">{label}</div>
     </div>
   );
 };
 
+const PilaoIcon = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    {/* Caixa do explodidor */}
+    <rect x="6" y="10" width="12" height="12" rx="1.5" strokeWidth="1.5" />
+    {/* Haste do pilão */}
+    <path d="M12 10V2" strokeWidth="2" />
+    {/* Alça/T-bar */}
+    <path d="M8 2h8" strokeWidth="2.5" />
+    {/* Terminais e fio */}
+    <circle cx="10" cy="14" r="1" fill="currentColor" />
+    <circle cx="14" cy="14" r="1" fill="currentColor" />
+    <path d="M14 14c3 0 4 2 4 5s2 3 4 3" strokeWidth="1" strokeDasharray="2 2" />
+  </svg>
+);
+
 const HeroSection = () => {
   return (
     <section
-      id="hero"
+      id="inicio"
       className="relative min-h-[100svh] flex items-center justify-center overflow-hidden bg-semin-dark"
     >
       {/* Background */}
       <div className="absolute inset-0">
-        <svg className="absolute bottom-0 left-0 w-full h-40 md:h-64 opacity-10" viewBox="0 0 1440 320" preserveAspectRatio="none">
+        <svg className="absolute bottom-0 left-0 w-full h-28 sm:h-40 md:h-64 opacity-10" viewBox="0 0 1440 320" preserveAspectRatio="none">
           <path fill="hsl(40 73% 48%)" d="M0,192L60,181.3C120,171,240,149,360,160C480,171,600,213,720,218.7C840,224,960,192,1080,181.3C1200,171,1320,181,1380,186.7L1440,192L1440,320L0,320Z" />
         </svg>
         <svg className="absolute bottom-0 left-0 w-full h-32 md:h-48 opacity-5" viewBox="0 0 1440 320" preserveAspectRatio="none">
@@ -59,12 +77,36 @@ const HeroSection = () => {
         <div className="absolute top-20 left-10 w-48 md:w-96 h-48 md:h-96 bg-semin-yellow/10 rounded-full blur-[80px] md:blur-[100px]" />
         <div className="absolute bottom-20 right-10 w-64 md:w-[500px] h-64 md:h-[500px] bg-semin-orange/6 rounded-full blur-[80px] md:blur-[120px]" />
 
-        <div className="absolute inset-0 opacity-[0.03] hidden md:block" style={{
-          backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 35px, hsl(40 73% 48%) 35px, hsl(40 73% 48%) 36px),
-                            repeating-linear-gradient(-45deg, transparent, transparent 35px, hsl(40 73% 48%) 35px, hsl(40 73% 48%) 36px)`
+        <div className="absolute inset-0 opacity-[0.05] hidden md:block" style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='240' height='160' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23d29b21' stroke-width='1.5'%3E%3Cpath d='M0 40 L240 40 M0 120 L240 120' stroke-opacity='0.25'/%3E%3Cpath d='M60 40 L180 120 M180 40 L240 80 M0 80 L60 120' stroke-opacity='0.35' stroke-dasharray='12 8'/%3E%3Cg stroke-opacity='0.5'%3E%3Ccircle cx='60' cy='40' r='8'/%3E%3Ccircle cx='180' cy='40' r='8'/%3E%3Ccircle cx='60' cy='120' r='8'/%3E%3Ccircle cx='180' cy='120' r='8'/%3E%3C/g%3E%3Cg stroke='none' fill='%23d29b21' fill-opacity='0.8'%3E%3Ccircle cx='60' cy='40' r='3.5'/%3E%3Ccircle cx='180' cy='40' r='3.5'/%3E%3Ccircle cx='60' cy='120' r='3.5'/%3E%3Ccircle cx='180' cy='120' r='3.5'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+          backgroundSize: '360px 240px'
         }} />
 
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] md:w-[600px] h-[300px] md:h-[600px] border border-semin-yellow/8 rounded-full animate-[spin_60s_linear_infinite] hidden sm:block" />
+        <svg 
+          viewBox="0 0 200 200" 
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] md:w-[800px] h-[350px] md:h-[800px] animate-[spin_120s_linear_infinite] hidden sm:block opacity-[0.10] pointer-events-none"
+        >
+          {/* Outline shape of a gold nugget */}
+          <path 
+            fill="none" 
+            stroke="currentColor" 
+            strokeWidth="1.5" 
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="text-semin-yellow" 
+            d="M 95 25 C 130 15, 155 30, 165 55 C 180 80, 185 110, 160 145 C 145 170, 105 185, 75 170 C 45 155, 25 130, 20 95 C 15 65, 40 35, 70 25 C 80 20, 85 28, 95 25 Z" 
+          />
+          {/* Very faint inner lines to hint at the lumpy volume of the nugget */}
+          <path
+            fill="none" 
+            stroke="currentColor" 
+            strokeWidth="0.5" 
+            strokeLinecap="round"
+            className="text-semin-yellow" 
+            d="M 95 25 Q 100 80 160 145 M 75 170 Q 90 120 165 55 M 20 95 Q 60 100 105 185" 
+            opacity="0.3"
+          />
+        </svg>
 
         <Mountain className="absolute top-[18%] left-[8%] h-6 w-6 md:h-8 md:w-8 text-semin-yellow/10 hidden sm:block" />
         <Pickaxe className="absolute top-[12%] right-[12%] h-5 w-5 md:h-7 md:w-7 text-semin-yellow/8 hidden sm:block" />
@@ -72,65 +114,78 @@ const HeroSection = () => {
         <HardHat className="absolute bottom-[30%] left-[15%] h-5 w-5 md:h-6 md:w-6 text-semin-yellow/8 hidden sm:block" />
       </div>
 
-      <div className="container mx-auto px-4 relative z-10 text-center pt-20 pb-16 md:pt-0 md:pb-0">
+      <div className="container mx-auto px-4 relative z-10 text-center -mt-10 sm:mt-0">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
         >
-          <div className="inline-flex items-center gap-2 md:gap-3 mb-6 md:mb-8 px-4 md:px-6 py-2.5 md:py-3 border border-semin-yellow/30 rounded-full bg-semin-yellow/5 backdrop-blur-sm">
-            <Pickaxe className="h-3.5 w-3.5 md:h-4 md:w-4 text-semin-yellow" />
-            <span className="text-semin-yellow font-body text-[10px] md:text-sm font-medium tracking-widest uppercase">
-              Edição Comemorativa • 50 Anos
-            </span>
-            <Gem className="h-3.5 w-3.5 md:h-4 md:w-4 text-semin-orange" />
+          <div className="relative inline-flex items-center mb-8 md:mb-10 group cta-float">
+            {/* Glow ring outsite */}
+            <div className="absolute inset-0 bg-gradient-to-r from-semin-yellow via-semin-orange to-semin-yellow opacity-40 blur-xl rounded-full" />
+            
+            <div className="relative inline-flex items-center gap-2 md:gap-3 px-5 py-2.5 md:px-8 md:py-3.5 border-2 border-semin-yellow/60 rounded-full bg-semin-dark/80 backdrop-blur-xl shadow-[0_0_20px_rgba(210,155,33,0.4)]">
+              <Pickaxe className="h-4 w-4 md:h-5 md:w-5 text-semin-yellow drop-shadow-md" />
+              <span className="bg-gradient-to-r from-semin-yellow via-amber-300 to-semin-orange bg-clip-text text-transparent font-display text-xs sm:text-sm font-black tracking-[0.2em] sm:tracking-[0.25em] uppercase">
+                Edição Histórica • 50 Anos
+              </span>
+              <Gem className="h-4 w-4 md:h-5 md:w-5 text-semin-yellow drop-shadow-md" />
+            </div>
           </div>
 
           <h1 className="font-display text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold text-white mb-4 md:mb-6 leading-tight">
             <span className="bg-gradient-to-r from-semin-yellow via-semin-cream to-semin-yellow bg-clip-text text-transparent">
-              SEMIN
+              SEMIN 2026
             </span>
             <span className="block text-base sm:text-lg md:text-2xl lg:text-3xl font-medium text-semin-cream/80 mt-2 md:mt-4 tracking-wide">
-              Seminário de Mineração da UFBA
+              Semana de Mineração da UFBA
             </span>
           </h1>
 
           <div className="flex items-center justify-center gap-3 mb-6 md:mb-8">
             <div className="w-10 md:w-16 h-[2px] bg-gradient-to-r from-transparent to-semin-yellow rounded-full" />
-            <Mountain className="h-4 w-4 md:h-5 md:w-5 text-semin-yellow/60" />
+            <PilaoIcon className="h-5 w-5 md:h-6 md:w-6 text-semin-yellow/60" />
             <div className="w-10 md:w-16 h-[2px] bg-gradient-to-l from-transparent to-semin-yellow rounded-full" />
           </div>
 
           <p className="font-body text-sm sm:text-base md:text-xl text-white/50 max-w-2xl mx-auto mb-8 md:mb-12 leading-relaxed px-2">
-            50 anos da Engenharia de Minas: passado, presente e futuro da mineração
+            Celebrando meio século de excelência em Engenharia de Minas — unindo tradição, inovação e o futuro da mineração
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center mb-14 md:mb-20 px-4 sm:px-0">
-            <a href="#inscricoes" className="w-full sm:w-auto">
-              <Button
-                size="lg"
-                className="w-full sm:w-auto bg-gradient-to-r from-semin-yellow to-semin-orange text-semin-dark hover:from-semin-orange hover:to-semin-yellow font-bold text-base md:text-lg px-8 md:px-10 py-6 md:py-7 shadow-xl shadow-semin-yellow/25 transition-all duration-300 hover:shadow-semin-yellow/40 active:scale-95 md:hover:scale-105 group"
-              >
-                <HardHat className="h-5 w-5 mr-2 group-hover:rotate-12 transition-transform" />
-                Inscreva-se
-              </Button>
-            </a>
-            <a href="#patrocinio" className="w-full sm:w-auto">
-              <Button
-                size="lg"
-                variant="outline"
-                className="w-full sm:w-auto border-2 border-semin-yellow/40 text-semin-yellow hover:bg-semin-yellow/10 hover:border-semin-yellow font-semibold text-base md:text-lg px-8 md:px-10 py-6 md:py-7 transition-all duration-300 active:scale-95 md:hover:scale-105 group"
-              >
-                <Gem className="h-5 w-5 mr-2 group-hover:rotate-12 transition-transform" />
-                Seja um Patrocinador
-              </Button>
-            </a>
+          <div className="flex flex-col sm:flex-row gap-4 md:gap-5 justify-center mb-14 md:mb-20 px-4 sm:px-0">
+            <RegistrationModal>
+              <div className="relative inline-flex w-full sm:w-auto cta-float cursor-pointer">
+                {/* Glow ring behind CTA */}
+                <div className="absolute -inset-1 md:-inset-1.5 rounded-2xl bg-gradient-to-r from-semin-yellow via-semin-orange to-semin-yellow opacity-50 blur-md cta-glow" />
+                <Button
+                  size="lg"
+                  className="cta-shine relative w-full sm:w-auto bg-gradient-to-r from-semin-yellow via-amber-400 to-semin-orange text-semin-dark hover:from-semin-orange hover:via-amber-500 hover:to-semin-yellow font-bold text-base md:text-lg px-10 md:px-12 py-7 md:py-8 rounded-xl shadow-2xl shadow-semin-yellow/30 transition-all duration-300 hover:shadow-semin-yellow/50 active:scale-95 md:hover:scale-105 group"
+                >
+                  <HardHat className="h-5 w-5 md:h-6 md:w-6 mr-2.5 group-hover:rotate-12 transition-transform duration-300" />
+                  Inscreva-se
+                  <ArrowRight className="ml-2.5 h-4 w-4 md:h-5 md:w-5 group-hover:translate-x-1 transition-transform duration-300" />
+                </Button>
+              </div>
+            </RegistrationModal>
+            <SponsorModal>
+              <div className="relative inline-flex w-full sm:w-auto cursor-pointer">
+                <div className="absolute -inset-[1px] rounded-xl bg-gradient-to-r from-semin-yellow/60 via-semin-orange/40 to-semin-yellow/60 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="relative w-full sm:w-auto border-2 border-semin-yellow/40 text-semin-yellow hover:bg-semin-yellow/10 hover:border-semin-yellow/80 font-semibold text-base md:text-lg px-10 md:px-12 py-7 md:py-8 rounded-xl backdrop-blur-sm transition-all duration-300 active:scale-95 md:hover:scale-105 group hover:shadow-lg hover:shadow-semin-yellow/15"
+                >
+                  <Gem className="h-5 w-5 md:h-6 md:w-6 mr-2.5 group-hover:rotate-12 transition-transform duration-300" />
+                  Seja um Patrocinador
+                </Button>
+              </div>
+            </SponsorModal>
           </div>
 
           <div className="flex justify-center gap-8 sm:gap-12 md:gap-16 lg:gap-24">
             <Counter end={50} label="Anos de história" suffix="+" />
-            <Counter end={12} label="Edições realizadas" />
-            <Counter end={500} label="Participantes" suffix="+" />
+            <Counter end={4} label="Edições realizadas" />
+            <Counter end={400} label="Participantes" suffix="+" />
           </div>
         </motion.div>
 

@@ -34,20 +34,20 @@ const SpeakersSection = () => {
             <Mountain className="h-3.5 w-3.5 md:h-4 md:w-4 text-semin-yellow/60" />
             <div className="w-8 md:w-12 h-[2px] bg-gradient-to-l from-transparent to-semin-yellow rounded-full" />
           </div>
-          <p className="font-body text-sm md:text-base text-semin-blue/60 max-w-xl mx-auto">
-            Conheça os especialistas que compartilharão conhecimento e experiência no setor mineral.
+          <p className="font-body text-sm md:text-base text-semin-blue/70 max-w-2xl mx-auto">
+            Priorizamos a participação de profissionais altamente qualificados e ex-alunos da Engenharia de Minas da UFBA, valorizando a trajetória dos egressos que hoje são grandes referências em inovação tecnológica no mercado.
           </p>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-6 max-w-5xl mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 max-w-5xl mx-auto px-4 sm:px-0">
           {speakers.map((s, i) => (
             <div
               key={i}
               className={`transition-all duration-500 ${isVisible ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-6 scale-95"}`}
               style={{ transitionDelay: `${i * 80 + 200}ms` }}
             >
-              <Card className="bg-white/80 backdrop-blur-sm border border-semin-blue/10 hover:border-semin-yellow/50 shadow-sm hover:shadow-2xl transition-all duration-300 group hover:-translate-y-1 md:hover:-translate-y-2 active:scale-[0.98]">
-                <CardContent className="p-4 md:p-8 text-center">
+              <Card className="bg-white/90 backdrop-blur-sm border-none ring-1 ring-semin-blue/[0.06] hover:ring-semin-yellow/40 shadow-sm hover:shadow-xl transition-all duration-300 group hover:-translate-y-1 md:hover:-translate-y-2 active:scale-[0.98]">
+                <CardContent className="p-4 md:p-6 text-center">
                   <div className="relative mx-auto mb-3 md:mb-5 w-16 h-16 md:w-24 md:h-24">
                     <Avatar className="relative h-16 w-16 md:h-24 md:w-24 mx-auto ring-2 md:ring-3 ring-semin-blue/10 group-hover:ring-semin-yellow/50 transition-all duration-300">
                       <AvatarFallback className="bg-gradient-to-br from-semin-blue to-semin-dark text-white font-display text-base md:text-xl font-bold">

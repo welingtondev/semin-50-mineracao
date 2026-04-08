@@ -1,14 +1,16 @@
 import { useState, useEffect } from "react";
 import { Menu } from "lucide-react";
-import seminLogo from "@/assets/semin_logo.png";
+import seminLogo from "@/assets/semin_logo.webp";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { motion } from "framer-motion";
+import { RegistrationModal } from "./RegistrationModal";
 
 const links = [
   { label: "Sobre", href: "#sobre" },
-  { label: "Programação", href: "#programacao" },
+  { label: "Jubileu 50 Anos", href: "#jubileu" },
   { label: "Palestrantes", href: "#palestrantes" },
+  { label: "Programação", href: "#programacao" },
   { label: "Galeria", href: "#galeria" },
   { label: "Patrocínio", href: "#patrocinio" },
   { label: "Inscrições", href: "#inscricoes" },
@@ -37,7 +39,7 @@ const Navbar = () => {
     >
       <div className="container mx-auto flex items-center justify-between px-4">
         <a href="#" className="flex items-center gap-2">
-          <img src={seminLogo} alt="SEMIN 2026" className="h-14 md:h-16 w-auto" />
+          <img src={seminLogo} alt="SEMIN 2026" width="160" height="64" className="h-14 md:h-16 w-auto" />
         </a>
 
         {/* Desktop */}
@@ -51,11 +53,13 @@ const Navbar = () => {
               {l.label}
             </a>
           ))}
-          <a href="#inscricoes">
-            <Button className="bg-gradient-to-r from-semin-yellow to-semin-orange text-semin-dark hover:from-semin-orange hover:to-semin-yellow font-semibold shadow-lg shadow-semin-yellow/20 transition-all duration-300 hover:shadow-semin-yellow/40">
-              Inscreva-se
-            </Button>
-          </a>
+          <RegistrationModal>
+            <div className="cursor-pointer">
+              <Button className="bg-gradient-to-r from-semin-yellow to-semin-orange text-semin-dark hover:from-semin-orange hover:to-semin-yellow font-semibold shadow-lg shadow-semin-yellow/20 transition-all duration-300 hover:shadow-semin-yellow/40">
+                Inscreva-se
+              </Button>
+            </div>
+          </RegistrationModal>
         </div>
 
         {/* Mobile */}
@@ -68,7 +72,7 @@ const Navbar = () => {
           <SheetContent side="right" className="bg-semin-dark/98 backdrop-blur-xl border-semin-blue/20 w-[280px] p-0">
             <div className="flex flex-col h-full pt-16 pb-8 px-6">
               <div className="flex items-center gap-2 mb-10">
-                <img src={seminLogo} alt="SEMIN 2026" className="h-16 w-auto" />
+                <img src={seminLogo} alt="SEMIN 2026" width="160" height="64" className="h-16 w-auto" />
               </div>
               <div className="flex flex-col gap-1 flex-1">
                 {links.map((l, i) => (
@@ -85,11 +89,13 @@ const Navbar = () => {
                   </motion.a>
                 ))}
               </div>
-              <a href="#inscricoes" onClick={() => setOpen(false)} className="mt-4">
-                <Button className="w-full bg-gradient-to-r from-semin-yellow to-semin-orange text-semin-dark hover:from-semin-orange hover:to-semin-yellow font-semibold py-6 text-base">
-                  Inscreva-se
-                </Button>
-              </a>
+              <RegistrationModal>
+                <div onClick={() => setOpen(false)} className="mt-4 cursor-pointer">
+                  <Button className="w-full bg-gradient-to-r from-semin-yellow to-semin-orange text-semin-dark hover:from-semin-orange hover:to-semin-yellow font-semibold py-6 text-base">
+                    Inscreva-se
+                  </Button>
+                </div>
+              </RegistrationModal>
             </div>
           </SheetContent>
         </Sheet>
