@@ -229,7 +229,7 @@ const SponsorLogosSection = () => {
                     alt={sponsor.name}
                     width="160"
                     height="128"
-                    className="h-12 sm:h-18 md:h-24 lg:h-28 w-auto max-w-[160px] sm:max-w-none object-contain grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500 group-hover:scale-110"
+                    className="h-10 sm:h-14 md:h-20 lg:h-24 w-auto max-w-[140px] sm:max-w-none object-contain grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500 group-hover:scale-110"
                     style={{ imageRendering: 'auto' }}
                     loading="lazy"
                   />
