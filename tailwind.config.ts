@@ -13,6 +13,11 @@ export default {
       },
     },
     extend: {
+      fontFamily: {
+        sans: ['"Outfit"', 'sans-serif'],
+        display: ['"Costa Rica"', 'sans-serif'],
+        body: ['"Outfit"', 'sans-serif'],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

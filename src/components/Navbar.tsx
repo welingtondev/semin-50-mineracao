@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Menu } from "lucide-react";
+import { Link } from "react-router-dom";
 import seminLogo from "@/assets/semin_logo.webp";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -9,10 +10,11 @@ import { RegistrationModal } from "./RegistrationModal";
 const links = [
   { label: "Sobre", href: "#sobre" },
   { label: "Jubileu 50 Anos", href: "#jubileu" },
-  { label: "Palestrantes", href: "#palestrantes" },
+//  { label: "Palestrantes", href: "#palestrantes" },
   { label: "Programação", href: "#programacao" },
   { label: "Galeria", href: "#galeria" },
-  { label: "Patrocínio", href: "#patrocinio" },
+  { label: "O Legado", href: "#legado" },
+//  { label: "Patrocínio", href: "#patrocinio" },
   { label: "Inscrições", href: "#inscricoes" },
 ];
 
@@ -53,13 +55,20 @@ const Navbar = () => {
               {l.label}
             </a>
           ))}
-          <RegistrationModal>
-            <div className="cursor-pointer">
-              <Button className="bg-gradient-to-r from-semin-yellow to-semin-orange text-semin-dark hover:from-semin-orange hover:to-semin-yellow font-semibold shadow-lg shadow-semin-yellow/20 transition-all duration-300 hover:shadow-semin-yellow/40">
-                Inscreva-se
+          <div className="flex items-center gap-3">
+            <Link to="/quiz">
+              <Button variant="outline" className="border-semin-yellow text-semin-yellow hover:bg-semin-yellow hover:text-semin-dark font-semibold transition-all duration-300">
+                Desafio Semin
               </Button>
-            </div>
-          </RegistrationModal>
+            </Link>
+            <RegistrationModal>
+              <div className="cursor-pointer">
+                <Button className="bg-gradient-to-r from-semin-yellow to-semin-orange text-semin-dark hover:from-semin-orange hover:to-semin-yellow font-semibold shadow-lg shadow-semin-yellow/20 transition-all duration-300 hover:shadow-semin-yellow/40">
+                  Inscreva-se
+                </Button>
+              </div>
+            </RegistrationModal>
+          </div>
         </div>
 
         {/* Mobile */}
@@ -89,13 +98,20 @@ const Navbar = () => {
                   </motion.a>
                 ))}
               </div>
-              <RegistrationModal>
-                <div onClick={() => setOpen(false)} className="mt-4 cursor-pointer">
-                  <Button className="w-full bg-gradient-to-r from-semin-yellow to-semin-orange text-semin-dark hover:from-semin-orange hover:to-semin-yellow font-semibold py-6 text-base">
-                    Inscreva-se
+              <div className="flex flex-col gap-3 mt-4">
+                <Link to="/quiz" onClick={() => setOpen(false)} className="w-full">
+                  <Button variant="outline" className="w-full border-semin-yellow text-semin-yellow hover:bg-semin-yellow hover:text-semin-dark font-semibold py-6 text-base">
+                    Desafio Semin
                   </Button>
-                </div>
-              </RegistrationModal>
+                </Link>
+                <RegistrationModal>
+                  <div onClick={() => setOpen(false)} className="cursor-pointer">
+                    <Button className="w-full bg-gradient-to-r from-semin-yellow to-semin-orange text-semin-dark hover:from-semin-orange hover:to-semin-yellow font-semibold py-6 text-base">
+                      Inscreva-se
+                    </Button>
+                  </div>
+                </RegistrationModal>
+              </div>
             </div>
           </SheetContent>
         </Sheet>

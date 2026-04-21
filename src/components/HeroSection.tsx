@@ -74,10 +74,12 @@ const HeroSection = () => {
           <path fill="hsl(30 100% 38%)" d="M0,256L80,234.7C160,213,320,171,480,165.3C640,160,800,192,960,202.7C1120,213,1280,203,1360,197.3L1440,192L1440,320L0,320Z" />
         </svg>
 
-        <div className="absolute top-20 left-10 w-48 md:w-96 h-48 md:h-96 bg-semin-yellow/10 rounded-full blur-[80px] md:blur-[100px]" />
-        <div className="absolute bottom-20 right-10 w-64 md:w-[500px] h-64 md:h-[500px] bg-semin-orange/6 rounded-full blur-[80px] md:blur-[120px]" />
+        {/* Dynamic Glass Orbs Cênicos */}
+        <div className="absolute top-[-10%] left-[-10%] w-64 md:w-[600px] h-64 md:h-[600px] bg-semin-yellow/15 rounded-full blur-[100px] md:blur-[140px] mix-blend-screen" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-80 md:w-[700px] h-80 md:h-[700px] bg-semin-orange/10 rounded-full blur-[120px] md:blur-[180px] mix-blend-screen" />
+        <div className="absolute top-[40%] right-[20%] w-48 md:w-[400px] h-48 md:h-[300px] bg-amber-500/10 rounded-full blur-[90px] md:blur-[120px] mix-blend-screen" />
 
-        <div className="absolute inset-0 opacity-[0.05] hidden md:block" style={{
+        <div className="absolute inset-0 opacity-[0.08] hidden md:block" style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg width='240' height='160' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23d29b21' stroke-width='1.5'%3E%3Cpath d='M0 40 L240 40 M0 120 L240 120' stroke-opacity='0.25'/%3E%3Cpath d='M60 40 L180 120 M180 40 L240 80 M0 80 L60 120' stroke-opacity='0.35' stroke-dasharray='12 8'/%3E%3Cg stroke-opacity='0.5'%3E%3Ccircle cx='60' cy='40' r='8'/%3E%3Ccircle cx='180' cy='40' r='8'/%3E%3Ccircle cx='60' cy='120' r='8'/%3E%3Ccircle cx='180' cy='120' r='8'/%3E%3C/g%3E%3Cg stroke='none' fill='%23d29b21' fill-opacity='0.8'%3E%3Ccircle cx='60' cy='40' r='3.5'/%3E%3Ccircle cx='180' cy='40' r='3.5'/%3E%3Ccircle cx='60' cy='120' r='3.5'/%3E%3Ccircle cx='180' cy='120' r='3.5'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
           backgroundSize: '360px 240px'
         }} />
@@ -133,11 +135,11 @@ const HeroSection = () => {
             </div>
           </div>
 
-          <h1 className="font-display text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold text-white mb-4 md:mb-6 leading-tight">
+          <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black text-white mb-4 md:mb-6 leading-tight">
             <span className="bg-gradient-to-r from-semin-yellow via-semin-cream to-semin-yellow bg-clip-text text-transparent">
-              SEMIN 2026
+              SEMIN <span className="lining-nums">2026</span>
             </span>
-            <span className="block text-base sm:text-lg md:text-2xl lg:text-3xl font-medium text-semin-cream/80 mt-2 md:mt-4 tracking-wide">
+            <span className="block text-base sm:text-lg md:text-2xl lg:text-3xl font-medium mt-2 md:mt-4 bg-gradient-to-r from-semin-cream/60 via-white to-semin-cream/60 bg-clip-text text-transparent drop-shadow-sm">
               Semana de Mineração da UFBA
             </span>
           </h1>
@@ -159,7 +161,7 @@ const HeroSection = () => {
                 <div className="absolute -inset-1 md:-inset-1.5 rounded-2xl bg-gradient-to-r from-semin-yellow via-semin-orange to-semin-yellow opacity-50 blur-md cta-glow" />
                 <Button
                   size="lg"
-                  className="cta-shine relative w-full sm:w-auto bg-gradient-to-r from-semin-yellow via-amber-400 to-semin-orange text-semin-dark hover:from-semin-orange hover:via-amber-500 hover:to-semin-yellow font-bold text-base md:text-lg px-10 md:px-12 py-7 md:py-8 rounded-xl shadow-2xl shadow-semin-yellow/30 transition-all duration-300 hover:shadow-semin-yellow/50 active:scale-95 md:hover:scale-105 group"
+                  className="cta-shine relative w-full sm:w-auto md:w-[320px] bg-gradient-to-r from-semin-yellow via-amber-400 to-semin-orange text-semin-dark hover:from-semin-orange hover:via-amber-500 hover:to-semin-yellow font-display font-bold text-base md:text-lg px-6 py-7 md:py-8 rounded-xl shadow-2xl shadow-semin-yellow/30 transition-all duration-300 hover:shadow-semin-yellow/50 active:scale-95 md:hover:scale-105 group"
                 >
                   <HardHat className="h-5 w-5 md:h-6 md:w-6 mr-2.5 group-hover:rotate-12 transition-transform duration-300" />
                   Inscreva-se
@@ -173,7 +175,7 @@ const HeroSection = () => {
                 <Button
                   size="lg"
                   variant="outline"
-                  className="relative w-full sm:w-auto border-2 border-semin-yellow/40 text-semin-yellow hover:bg-semin-yellow/10 hover:border-semin-yellow/80 font-semibold text-base md:text-lg px-10 md:px-12 py-7 md:py-8 rounded-xl backdrop-blur-sm transition-all duration-300 active:scale-95 md:hover:scale-105 group hover:shadow-lg hover:shadow-semin-yellow/15"
+                  className="relative w-full sm:w-auto md:w-[320px] border-2 border-semin-yellow/40 text-semin-yellow hover:bg-semin-yellow/10 hover:border-semin-yellow/80 font-display font-semibold text-base md:text-lg px-6 py-7 md:py-8 rounded-xl backdrop-blur-sm transition-all duration-300 active:scale-95 md:hover:scale-105 group hover:shadow-lg hover:shadow-semin-yellow/15"
                 >
                   <Gem className="h-5 w-5 md:h-6 md:w-6 mr-2.5 group-hover:rotate-12 transition-transform duration-300" />
                   Seja um Patrocinador
@@ -183,7 +185,7 @@ const HeroSection = () => {
           </div>
 
           <div className="flex justify-center gap-8 sm:gap-12 md:gap-16 lg:gap-24">
-            <Counter end={50} label="Anos de história" suffix="+" />
+            <Counter end={50} label="Anos de história" />
             <Counter end={4} label="Edições realizadas" />
             <Counter end={400} label="Participantes" suffix="+" />
           </div>

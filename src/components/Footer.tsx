@@ -3,10 +3,11 @@ import { Mail, Instagram, Linkedin, ArrowUp, Mountain, Pickaxe } from "lucide-re
 const footerLinks = [
   { label: "Sobre", href: "#sobre" },
   { label: "Jubileu 50 Anos", href: "#jubileu" },
-  { label: "Palestrantes", href: "#palestrantes" },
+//  { label: "Palestrantes", href: "#palestrantes" },
   { label: "Programação", href: "#programacao" },
   { label: "Galeria", href: "#galeria" },
-  { label: "Patrocínio", href: "#patrocinio" },
+  { label: "O Legado", href: "#legado" },
+//  { label: "Patrocínio", href: "#patrocinio" },
   { label: "Inscrições", href: "#inscricoes" },
 ];
 
@@ -65,7 +66,7 @@ const Footer = () => (
             <a href="https://www.instagram.com/semin.ufba/" target="_blank" rel="noopener noreferrer" className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-white/5 flex items-center justify-center text-white/40 hover:bg-semin-yellow/10 hover:text-semin-yellow transition-all duration-300 active:scale-90">
               <Instagram className="h-4 w-4" />
             </a>
-            <a href="#" className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-white/5 flex items-center justify-center text-white/40 hover:bg-semin-yellow/10 hover:text-semin-yellow transition-all duration-300 active:scale-90">
+            <a href="https://linkedin.com/in/daemin-diretório-acadêmico-de-engenharia-de-minas-9b167b403/?skipRedirect=true" target="_blank" rel="noopener noreferrer" className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-white/5 flex items-center justify-center text-white/40 hover:bg-semin-yellow/10 hover:text-semin-yellow transition-all duration-300 active:scale-90">
               <Linkedin className="h-4 w-4" />
             </a>
           </div>

@@ -27,7 +27,7 @@ const AboutSection = () => {
             <span className="bg-gradient-to-r from-semin-yellow to-semin-orange bg-clip-text text-transparent">Mineração da Bahia</span>
           </h2>
           
-          <p className="font-body text-base md:text-xl text-semin-blue/70 max-w-3xl mx-auto leading-relaxed">
+          <p className="font-sans text-base md:text-xl text-semin-blue/70 max-w-3xl mx-auto leading-relaxed font-medium">
             Em 2026, celebramos o <strong className="text-semin-blue">Jubileu de Ouro</strong> da Engenharia de Minas da UFBA. Um marco de 50 anos formando líderes, impulsionando a inovação e conectando gerações de profissionais que transformam o cenário mineral.
           </p>
         </div>
@@ -37,10 +37,11 @@ const AboutSection = () => {
           
           {/* Main Info Card (Spans 8 cols on desktop) */}
           <div className={`md:col-span-8 bg-white rounded-[2rem] p-8 md:p-12 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-black/[0.03] relative overflow-hidden group transition-all duration-700 delay-100 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
-            <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-semin-yellow/10 to-transparent rounded-bl-[100px] transition-transform duration-700 group-hover:scale-110" />
+            <div className="absolute -top-10 -right-10 w-80 h-80 bg-semin-yellow/15 rounded-full blur-[80px] pointer-events-none transition-transform duration-1000 group-hover:scale-125" />
             
             <h3 className="font-display text-2xl md:text-3xl font-bold text-semin-blue mb-4 relative z-10">O que é o SEMIN?</h3>
-            <p className="font-body text-sm md:text-base text-semin-blue/70 leading-relaxed max-w-2xl relative z-10 mb-8">
+            <p className="text-sm md:text-base text-semin-blue/70 leading-relaxed max-w-2xl relative z-10 mb-8 font-medium"
+               style={{ fontFamily: "'Outfit', 'Inter', system-ui, sans-serif" }}>
               A Semana de Mineração (SEMIN) não é apenas um evento, é um marco histórico. Este ano, a edição é inteiramente dedicada a celebrar o grandioso <strong>Jubileu de Ouro — os 50 anos do curso de Engenharia de Minas da UFBA</strong>. 
               <br/><br/>
               Serão quatro dias promovendo o reencontro de gerações através de palestras inspiradoras, debates técnicos sobre nossa realidade e uma oportunidade rara de estar, no mesmo ambiente, com nomes que ajudaram a construir (e que guiarão o futuro) da mineração no Brasil.
@@ -70,7 +71,7 @@ const AboutSection = () => {
               <div className="font-display text-5xl font-black text-white relative z-10">
                 50<span className="text-semin-yellow text-3xl"> anos</span>
               </div>
-              <p className="font-body text-white/60 text-sm mt-2 relative z-10">de tradição e excelência</p>
+              <p className="font-sans text-white/60 text-sm mt-2 relative z-10 font-medium">de tradição e excelência</p>
             </div>
 
             <div className={`bg-white rounded-[2rem] p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-black/[0.03] flex flex-col justify-center items-center text-center group transition-all duration-700 delay-300 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
@@ -78,7 +79,7 @@ const AboutSection = () => {
               <div className="font-display text-4xl font-black text-semin-blue">
                 120<span className="text-semin-orange text-2xl">+</span>
               </div>
-              <p className="font-body text-semin-blue/60 text-sm mt-2">Participantes previstos por dia</p>
+              <p className="font-sans text-semin-blue/60 text-sm mt-2 font-medium">Participantes previstos por dia</p>
             </div>
           </div>
 
@@ -99,8 +100,8 @@ const AboutSection = () => {
               <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-semin-yellow/20 to-semin-orange/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500">
                 <item.icon className="w-6 h-6 text-semin-orange" />
               </div>
-              <h4 className="font-display text-xl font-bold text-semin-blue mb-3">{item.title}</h4>
-              <p className="font-body text-sm text-semin-blue/60 leading-relaxed">{item.desc}</p>
+              <h4 className="text-xl font-bold text-semin-blue mb-3">{item.title}</h4>
+              <p className="text-sm text-semin-blue/60 leading-relaxed font-medium">{item.desc}</p>
             </div>
           ))}
         </div>
@@ -124,7 +125,7 @@ const AboutSection = () => {
               <h3 className="font-display text-2xl md:text-4xl font-bold text-semin-blue mb-4">
                 Entrada Solidária
               </h3>
-              <p className="font-body text-base md:text-lg text-semin-blue/70 leading-relaxed mb-6">
+              <p className="font-sans text-base md:text-lg text-semin-blue/70 leading-relaxed mb-6 font-medium">
                 Sua participação transforma vidas. O acesso ao evento é garantido mediante a doação de <strong className="text-semin-blue">1 kg de alimento não perecível</strong>, que será integralmente destinado ao{" "}
                 <a 
                   href="https://investidoresdaesperanca.org/" 
@@ -140,11 +141,11 @@ const AboutSection = () => {
               <div className="flex flex-col sm:flex-row items-center gap-4 md:gap-8 pt-4 border-t border-black/5">
                 <div className="flex items-center gap-2">
                   <MapPin className="w-5 h-5 text-semin-yellow" />
-                  <span className="font-body text-sm font-medium text-semin-blue/80">Auditório Leopoldo Amaral - UFBA</span>
+                  <span className="font-sans text-sm font-medium text-semin-blue/80">Auditório Leopoldo Amaral - UFBA</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Calendar className="w-5 h-5 text-semin-yellow" />
-                  <span className="font-body text-sm font-medium text-semin-blue/80">09 a 12 de Nov 2026</span>
+                  <span className="font-sans text-sm font-medium text-semin-blue/80">09 a 12 de Nov 2026</span>
                 </div>
               </div>
             </div>

@@ -7,12 +7,12 @@ const realizacao = [
   { 
     name: "DAEMIN", 
     logo: daeminLogo,
-    description: "O DAEMIN é o diretório acadêmico que representa os estudantes de Engenharia de Minas da UFBA. É uma entidade sem fins lucrativos que busca aproximar os graduandos do setor mineral, com foco social, cultural e científico."
+    description: "Diretório acadêmico representante dos estudantes de Engenharia de Minas da UFBA, promovendo a integração com o setor mineral."
   },
   { 
     name: "CRISTAL JR", 
     logo: cristalJrLogo,
-    description: "A Cristal é a Empresa Júnior dos cursos de Engenharia de Minas, Petróleo e Geologia da UFBA. Uma entidade estudantil com foco em impacto profissional, que busca integrar e conectar os alunos à prática do setor."
+    description: "Empresa Júnior dos cursos de Engenharia de Minas, Petróleo e Geologia da UFBA, focada em conectar alunos à prática do mercado."
   },
 ];
 
@@ -44,11 +44,11 @@ const SupportSection = () => {
           </div>
         </div>
 
-        <div className="flex flex-wrap justify-center items-center gap-10 md:gap-16 lg:gap-24">
+        <div className="flex flex-wrap justify-center items-stretch gap-10 md:gap-16 lg:gap-24">
           {realizacao.map((s, i) => (
             <div
               key={s.name}
-              className={`text-center group transition-all duration-500 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}
+              className={`flex-1 min-w-[280px] max-w-sm text-center group transition-all duration-500 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}
               style={{ transitionDelay: `${i * 200 + 200}ms` }}
             >
               <div className="relative bg-white rounded-2xl px-8 py-6 md:px-14 md:py-10 shadow-xl shadow-black/15 ring-1 ring-white/10 group-hover:shadow-2xl group-hover:shadow-semin-yellow/10 transition-all duration-500 group-hover:-translate-y-2 h-full flex flex-col justify-between max-w-sm mx-auto overflow-hidden">

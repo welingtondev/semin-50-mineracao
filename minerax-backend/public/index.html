@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QUIZ - SEMIN 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @font-face {
+            font-family: 'Costa Rica';
+            src: url('/fonts/costarica.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+        body { font-family: 'Inter', sans-serif; background-color: #0f172a; color: white; }
+        .font-display { font-family: 'Costa Rica', 'Playfair Display', serif; }
+        .miner-gradient { background: linear-gradient(135deg, #d29b21 0%, #e67e22 100%); }
+        .miner-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .quiz-option { transition: all 0.2s; border: 1px solid rgba(255, 255, 255, 0.1); }
+        .quiz-option:hover { border-color: #d29b21; background: rgba(210, 155, 33, 0.1); }
+        .quiz-option:disabled:hover { border-color: rgba(255, 255, 255, 0.1); background: transparent; cursor: not-allowed; }
+        @keyframes pulse-gold { 0%, 100% { box-shadow: 0 0 20px rgba(210, 155, 33, 0.2); } 50% { box-shadow: 0 0 40px rgba(210, 155, 33, 0.4); } }
+        .gold-glow { animation: pulse-gold 2s infinite; }
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4 relative">
+    <!-- Music Player -->
+    <audio id="bg-music" loop src="/audio/bgm.mp3"></audio>
+    <button onclick="toggleMusic()" class="absolute top-4 right-4 z-50 w-12 h-12 bg-slate-800/80 backdrop-blur border border-white/10 rounded-full flex items-center justify-center hover:bg-slate-700 transition-all shadow-lg hover:scale-105 active:scale-95 text-slate-400 hover:text-yellow-500">
+        <i data-lucide="music" id="music-icon" class="w-5 h-5"></i>
+    </button>
+
+    <div id="app" class="w-full max-w-2xl">
+        
+        <!-- Welcome / Auth Screen -->
+        <div id="auth-screen" class="miner-card rounded-3xl p-8 md:p-12 text-center shadow-2xl">
+            <div class="mb-4 inline-flex items-center justify-center p-4 bg-yellow-500/10 rounded-full border border-yellow-500/20">
+                <i data-lucide="pickaxe" class="w-12 h-12 text-yellow-500"></i>
+            </div>
+            <h1 class="font-display text-5xl md:text-7xl font-black mb-2 tracking-tighter">
+                QUIZ <span class="text-yellow-500">SEMIN</span>
+            </h1>
+            <p class="text-slate-400 text-sm md:text-base mb-8">O maior desafio de conhecimentos em mineração.</p>
+            
+            <div class="flex border-b border-slate-700 mb-6">
+                <button id="tab-login" onclick="switchAuthTab('login')" class="flex-1 py-3 border-b-2 border-yellow-500 text-yellow-500 font-bold transition-all">Entrar</button>
+                <button id="tab-register" onclick="switchAuthTab('register')" class="flex-1 py-3 border-b-2 border-transparent text-slate-400 font-bold hover:text-slate-200 transition-all">Cadastrar</button>
+            </div>
+
+            <!-- Login Form -->
+            <form id="login-form" onsubmit="handleLogin(event)" class="space-y-4 text-left">
+                <div>
+                    <label class="block text-xs uppercase tracking-widest text-slate-400 font-bold mb-1">E-mail</label>
+                    <input type="email" id="login-email" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-yellow-500 transition-all">
+                </div>
+                <div>
+                    <label class="block text-xs uppercase tracking-widest text-slate-400 font-bold mb-1">Senha</label>
+                    <input type="password" id="login-password" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-yellow-500 transition-all">
+                </div>
+                <button type="submit" class="w-full miner-gradient hover:opacity-90 text-slate-900 font-bold py-4 rounded-xl text-lg shadow-lg gold-glow transition-all mt-4">
+                    ENTRAR
+                </button>
+            </form>
+
+            <!-- Register Form -->
+            <form id="register-form" onsubmit="handleRegister(event)" class="space-y-4 text-left hidden">
+                <div>
+                    <label class="block text-xs uppercase tracking-widest text-slate-400 font-bold mb-1">Nickname (3 a 20 chars)</label>
+                    <input type="text" id="reg-nickname" required minlength="3" maxlength="20" pattern="[a-zA-Z0-9_-]+" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-yellow-500 transition-all">
+                </div>
+                <div>
+                    <label class="block text-xs uppercase tracking-widest text-slate-400 font-bold mb-1">E-mail</label>
+                    <input type="email" id="reg-email" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-yellow-500 transition-all">
+                </div>
+                <div>
+                    <label class="block text-xs uppercase tracking-widest text-slate-400 font-bold mb-1">Senha (Mín. 6 chars)</label>
+                    <input type="password" id="reg-password" required minlength="6" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-yellow-500 transition-all">
+                </div>
+                <div class="flex items-start gap-2 mt-4">
+                    <input type="checkbox" id="reg-lgpd" required class="mt-1">
+                    <label for="reg-lgpd" class="text-xs text-slate-400">
+                        Eu concordo com os Termos de Uso e consinto com a LGPD. Aceito usar meu email e nickname no jogo para fins de registro e ranking.
+                    </label>
+                </div>
+                <button type="submit" class="w-full miner-gradient hover:opacity-90 text-slate-900 font-bold py-4 rounded-xl text-lg shadow-lg gold-glow transition-all mt-4">
+                    CRIAR CONTA
+                </button>
+            </form>
+            <div id="auth-error" class="hidden mt-4 text-red-500 text-sm font-semibold p-3 bg-red-500/10 border border-red-500/20 rounded-xl"></div>
+        </div>
+
+        <!-- Profile / Dashboard Screen -->
+        <div id="profile-screen" class="hidden miner-card rounded-3xl p-8 md:p-12 shadow-2xl">
+            <div class="flex justify-between items-center mb-8 pb-6 border-b border-slate-700">
+                <div class="flex items-center gap-4">
+                    <div class="w-16 h-16 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center text-slate-900 font-bold text-2xl" id="profile-avatar">U</div>
+                    <div>
+                        <h2 class="text-2xl font-display font-black text-white" id="profile-nickname">@Nickname</h2>
+                        <span class="text-xs text-yellow-500 uppercase tracking-widest font-bold">Jogador Registrado</span>
+                    </div>
+                </div>
+                <button onclick="logout()" class="text-slate-400 hover:text-white transition-colors" title="Sair">
+                    <i data-lucide="log-out" class="w-6 h-6"></i>
+                </button>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 mb-8">
+                <div class="bg-slate-900/50 rounded-2xl p-6 border border-white/5 text-center">
+                    <i data-lucide="trophy" class="w-8 h-8 text-yellow-500 mx-auto mb-2"></i>
+                    <div class="text-xs text-slate-400 uppercase tracking-widest font-bold mb-1">Recorde Pessoal</div>
+                    <div id="profile-max-score" class="text-3xl font-black text-white tabular-nums">0</div>
+                </div>
+                <div class="bg-slate-900/50 rounded-2xl p-6 border border-white/5 text-center">
+                    <i data-lucide="bar-chart-2" class="w-8 h-8 text-yellow-500 mx-auto mb-2"></i>
+                    <div class="text-xs text-slate-400 uppercase tracking-widest font-bold mb-1">Partidas Jogadas</div>
+                    <div id="profile-matches" class="text-3xl font-black text-white tabular-nums">0</div>
+                </div>
+            </div>
+
+            <button onclick="startQuiz()" class="w-full miner-gradient hover:opacity-90 text-slate-900 font-bold py-5 rounded-xl text-xl shadow-lg gold-glow transition-all active:scale-[0.98] flex items-center justify-center gap-3">
+                <i data-lucide="play" class="w-6 h-6 fill-current"></i> INICIAR NOVA PARTIDA
+            </button>
+        </div>
+
+        <!-- Quiz Screen -->
+        <div id="quiz-screen" class="hidden">
+            <div class="flex items-center justify-between mb-6">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 bg-slate-800 rounded-lg flex items-center justify-center border border-white/5">
+                        <i data-lucide="timer" class="w-6 h-6 text-yellow-500"></i>
+                    </div>
+                    <div>
+                        <div class="text-[10px] text-slate-500 uppercase font-black tracking-widest leading-none">Tempo Restante</div>
+                        <div id="timer" class="text-2xl font-black tabular-nums">03:00</div>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <div class="text-[10px] text-slate-500 uppercase font-black tracking-widest leading-none">Pergunta</div>
+                    <div id="question-progress" class="text-2xl font-black text-yellow-500 tabular-nums">1/20</div>
+                </div>
+            </div>
+
+            <div class="miner-card rounded-3xl p-8 md:p-10 shadow-2xl relative overflow-hidden">
+                <div id="progress-bar" class="absolute top-0 left-0 h-1 bg-yellow-500 transition-all duration-300" style="width: 0%"></div>
+                
+                <div class="mb-4">
+                    <span id="q-difficulty" class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-yellow-500/10 text-yellow-500 border border-yellow-500/20">Médio</span>
+                </div>
+                
+                <h3 id="question-text" class="text-2xl md:text-3xl font-bold mb-8 leading-tight">
+                    Carregando perguntas...
+                </h3>
+
+                <div id="options" class="grid grid-cols-1 gap-4">
+                    <!-- Options injected here -->
+                </div>
+            </div>
+            <button onclick="endQuiz(true)" class="mt-4 w-full py-4 text-slate-500 font-bold uppercase tracking-widest text-sm hover:text-white transition-colors">
+                Finalizar e Pontuar Agora
+            </button>
+        </div>
+
+        <!-- Result Screen -->
+        <div id="result-screen" class="hidden text-center">
+            <div class="miner-card rounded-3xl p-8 md:p-12 shadow-2xl">
+                <div class="mb-6 inline-flex items-center justify-center p-6 bg-yellow-500 text-slate-900 rounded-full shadow-2xl gold-glow">
+                    <i data-lucide="award" class="w-16 h-16"></i>
+                </div>
+                <h2 class="text-3xl font-display font-black mb-2">Partida Concluída!</h2>
+                <p id="result-message" class="text-slate-400 mb-8">Processando resultados...</p>
+                
+                <div class="grid grid-cols-3 gap-4 mb-8">
+                    <div class="bg-white/5 rounded-2xl p-4 border border-white/5">
+                        <div class="text-xs text-slate-500 uppercase font-black mb-1">Pontos</div>
+                        <div id="final-score" class="text-2xl font-black text-white">0</div>
+                    </div>
+                    <div class="bg-white/5 rounded-2xl p-4 border border-white/5">
+                        <div class="text-xs text-slate-500 uppercase font-black mb-1">Acertos</div>
+                        <div id="final-hits" class="text-2xl font-black text-green-400">0</div>
+                    </div>
+                     <div class="bg-white/5 rounded-2xl p-4 border border-white/5">
+                        <div class="text-xs text-slate-500 uppercase font-black mb-1">Erros</div>
+                        <div id="final-errors" class="text-2xl font-black text-red-400">0</div>
+                    </div>
+                </div>
+                <button onclick="deleteAccount()" class="text-xs text-red-500/70 hover:text-red-500 font-bold uppercase tracking-widest mb-4 transition-colors">
+                    Apagar Conta (Direito ao Esquecimento LGPD)
+                </button>
+
+                <div id="share-area" class="hidden mb-8 p-6 bg-slate-900/50 rounded-2xl border border-yellow-500/20">
+                    <p class="text-sm font-bold text-yellow-500 mb-4 uppercase tracking-widest">🏆 Você faz parte do Top 10!</p>
+                    <img id="share-img" src="" class="w-full rounded-xl shadow-lg border border-white/10 mb-4 cursor-pointer" onclick="window.open(this.src)">
+                    <div class="flex gap-2">
+                        <button onclick="shareWhatsApp()" class="flex-1 bg-green-500 hover:bg-green-600 text-white font-bold py-2 rounded-lg text-sm transition-all flex items-center justify-center gap-2">
+                            <i data-lucide="smartphone" class="w-4 h-4"></i> WhatsApp
+                        </button>
+                        <button onclick="copyShareLink()" class="flex-1 bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 rounded-lg text-sm transition-all flex items-center justify-center gap-2">
+                            <i data-lucide="copy" class="w-4 h-4"></i> Copiar
+                        </button>
+                    </div>
+                </div>
+
+                <div id="ranking-area" class="mb-8 p-6 bg-slate-900/50 rounded-2xl border border-white/5 hidden">
+                    <h3 class="text-yellow-500 font-bold uppercase tracking-widest text-sm mb-4">🏆 Ranking Global</h3>
+                    <div id="ranking-list" class="flex flex-col gap-2">
+                        <!-- Ranking injetado aqui -->
+                    </div>
+                </div>
+
+                <div class="flex gap-4">
+                    <button onclick="goToProfile()" class="flex-1 border-2 border-slate-700 hover:bg-slate-800 text-white font-bold py-4 rounded-xl transition-all">
+                        VOLTAR
+                    </button>
+                    <button onclick="startQuiz()" class="flex-1 miner-gradient hover:opacity-90 text-slate-900 font-bold py-4 rounded-xl shadow-lg gold-glow transition-all">
+                        JOGAR DE NOVO
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+        
+        let token = localStorage.getItem('minerax_token');
+        let currentUser = null;
+
+        // Quiz State
+        let questions = [];
+        let currentIndex = 0;
+        let timer = 180;
+        let timerId = null;
+        let answers = [];
+        let questionStartTime = 0;
+
+        // Music State
+        let isMusicPlaying = false;
+        const bgMusic = document.getElementById('bg-music');
+        bgMusic.volume = 0.2; // 20% volume is usually enough for background
+
+        function toggleMusic() {
+            const icon = document.getElementById('music-icon');
+            if (isMusicPlaying) {
+                bgMusic.pause();
+                icon.setAttribute('data-lucide', 'music');
+                icon.classList.remove('text-yellow-500');
+            } else {
+                bgMusic.play().catch(e => console.log('Autoplay block:', e));
+                icon.setAttribute('data-lucide', 'music-4');
+                icon.classList.add('text-yellow-500');
+            }
+            isMusicPlaying = !isMusicPlaying;
+            lucide.createIcons();
+        }
+
+        // Try to start music upon first user interaction
+        function tryStartMusic() {
+            if (!isMusicPlaying) toggleMusic();
+            initAudioContext();
+        }
+
+        // --- SOUND EFFECTS (Web Audio API Synthesizer) ---
+        let audioCtx;
+        function initAudioContext() {
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+        }
+        
+        function playSound(type) {
+            if(!audioCtx || !isMusicPlaying) return;
+            const osc = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            osc.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            
+            if (type === 'success') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(500, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(1000, audioCtx.currentTime + 0.1);
+                gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                osc.start(); osc.stop(audioCtx.currentTime + 0.3);
+            } else if (type === 'click') {
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(300, audioCtx.currentTime);
+                gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+                osc.start(); osc.stop(audioCtx.currentTime + 0.1);
+            }
+        }
+
+        // Init App
+        async function initApp() {
+            if (token) {
+                await loadProfile();
+            } else {
+                showScreen('auth-screen');
+            }
+        }
+
+        function showScreen(screenId) {
+            ['auth-screen', 'profile-screen', 'quiz-screen', 'result-screen'].forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+            });
+            document.getElementById(screenId).classList.remove('hidden');
+        }
+
+        function showError(msg) {
+            const errBox = document.getElementById('auth-error');
+            errBox.innerText = msg;
+            errBox.classList.remove('hidden');
+            setTimeout(() => errBox.classList.add('hidden'), 5000);
+        }
+
+        // --- AUTH ---
+        function switchAuthTab(tab) {
+            if(tab === 'login') {
+                document.getElementById('login-form').classList.remove('hidden');
+                document.getElementById('register-form').classList.add('hidden');
+                document.getElementById('tab-login').className = "flex-1 py-3 border-b-2 border-yellow-500 text-yellow-500 font-bold transition-all";
+                document.getElementById('tab-register').className = "flex-1 py-3 border-b-2 border-transparent text-slate-400 font-bold hover:text-slate-200 transition-all";
+            } else {
+                document.getElementById('login-form').classList.add('hidden');
+                document.getElementById('register-form').classList.remove('hidden');
+                document.getElementById('tab-register').className = "flex-1 py-3 border-b-2 border-yellow-500 text-yellow-500 font-bold transition-all";
+                document.getElementById('tab-login').className = "flex-1 py-3 border-b-2 border-transparent text-slate-400 font-bold hover:text-slate-200 transition-all";
+            }
+        }
+
+        async function handleLogin(e) {
+            e.preventDefault();
+            tryStartMusic();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            
+            try {
+                const res = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    token = data.token;
+                    localStorage.setItem('minerax_token', token);
+                    await loadProfile();
+                } else {
+                    showError(data.error || 'Erro ao realizar login.');
+                }
+            } catch(e) { showError('Servidor offline.'); }
+        }
+
+        async function handleRegister(e) {
+            e.preventDefault();
+            tryStartMusic();
+            const nickname = document.getElementById('reg-nickname').value;
+            const email = document.getElementById('reg-email').value;
+            const password = document.getElementById('reg-password').value;
+            const consent_lgpd = document.getElementById('reg-lgpd').checked;
+            
+            try {
+                const res = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password, nickname, consent_lgpd })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    token = data.token;
+                    localStorage.setItem('minerax_token', token);
+                    await loadProfile();
+                } else {
+                    showError(data.error || data.errors?.[0]?.msg || 'Erro ao criar conta.');
+                }
+            } catch(e) { showError('Servidor offline.'); }
+        }
+
+        function logout() {
+            localStorage.removeItem('minerax_token');
+            token = null;
+            currentUser = null;
+            showScreen('auth-screen');
+            document.getElementById('login-password').value = '';
+        }
+
+        // --- DASHBOARD ---
+        async function loadProfile() {
+            try {
+                const res = await fetch('/api/me', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (!res.ok) throw new Error();
+                const data = await res.json();
+                currentUser = data;
+                
+                document.getElementById('profile-nickname').innerText = `@${data.nickname}`;
+                document.getElementById('profile-avatar').innerText = data.nickname.charAt(0).toUpperCase();
+                document.getElementById('profile-max-score').innerText = data.max_score.toLocaleString('pt-BR');
+                document.getElementById('profile-matches').innerText = data.stats?.total_partidas || 0;
+                
+                showScreen('profile-screen');
+            } catch(e) {
+                logout(); // Token invalid
+            }
+        }
+
+        async function deleteAccount() {
+            if(!confirm("Atenção! Segundo a LGPD, o direito ao esquecimento pagará permanentemente sua conta, recordes e convites. Deseja continuar?")) return;
+            try {
+                const res = await fetch('/api/me', {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if(res.ok) {
+                    alert("Conta removida com sucesso. Até logo!");
+                    logout();
+                } else {
+                    const data = await res.json();
+                    alert(data.error || "Erro ao apagar conta.");
+                }
+            } catch(e) { alert("Servidor offline."); }
+        }
+
+        function goToProfile() {
+            loadProfile(); // reload stats
+        }
+
+        // --- QUIZ ---
+        async function startQuiz() {
+            tryStartMusic();
+            try {
+                const qRes = await fetch('/api/questions', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if(!qRes.ok) {
+                    const err = await qRes.json();
+                    alert(err.error || 'Erro ao obter perguntas');
+                    return;
+                }
+                const qData = await qRes.json();
+                questions = qData.questions;
+                timer = qData.duration_seconds || 180;
+                currentIndex = 0;
+                answers = [];
+                
+                showScreen('quiz-screen');
+                renderQuestion();
+                
+                clearInterval(timerId);
+                timerId = setInterval(() => {
+                    timer--;
+                    const mins = Math.floor(timer / 60);
+                    const secs = timer % 60;
+                    document.getElementById('timer').innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+                    if (timer <= 0) endQuiz();
+                }, 1000);
+            } catch (err) {
+                alert('Erro de conexão ao iniciar partida.');
+            }
+        }
+
+        function renderQuestion() {
+            if (currentIndex >= questions.length) {
+                endQuiz();
+                return;
+            }
+
+            questionStartTime = Date.now();
+            const q = questions[currentIndex];
+            document.getElementById('question-text').innerText = q.pergunta;
+            
+            let diffColor = 'text-green-500 bg-green-500/10 border-green-500/20';
+            if(q.dificuldade === 'medio') diffColor = 'text-yellow-500 bg-yellow-500/10 border-yellow-500/20';
+            if(q.dificuldade === 'dificil') diffColor = 'text-red-500 bg-red-500/10 border-red-500/20';
+            
+            const diffEl = document.getElementById('q-difficulty');
+            diffEl.innerText = q.dificuldade;
+            diffEl.className = `px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border ${diffColor}`;
+            
+            document.getElementById('progress-bar').style.width = `${((currentIndex) / questions.length) * 100}%`;
+            document.getElementById('question-progress').innerText = `${currentIndex + 1}/${questions.length}`;
+            
+            const optionsBox = document.getElementById('options');
+            optionsBox.innerHTML = '';
+            
+            q.alternativas.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'quiz-option w-full text-left p-5 md:p-6 rounded-2xl font-semibold bg-slate-800/50 hover:bg-slate-700 transition-colors';
+                btn.innerText = opt;
+                btn.onclick = () => selectOption(idx, btn);
+                optionsBox.appendChild(btn);
+            });
+        }
+
+        async function selectOption(idx, btn) {
+            playSound('click');
+            const timeTaken = Date.now() - questionStartTime;
+            const q = questions[currentIndex];
+            
+            document.querySelectorAll('.quiz-option').forEach(b => b.disabled = true);
+            bStyleOriginal = btn.style.transform;
+            btn.style.transform = 'scale(0.98)';
+            btn.style.borderColor = '#d29b21';
+            btn.style.background = 'rgba(210, 155, 33, 0.2)';
+            
+            answers.push({
+                question_id: q.id,
+                answer_index: idx,
+                time_ms: timeTaken
+            });
+
+            currentIndex++;
+            setTimeout(() => {
+                btn.style.transform = bStyleOriginal;
+                renderQuestion();
+            }, 300);
+        }
+
+        async function endQuiz(isPremature = false) {
+            clearInterval(timerId);
+            const durMs = isPremature ? (questions.length * 2000) : ((180 - timer) * 1000); // Approximation
+            if (answers.length === 0) {
+                alert("Nenhuma resposta submetida.");
+                goToProfile();
+                return;
+            }
+
+            document.getElementById('result-message').innerText = "Analisando seu desempenho...";
+            document.getElementById('share-area').classList.add('hidden');
+            document.getElementById('ranking-area').classList.add('hidden');
+            showScreen('result-screen');
+            
+            try {
+                const res = await fetch('/api/submit-match', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                    body: JSON.stringify({ answers, duration_ms: durMs })
+                });
+                
+                if(!res.ok){
+                    const errObj = await res.json();
+                    alert(errObj.error || "Erro ao processar");
+                    goToProfile();
+                    return;
+                }
+
+                const data = await res.json();
+                
+                document.getElementById('result-message').innerHTML = data.score > currentUser.max_score ? 
+                    "<span class='text-green-400 font-bold'>Novo Recorde Pessoal!</span>" : 
+                    "Bom trabalho! Continue treinando para subir no ranking.";
+
+                document.getElementById('final-score').innerText = data.score;
+                document.getElementById('final-hits').innerText = data.total_acertos;
+                document.getElementById('final-errors').innerText = data.total_erros;
+                
+                if (data.share_url) {
+                    document.getElementById('share-area').classList.remove('hidden');
+                    document.getElementById('share-img').src = data.share_url;
+                }
+
+                // Fetch Global Ranking
+                await fetchAndRenderRanking();
+
+            } catch (err) {
+                alert('Erro ao salvar resultados.');
+                goToProfile();
+            }
+        }
+
+        async function fetchAndRenderRanking() {
+            try {
+                const rRes = await fetch('/api/ranking');
+                if(!rRes.ok) return;
+                const topPlayers = await rRes.json();
+                
+                const rList = document.getElementById('ranking-list');
+                rList.innerHTML = '';
+                
+                topPlayers.slice(0, 5).forEach((p, idx) => {
+                    const isMe = p.id === currentUser?.id;
+                    const el = document.createElement('div');
+                    el.className = `flex justify-between items-center p-3 rounded-lg ${isMe ? 'bg-yellow-500/20 border border-yellow-500/50' : 'bg-slate-800/50'}`;
+                    el.innerHTML = `
+                        <div class="flex items-center gap-3">
+                            <span class="text-slate-400 font-bold w-4">${idx + 1}</span>
+                            <span class="text-white font-bold">${p.nickname} ${isMe ? '(Você)' : ''}</span>
+                        </div>
+                        <span class="text-yellow-500 font-black">${p.max_score} pts</span>
+                    `;
+                    rList.appendChild(el);
+                });
+                
+                document.getElementById('ranking-area').classList.remove('hidden');
+            } catch(e) { console.error(e); }
+        }
+
+        function shareWhatsApp() {
+            const url = document.getElementById('share-img').src;
+            const text = "Olha meu recorde no QUIZ SEMIN 2026! Será que você consegue me bater? Jogue agora: " + window.location.origin;
+            window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text + " " + url)}`, '_blank');
+        }
+
+        function copyShareLink() {
+            const url = document.getElementById('share-img').src;
+            navigator.clipboard.writeText(url).then(() => alert("Link da imagem copiado!"));
+        }
+
+        // Run
+        initApp();
+    </script>
+</body>
+</html>
