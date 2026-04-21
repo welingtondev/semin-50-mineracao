@@ -60,7 +60,7 @@ const SupportSection = () => {
                     alt={s.name}
                     width="112"
                     height="112"
-                    className="h-20 md:h-28 w-auto object-contain mx-auto group-hover:scale-105 transition-transform duration-300 mb-6 md:mb-8"
+                    className="h-20 md:h-28 w-auto object-contain mx-auto grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500 group-hover:scale-105 mb-6 md:mb-8"
                     style={{ imageRendering: 'auto' }}
                     loading="lazy"
                   />

@@ -2,6 +2,7 @@ import { Heart, Mountain, Diamond, Gem, Sparkles, Crown, Star } from "lucide-rea
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import ufbaLogo from "@/assets/ufba_logo.webp";
 import sindimibaLogo from "@/assets/sindimiba-logo.webp";
+import jmcLogo from "@/assets/jmc_logo.png";
 
 type SponsorLogo = {
   name: string;
@@ -50,7 +51,7 @@ const sponsorsByTier: TierGroup[] = [
     glowColor: "bg-rose-400/15",
     ringColor: "ring-rose-400/20",
     sponsors: [
-      { name: "Patrocinador Córindon 1" },
+      { name: "JMC", logo: jmcLogo },
       { name: "Patrocinador Córindon 2" },
       { name: "Patrocinador Córindon 3" },
     ],
@@ -87,10 +88,10 @@ const sponsorsByTier: TierGroup[] = [
 ];
 
 const logoSizes: Record<string, string> = {
-  Diamante: "w-52 h-36 md:w-72 md:h-44",
-  "Córindon": "w-44 h-30 md:w-60 md:h-38",
-  "Topázio": "w-40 h-26 md:w-56 md:h-34",
-  Quartzo: "w-36 h-24 md:w-52 md:h-30",
+  Diamante: "w-40 h-28 md:w-56 md:h-36",
+  "Córindon": "w-40 h-28 md:w-56 md:h-36",
+  "Topázio": "w-40 h-28 md:w-56 md:h-36",
+  Quartzo: "w-40 h-28 md:w-56 md:h-36",
 };
 
 const SponsorLogosSection = () => {
@@ -179,7 +180,7 @@ const SponsorLogosSection = () => {
                         alt={sponsor.name}
                         width="200"
                         height="100"
-                        className="max-w-full max-h-full object-contain group-hover:scale-110 transition-transform duration-500"
+                        className="max-w-full max-h-full object-contain grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500 group-hover:scale-110"
                         style={{ imageRendering: 'auto' }}
                         loading="lazy"
                       />
@@ -228,7 +229,7 @@ const SponsorLogosSection = () => {
                     alt={sponsor.name}
                     width="160"
                     height="128"
-                    className="h-12 sm:h-18 md:h-28 lg:h-32 w-auto max-w-[160px] sm:max-w-none object-contain group-hover:scale-110 transition-transform duration-500"
+                    className="h-12 sm:h-18 md:h-24 lg:h-28 w-auto max-w-[160px] sm:max-w-none object-contain grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500 group-hover:scale-110"
                     style={{ imageRendering: 'auto' }}
                     loading="lazy"
                   />
