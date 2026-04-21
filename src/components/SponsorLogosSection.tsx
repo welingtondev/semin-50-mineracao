@@ -88,10 +88,10 @@ const sponsorsByTier: TierGroup[] = [
 ];
 
 const logoSizes: Record<string, string> = {
-  Diamante: "w-40 h-28 md:w-56 md:h-36",
-  "Córindon": "w-40 h-28 md:w-56 md:h-36",
-  "Topázio": "w-40 h-28 md:w-56 md:h-36",
-  Quartzo: "w-40 h-28 md:w-56 md:h-36",
+  Diamante: "w-44 h-32 md:w-64 md:h-40",
+  "Córindon": "w-44 h-32 md:w-64 md:h-40",
+  "Topázio": "w-44 h-32 md:w-64 md:h-40",
+  Quartzo: "w-44 h-32 md:w-64 md:h-40",
 };
 
 const SponsorLogosSection = () => {
@@ -169,7 +169,7 @@ const SponsorLogosSection = () => {
                 {group.sponsors.map((sponsor) => (
                   <div
                     key={sponsor.name}
-                    className={`${logoSizes[group.tier]} relative rounded-2xl bg-white/[0.97] shadow-xl shadow-black/15 ring-1 ${group.ringColor} hover:-translate-y-3 hover:shadow-2xl transition-all duration-500 flex items-center justify-center p-6 md:p-8 group cursor-pointer`}
+                    className={`${logoSizes[group.tier]} relative rounded-2xl bg-white/[0.97] shadow-xl shadow-black/15 ring-1 ${group.ringColor} hover:-translate-y-3 hover:shadow-2xl transition-all duration-500 flex items-center justify-center p-3 md:p-4 group cursor-pointer`}
                   >
                     {/* Card top accent line */}
                     <div className={`absolute top-0 left-[15%] right-[15%] h-[2px] bg-gradient-to-r ${group.accentFrom} ${group.accentTo} opacity-60 rounded-full`} />
