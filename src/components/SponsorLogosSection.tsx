@@ -3,6 +3,7 @@ import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import ufbaLogo from "@/assets/ufba_logo.webp";
 import sindimibaLogo from "@/assets/sindimiba-logo.webp";
 import jmcLogo from "@/assets/jmc_logo.png";
+import abemLogo from "@/assets/abem_logo.jpg";
 
 type SponsorLogo = {
   name: string;
@@ -12,6 +13,7 @@ type SponsorLogo = {
 const organizadores: SponsorLogo[] = [
   { name: "UFBA", logo: ufbaLogo },
   { name: "SINDIMIBA", logo: sindimibaLogo },
+  { name: "ABEM", logo: abemLogo },
 ];
 
 type TierGroup = {
