@@ -223,7 +223,23 @@ BEGIN
         ELSE 0
       END;
 
-      v_earned_points := ROUND(v_base_points * (1 + v_combo_bonus));
+      -- Speed bonus
+      DECLARE
+        v_answer_time INTEGER;
+        v_speed_bonus NUMERIC;
+      BEGIN
+        v_answer_time := COALESCE((v_answer->>'time_ms')::INTEGER, 15000);
+        IF v_answer_time <= 3000 THEN
+          v_speed_bonus := 0.50;
+        ELSIF v_answer_time >= 10000 THEN
+          v_speed_bonus := 0.0;
+        ELSE
+          v_speed_bonus := 0.50 * (1.0 - ((v_answer_time - 3000)::NUMERIC / 7000.0));
+        END IF;
+
+        v_earned_points := ROUND(v_base_points * (1 + v_combo_bonus + v_speed_bonus));
+      END;
+
       v_score := v_score + v_earned_points;
     ELSE
       v_total_erros := v_total_erros + 1;

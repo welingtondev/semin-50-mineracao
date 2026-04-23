@@ -79,14 +79,14 @@ const HeroSection = () => {
         <div className="absolute bottom-[-10%] right-[-10%] w-80 md:w-[700px] h-80 md:h-[700px] bg-semin-orange/10 rounded-full blur-[120px] md:blur-[180px] mix-blend-screen" />
         <div className="absolute top-[40%] right-[20%] w-48 md:w-[400px] h-48 md:h-[300px] bg-amber-500/10 rounded-full blur-[90px] md:blur-[120px] mix-blend-screen" />
 
-        <div className="absolute inset-0 opacity-[0.08] hidden md:block" style={{
+        <div className="absolute inset-0 opacity-[0.05] sm:opacity-[0.06]" style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg width='240' height='160' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23d29b21' stroke-width='1.5'%3E%3Cpath d='M0 40 L240 40 M0 120 L240 120' stroke-opacity='0.25'/%3E%3Cpath d='M60 40 L180 120 M180 40 L240 80 M0 80 L60 120' stroke-opacity='0.35' stroke-dasharray='12 8'/%3E%3Cg stroke-opacity='0.5'%3E%3Ccircle cx='60' cy='40' r='8'/%3E%3Ccircle cx='180' cy='40' r='8'/%3E%3Ccircle cx='60' cy='120' r='8'/%3E%3Ccircle cx='180' cy='120' r='8'/%3E%3C/g%3E%3Cg stroke='none' fill='%23d29b21' fill-opacity='0.8'%3E%3Ccircle cx='60' cy='40' r='3.5'/%3E%3Ccircle cx='180' cy='40' r='3.5'/%3E%3Ccircle cx='60' cy='120' r='3.5'/%3E%3Ccircle cx='180' cy='120' r='3.5'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
           backgroundSize: '360px 240px'
         }} />
 
         <svg 
           viewBox="0 0 200 200" 
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] md:w-[800px] h-[350px] md:h-[800px] animate-[spin_120s_linear_infinite] hidden sm:block opacity-[0.10] pointer-events-none"
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] md:w-[800px] h-[350px] md:h-[800px] animate-[spin_120s_linear_infinite] block opacity-[0.05] sm:opacity-[0.07] pointer-events-none"
         >
           {/* Outline shape of a gold nugget */}
           <path 
@@ -135,11 +135,11 @@ const HeroSection = () => {
             </div>
           </div>
 
-          <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black text-white mb-4 md:mb-6 leading-tight">
+          <h1 className="text-5xl sm:text-6xl md:text-8xl lg:text-[10rem] font-black text-white mb-4 md:mb-6 leading-tight">
             <span className="bg-gradient-to-r from-semin-yellow via-semin-cream to-semin-yellow bg-clip-text text-transparent">
               SEMIN <span className="lining-nums">2026</span>
             </span>
-            <span className="block text-base sm:text-lg md:text-2xl lg:text-3xl font-medium mt-2 md:mt-4 bg-gradient-to-r from-semin-cream/60 via-white to-semin-cream/60 bg-clip-text text-transparent drop-shadow-sm">
+            <span className="block text-xl sm:text-2xl md:text-3xl lg:text-4xl font-medium mt-2 md:mt-4 tracking-wider bg-gradient-to-r from-semin-cream/60 via-white to-semin-cream/60 bg-clip-text text-transparent drop-shadow-sm">
               Semana de Mineração da UFBA
             </span>
           </h1>
@@ -150,7 +150,7 @@ const HeroSection = () => {
             <div className="w-10 md:w-16 h-[2px] bg-gradient-to-l from-transparent to-semin-yellow rounded-full" />
           </div>
 
-          <p className="font-body text-sm sm:text-base md:text-xl text-white/50 max-w-2xl mx-auto mb-8 md:mb-12 leading-relaxed px-2">
+          <p className="font-body text-lg sm:text-xl md:text-[26px] text-white/50 max-w-4xl mx-auto mb-8 md:mb-12 leading-relaxed px-2">
             Celebrando meio século de excelência em Engenharia de Minas — unindo tradição, inovação e o futuro da mineração
           </p>
 
@@ -161,11 +161,11 @@ const HeroSection = () => {
                 <div className="absolute -inset-1 md:-inset-1.5 rounded-2xl bg-gradient-to-r from-semin-yellow via-semin-orange to-semin-yellow opacity-50 blur-md cta-glow" />
                 <Button
                   size="lg"
-                  className="cta-shine relative w-full sm:w-auto md:w-[320px] bg-gradient-to-r from-semin-yellow via-amber-400 to-semin-orange text-semin-dark hover:from-semin-orange hover:via-amber-500 hover:to-semin-yellow font-display font-bold text-base md:text-lg px-6 py-7 md:py-8 rounded-xl shadow-2xl shadow-semin-yellow/30 transition-all duration-300 hover:shadow-semin-yellow/50 active:scale-95 md:hover:scale-105 group"
+                  className="cta-shine relative w-full sm:w-auto md:w-[320px] bg-gradient-to-r from-semin-yellow via-amber-400 to-semin-orange text-semin-dark hover:from-semin-orange hover:via-amber-500 hover:to-semin-yellow font-display font-bold text-sm md:text-lg px-6 py-4 md:py-8 rounded-xl shadow-2xl shadow-semin-yellow/30 transition-all duration-300 hover:shadow-semin-yellow/50 active:scale-95 md:hover:scale-105 group"
                 >
-                  <HardHat className="h-5 w-5 md:h-6 md:w-6 mr-2.5 group-hover:rotate-12 transition-transform duration-300" />
+                  <HardHat className="h-4 w-4 md:h-6 md:w-6 mr-2 group-hover:rotate-12 transition-transform duration-300" />
                   Inscreva-se
-                  <ArrowRight className="ml-2.5 h-4 w-4 md:h-5 md:w-5 group-hover:translate-x-1 transition-transform duration-300" />
+                  <ArrowRight className="ml-2 h-4 w-4 md:h-5 md:w-5 group-hover:translate-x-1 transition-transform duration-300" />
                 </Button>
               </div>
             </RegistrationModal>
@@ -175,9 +175,9 @@ const HeroSection = () => {
                 <Button
                   size="lg"
                   variant="outline"
-                  className="relative w-full sm:w-auto md:w-[320px] border-2 border-semin-yellow/40 text-semin-yellow hover:bg-semin-yellow/10 hover:border-semin-yellow/80 font-display font-semibold text-base md:text-lg px-6 py-7 md:py-8 rounded-xl backdrop-blur-sm transition-all duration-300 active:scale-95 md:hover:scale-105 group hover:shadow-lg hover:shadow-semin-yellow/15"
+                  className="relative w-full sm:w-auto md:w-[320px] border-2 border-semin-yellow/40 text-semin-yellow hover:bg-semin-yellow/10 hover:border-semin-yellow/80 font-display font-semibold text-sm md:text-lg px-6 py-4 md:py-8 rounded-xl backdrop-blur-sm transition-all duration-300 active:scale-95 md:hover:scale-105 group hover:shadow-lg hover:shadow-semin-yellow/15"
                 >
-                  <Gem className="h-5 w-5 md:h-6 md:w-6 mr-2.5 group-hover:rotate-12 transition-transform duration-300" />
+                  <Gem className="h-4 w-4 md:h-6 md:w-6 mr-2 group-hover:rotate-12 transition-transform duration-300" />
                   Seja um Patrocinador
                 </Button>
               </div>

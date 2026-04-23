@@ -1,19 +1,18 @@
 import { Heart, Mountain, Diamond, Gem, Sparkles, Crown, Star } from "lucide-react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
-import ufbaLogo from "@/assets/ufba_logo.webp";
+import ufbaLogo from "@/assets/ufba_logo.png";
 import sindimibaLogo from "@/assets/sindimiba-logo.webp";
 import jmcLogo from "@/assets/jmc_logo.png";
-import abemLogo from "@/assets/abem_logo.jpg";
 
 type SponsorLogo = {
   name: string;
   logo?: string;
+  className?: string;
 };
 
 const organizadores: SponsorLogo[] = [
-  { name: "UFBA", logo: ufbaLogo },
-  { name: "SINDIMIBA", logo: sindimibaLogo },
-  { name: "ABEM", logo: abemLogo },
+  { name: "UFBA", logo: ufbaLogo, className: "h-16 sm:h-20 md:h-28 lg:h-32 max-w-[180px] md:max-w-[280px]" },
+  { name: "SINDIMIBA", logo: sindimibaLogo, className: "h-20 sm:h-24 md:h-36 lg:h-40 max-w-[240px] md:max-w-[320px]" },
 ];
 
 type TierGroup = {
@@ -53,7 +52,7 @@ const sponsorsByTier: TierGroup[] = [
     glowColor: "bg-rose-400/15",
     ringColor: "ring-rose-400/20",
     sponsors: [
-      { name: "JMC", logo: jmcLogo },
+      { name: "Patrocinador Córindon 1" },
       { name: "Patrocinador Córindon 2" },
       { name: "Patrocinador Córindon 3" },
     ],
@@ -68,8 +67,8 @@ const sponsorsByTier: TierGroup[] = [
     glowColor: "bg-amber-400/15",
     ringColor: "ring-amber-400/20",
     sponsors: [
-      { name: "Patrocinador Topázio 1" },
-      { name: "Patrocinador Topázio 2" },
+      { name: "JMC", logo: jmcLogo },
+      { name: "Pan American Silver" },
       { name: "Patrocinador Topázio 3" },
     ],
   },
@@ -221,13 +220,13 @@ const SponsorLogosSection = () => {
                 key={sponsor.name}
                 className="group cursor-pointer"
               >
-                <div className="relative bg-white/[0.97] rounded-2xl px-8 py-5 sm:px-10 sm:py-6 md:px-16 md:py-10 shadow-xl shadow-black/15 ring-1 ring-semin-yellow/10 hover:shadow-2xl hover:ring-semin-yellow/25 hover:-translate-y-2 transition-all duration-500 flex items-center justify-center">
+                <div className="relative bg-white rounded-2xl px-4 py-3 sm:px-6 sm:py-4 md:px-6 md:py-4 shadow-xl shadow-black/15 ring-1 ring-semin-yellow/10 hover:shadow-2xl hover:ring-semin-yellow/25 hover:-translate-y-2 transition-all duration-500 flex items-center justify-center min-w-[160px] md:min-w-[240px] h-32 md:h-44">
                   {/* Gold accent top line */}
                   <div className="absolute top-0 left-[20%] right-[20%] h-[2px] bg-gradient-to-r from-semin-yellow/40 via-amber-400/60 to-semin-yellow/40 rounded-full" />
                   <img
                     src={sponsor.logo}
                     alt={sponsor.name}
-                    className="h-10 sm:h-14 md:h-20 lg:h-24 w-auto max-w-[140px] sm:max-w-none object-contain transition-all duration-500 group-hover:scale-110"
+                    className={sponsor.className || "h-10 sm:h-14 md:h-20 lg:h-24 w-auto max-w-[140px] sm:max-w-none object-contain transition-all duration-500 group-hover:scale-110"}
                     style={{ imageRendering: 'auto' }}
                     loading="lazy"
                   />

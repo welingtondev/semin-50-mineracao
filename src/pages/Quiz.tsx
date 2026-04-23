@@ -289,7 +289,11 @@ const QuizPage = () => {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [matchCount, setMatchCount] = useState(0);
   const [myRank, setMyRank] = useState<number | null>(null);
+  const [prevRank, setPrevRank] = useState<number | null>(null);
   const [matchHistory, setMatchHistory] = useState<any[]>([]);
+  const [globalPlayerCount, setGlobalPlayerCount] = useState(0);
+  const [globalMatchCount, setGlobalMatchCount] = useState(0);
+  const [profileTop3, setProfileTop3] = useState<any[]>([]);
 
   // Quiz
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -544,6 +548,16 @@ const QuizPage = () => {
         setMyRank(rankObj.rank_position);
       }
 
+      // Get global stats
+      const { count: totalPlayers } = await supabase.from("profiles").select("*", { count: "exact", head: true });
+      setGlobalPlayerCount(totalPlayers || 0);
+      const { count: totalMatches } = await supabase.from("matches").select("*", { count: "exact", head: true });
+      setGlobalMatchCount(totalMatches || 0);
+
+      // Fetch top 3 ranking for profile screen
+      const { data: top3Data } = await supabase.rpc("get_global_ranking", { p_limit: 3 });
+      if (top3Data) setProfileTop3(top3Data);
+
       setScreen("profile");
     } else {
       handleLogout();
@@ -659,12 +673,23 @@ const QuizPage = () => {
 
       // Calcular pontos ganhos (espelhando a lógica do Postgres)
       let basePts = q.dificuldade === "facil" ? 10 : q.dificuldade === "medio" ? 20 : 40;
-      if (newCombo >= 3) basePts = Math.round(basePts * 1.5);
-      setLiveScore(prev => prev + basePts);
+      
+      let comboBonus = 0;
+      if (newCombo >= 10) comboBonus = 0.50;
+      else if (newCombo >= 5) comboBonus = 0.25;
+      else if (newCombo >= 3) comboBonus = 0.10;
+
+      let speedBonus = 0;
+      if (timeTaken <= 3000) speedBonus = 0.50;
+      else if (timeTaken >= 10000) speedBonus = 0;
+      else speedBonus = 0.50 * (1 - (timeTaken - 3000) / 7000);
+
+      const earnedPts = Math.round(basePts * (1 + comboBonus + speedBonus));
+      setLiveScore(prev => prev + earnedPts);
 
       // Animação flutuante de pontos
       floatingIdRef.current++;
-      setFloatingPts({ pts: basePts, id: floatingIdRef.current });
+      setFloatingPts({ pts: earnedPts, id: floatingIdRef.current });
       setTimeout(() => setFloatingPts(null), 1000);
 
       if (newCombo >= 3) {
@@ -724,15 +749,15 @@ const QuizPage = () => {
     playSound("finish");
     setResult(data as MatchResult);
 
-    // Fetch ranking
-    const { data: rankData } = await supabase.rpc("get_global_ranking", { p_limit: 10 });
+    // Save previous rank for comparison
+    setPrevRank(myRank);
+
+    // Fetch ranking (top 5)
+    const { data: rankData } = await supabase.rpc("get_global_ranking", { p_limit: 5 });
     if (rankData) setRanking(rankData);
 
-    // Refresh profile local
+    // Refresh profile local (use server truth for max_score)
     if (profile) {
-      const novaPontuacaoAcumulada = profile.max_score + data.score;
-      setProfile({ ...profile, max_score: novaPontuacaoAcumulada });
-      
       supabase.from("profiles").select("*").eq("id", profile.id).single().then(({ data: refreshed }) => {
         if (refreshed) setProfile(refreshed);
       });
@@ -1202,7 +1227,7 @@ const QuizPage = () => {
               <div className="grid grid-cols-3 gap-3 mb-6">
                 <div className="rounded-2xl p-4 text-center flex flex-col justify-center"
                      style={{ background: "rgba(15,23,42,0.5)", border: "1px solid rgba(255,255,255,0.04)" }}>
-                  <div className="text-[10px] text-slate-400 uppercase tracking-widest font-bold mb-1">Recorde</div>
+                  <div className="text-[10px] text-slate-400 uppercase tracking-widest font-bold mb-1">Maior Pont.</div>
                   <div className="text-xl md:text-2xl font-black text-white tabular-nums">{profile.max_score.toLocaleString("pt-BR")}</div>
                 </div>
                 <div className="rounded-2xl p-4 text-center flex flex-col justify-center"
@@ -1233,6 +1258,46 @@ const QuizPage = () => {
                         <Line type="monotone" dataKey="pontuacao" stroke="#d29b21" strokeWidth={3} dot={{ r: 4, fill: '#b3821a' }} />
                       </LineChart>
                     </ResponsiveContainer>
+                  </div>
+                </div>
+              )}
+
+              {/* Global Community Stats */}
+              <div className="grid grid-cols-2 gap-3 mb-6">
+                <div className="rounded-2xl p-4 text-center" style={{ background: "rgba(15,23,42,0.5)", border: "1px solid rgba(255,255,255,0.04)" }}>
+                  <div className="text-[10px] text-slate-400 uppercase tracking-widest font-bold mb-1">Jogadores</div>
+                  <div className="text-xl md:text-2xl font-black text-sky-400 tabular-nums">{globalPlayerCount}</div>
+                </div>
+                <div className="rounded-2xl p-4 text-center" style={{ background: "rgba(15,23,42,0.5)", border: "1px solid rgba(255,255,255,0.04)" }}>
+                  <div className="text-[10px] text-slate-400 uppercase tracking-widest font-bold mb-1">Partidas Jogadas</div>
+                  <div className="text-xl md:text-2xl font-black text-violet-400 tabular-nums">{globalMatchCount}</div>
+                </div>
+              </div>
+
+              {/* Top 3 Ranking */}
+              {profileTop3.length > 0 && (
+                <div className="mb-6 p-5 rounded-2xl" style={{ background: "rgba(15,23,42,0.5)", border: "1px solid rgba(255,255,255,0.05)" }}>
+                  <h3 className="text-amber-400 font-bold uppercase tracking-widest text-xs mb-4 text-center">👑 Top 3 — Ranking</h3>
+                  <div className="flex flex-col gap-2">
+                    {profileTop3.map((p) => {
+                      const isMe = p.user_id === profile?.id;
+                      return (
+                        <div key={p.user_id}
+                          className="flex justify-between items-center p-3 rounded-xl transition-all"
+                          style={{
+                            background: isMe ? "rgba(210,155,33,0.15)" : "rgba(30,41,59,0.5)",
+                            border: isMe ? "1px solid rgba(210,155,33,0.4)" : "1px solid rgba(255,255,255,0.03)",
+                          }}>
+                          <div className="flex items-center gap-3">
+                            <span className="text-xl w-7 text-center">
+                              {p.rank_position === 1 ? "🥇" : p.rank_position === 2 ? "🥈" : "🥉"}
+                            </span>
+                            <span className={`font-bold text-sm ${isMe ? "text-amber-300" : "text-white"}`}>{p.nickname} {isMe ? "(Você)" : ""}</span>
+                          </div>
+                          <span className="text-amber-400 font-black text-sm tabular-nums">{p.max_score.toLocaleString("pt-BR")} pts</span>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
               )}
@@ -1273,61 +1338,71 @@ const QuizPage = () => {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
-              className="text-center"
+              className="rounded-3xl p-6 md:p-10 text-center shadow-2xl"
+              style={{
+                background: "rgba(30, 41, 59, 0.7)",
+                backdropFilter: "blur(12px)",
+                border: "1px solid rgba(255,255,255,0.08)",
+              }}
             >
-              <div className="mb-6 inline-flex items-center justify-center p-4 rounded-full"
+              <div className="mb-5 inline-flex items-center justify-center p-4 rounded-full"
                    style={{ background: "rgba(210,155,33,0.15)", border: "1px solid rgba(210,155,33,0.4)" }}>
                 <svg className="w-10 h-10 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                 </svg>
               </div>
 
-              <h2 className="text-3xl font-black mb-8 text-white font-display">Como Jogar?</h2>
+              <h2 className="text-2xl md:text-3xl font-black mb-2 text-white font-display">Regras do Desafio</h2>
+              <p className="text-slate-400 text-sm mb-6">Leia com atenção antes de iniciar sua partida</p>
 
-              <div className="flex flex-col gap-4 mb-8 text-left">
-                <div className="p-5 rounded-2xl" style={{ background: "rgba(30, 41, 59, 0.5)", border: "1px solid rgba(255,255,255,0.05)" }}>
+              <div className="flex flex-col gap-3 md:gap-4 mb-8 text-left">
+                <div className="p-4 md:p-5 rounded-2xl" style={{ background: "rgba(15,23,42,0.6)", border: "1px solid rgba(255,255,255,0.05)" }}>
                   <div className="flex items-center gap-3 mb-2">
                     <span className="text-xl">⏱️</span>
-                    <h3 className="font-bold text-amber-400">Corrida contra o Tempo</h3>
+                    <h3 className="font-bold text-amber-400 text-sm md:text-base">Contra o Relógio</h3>
                   </div>
-                  <p className="text-sm text-slate-300">Você tem exatamente <strong>3 minutos</strong> para responder até 20 perguntas curtas da mineração!</p>
+                  <p className="text-xs md:text-sm text-slate-300 leading-relaxed">São <strong className="text-white">3 minutos</strong> para responder até <strong className="text-white">20 perguntas</strong> sobre mineração. Quando o tempo acabar, a partida encerra automaticamente.</p>
                 </div>
 
-                <div className="p-5 rounded-2xl" style={{ background: "rgba(30, 41, 59, 0.5)", border: "1px solid rgba(255,255,255,0.05)" }}>
+                <div className="p-4 md:p-5 rounded-2xl" style={{ background: "rgba(15,23,42,0.6)", border: "1px solid rgba(255,255,255,0.05)" }}>
                   <div className="flex items-center gap-3 mb-2">
                     <span className="text-xl">🎯</span>
-                    <h3 className="font-bold text-emerald-400">Pontuação Cumulativa Mensal</h3>
+                    <h3 className="font-bold text-emerald-400 text-sm md:text-base">Pontuação por Dificuldade</h3>
                   </div>
-                  <p className="text-sm text-slate-300">Suas respostas certas valem muito para o ranking. Elas <strong>rendem de +10 a +40 pontos</strong> cravados de acordo com a dificuldade.</p>
+                  <p className="text-xs md:text-sm text-slate-300 leading-relaxed">Cada acerto vale pontos de acordo com a dificuldade: <strong className="text-emerald-300">Fácil = +10</strong>, <strong className="text-amber-300">Médio = +20</strong>, <strong className="text-rose-300">Difícil = +40</strong>. Sua pontuação é acumulada no ranking mensal.</p>
                 </div>
 
-                <div className="p-5 rounded-2xl" style={{ background: "rgba(30, 41, 59, 0.5)", border: "1px solid rgba(255,255,255,0.05)" }}>
+                <div className="p-4 md:p-5 rounded-2xl" style={{ background: "rgba(15,23,42,0.6)", border: "1px solid rgba(255,255,255,0.05)" }}>
                   <div className="flex items-center gap-3 mb-2">
                     <span className="text-xl">⚠️</span>
-                    <h3 className="font-bold text-red-500">Cuidado com o chute!</h3>
+                    <h3 className="font-bold text-red-400 text-sm md:text-base">Penalidade por Erro</h3>
                   </div>
-                  <p className="text-sm text-slate-300">O erro no quiz não é perdoado. Marcar no chute e errar <strong>arrancará -15 pontos</strong> da sua partida na mesma hora.</p>
+                  <p className="text-xs md:text-sm text-slate-300 leading-relaxed">Errar não sai de graça! Cada resposta errada desconta <strong className="text-rose-300">−15 pontos</strong> da sua partida. Pense antes de chutar.</p>
                 </div>
 
-                <div className="p-5 rounded-2xl" style={{ background: "rgba(30, 41, 59, 0.5)", border: "1px solid rgba(255,255,255,0.05)" }}>
+                <div className="p-4 md:p-5 rounded-2xl" style={{ background: "rgba(15,23,42,0.6)", border: "1px solid rgba(255,255,255,0.05)" }}>
                   <div className="flex items-center gap-3 mb-2">
                     <span className="text-xl">🔥</span>
-                    <h3 className="font-bold text-orange-400">Multiplicador de Combo</h3>
+                    <h3 className="font-bold text-orange-400 text-sm md:text-base">Múltiplos Bônus</h3>
                   </div>
-                  <p className="text-sm text-slate-300">Acertou várias vezes seguidas? A partir de 3 acertos seguidos seus ganhos dobram em <strong>até 50% de bônus</strong> (chamas de combo).</p>
+                  <p className="text-xs md:text-sm text-slate-300 leading-relaxed">Responda em <strong className="text-white">menos de 3 segundos</strong> para ganhar até <strong className="text-sky-300">+50% de Bônus de Velocidade</strong>. Além disso, a partir de <strong className="text-white">3 acertos seguidos</strong>, você ativa o <strong className="text-orange-300">Bônus de Combo (até +50%)</strong>! Ambos os bônus acumulam.</p>
                 </div>
               </div>
 
-              <div className="flex gap-4">
+              <div className="flex flex-col-reverse sm:flex-row gap-3">
                 <button onClick={() => setScreen("profile")}
-                  className="w-full md:w-1/3 py-5 rounded-xl font-bold transition-all text-slate-400 hover:text-white hover:bg-slate-800"
+                  className="w-full sm:w-auto sm:flex-shrink-0 py-4 px-6 rounded-xl font-bold text-sm md:text-base transition-all text-slate-300 hover:text-white hover:bg-slate-700/60 active:scale-[0.98]"
                   style={{ border: "2px solid rgba(51,65,85,1)" }}>
-                  VOLTAR
+                  ← VOLTAR
                 </button>
                 <button onClick={startQuiz} disabled={quizLoading}
-                  className="w-full py-5 rounded-xl flex-1 text-lg font-bold shadow-lg transition-all hover:opacity-90 active:scale-[0.98] text-slate-900 disabled:opacity-50"
-                  style={{ background: `linear-gradient(135deg, ${SPONSOR_CONFIG.accentFrom}, ${SPONSOR_CONFIG.accentTo})`, boxShadow: "0 0 20px rgba(210, 155, 33, 0.2)" }}>
-                  {quizLoading ? "CARREGANDO..." : "ESTOU PRONTO!"}
+                  className="w-full flex-1 py-4 rounded-xl text-base md:text-lg font-bold shadow-lg transition-all hover:opacity-90 active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-2"
+                  style={{
+                    background: `linear-gradient(135deg, ${SPONSOR_CONFIG.accentFrom}, ${SPONSOR_CONFIG.accentTo})`,
+                    boxShadow: `0 0 25px ${SPONSOR_CONFIG.accentFrom}40`,
+                    color: SPONSOR_CONFIG.ctaTextColor,
+                  }}>
+                  {quizLoading ? "CARREGANDO..." : "🚀 ESTOU PRONTO!"}
                 </button>
               </div>
             </motion.div>
@@ -1349,27 +1424,29 @@ const QuizPage = () => {
                 <div className={`absolute bottom-0 left-0 w-64 h-64 rounded-full mix-blend-screen filter blur-[80px] transition-all duration-1000 delay-500 animate-pulse ${timerUrgent ? "bg-red-700/40" : "bg-fuchsia-600/20"}`}></div>
               </div>
 
-              {/* Header bar */}
+              {/* Header bar — Timer mais destacado */}
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-lg flex items-center justify-center"
-                       style={{ background: "rgba(30,41,59,0.8)", border: "1px solid rgba(255,255,255,0.05)" }}>
-                    <svg className="w-6 h-6 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                  <div className={`w-14 h-14 md:w-16 md:h-16 rounded-2xl flex items-center justify-center transition-all duration-500 ${
+                    timerUrgent ? "shadow-[0_0_25px_rgba(239,68,68,0.4)]" : "shadow-[0_0_15px_rgba(210,155,33,0.2)]"
+                  }`}
+                       style={{ background: timerUrgent ? "rgba(239,68,68,0.15)" : "rgba(30,41,59,0.8)", border: timerUrgent ? "2px solid rgba(239,68,68,0.5)" : "1px solid rgba(255,255,255,0.05)" }}>
+                    <svg className={`w-7 h-7 ${timerUrgent ? "text-rose-400 animate-pulse" : "text-amber-400"}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
                       <circle cx="12" cy="12" r="10" />
                       <polyline points="12,6 12,12 16,14" />
                     </svg>
                   </div>
                   <div>
-                    <div className="text-[10px] text-slate-500 uppercase font-black tracking-widest leading-none">Tempo Restante</div>
-                    <div className={`text-2xl font-black tabular-nums ${timerUrgent ? "text-rose-400 animate-pulse" : "text-white"}`}>
+                    <div className="text-[10px] text-slate-500 uppercase font-black tracking-widest leading-none">Tempo</div>
+                    <div className={`text-3xl md:text-4xl font-black tabular-nums transition-colors duration-300 ${timerUrgent ? "text-rose-400 animate-pulse" : "text-white"}`}>
                       {timerText}
                     </div>
                   </div>
                 </div>
                 <div className="text-right">
                   <div className="text-[10px] text-slate-500 uppercase font-black tracking-widest leading-none">Pergunta</div>
-                  <div className="text-2xl font-black text-amber-400 tabular-nums">
-                    {currentIndex + 1}/{questions.length}
+                  <div className="text-2xl md:text-3xl font-black text-amber-400 tabular-nums">
+                    {currentIndex + 1}<span className="text-slate-500">/{questions.length}</span>
                   </div>
                 </div>
               </div>
@@ -1594,8 +1671,10 @@ const QuizPage = () => {
                   <>
                     {/* Mensagem motivacional contextual */}
                     <p className="mb-6">
-                      {result.is_new_record ? (
-                        <span className="text-emerald-400 font-bold text-lg drop-shadow-md">🎉 Subiu no Ranking!</span>
+                      {result.is_new_record && prevRank !== null && myRank !== null && (ranking.find(r => r.user_id === profile?.id)?.rank_position ?? myRank) < prevRank ? (
+                        <span className="text-emerald-400 font-bold text-lg drop-shadow-md">🎉 Você subiu no Ranking!</span>
+                      ) : result.is_new_record ? (
+                        <span className="text-emerald-400 font-bold text-lg drop-shadow-md">🏅 Novo recorde pessoal!</span>
                       ) : result.total_acertos === 0 ? (
                         <span className="text-slate-400">Não desanime! Volte a jogar e conquiste seus primeiros pontos. 💪</span>
                       ) : result.total_acertos > result.total_erros ? (
@@ -1605,10 +1684,10 @@ const QuizPage = () => {
                       )}
                     </p>
 
-                    {/* Total Cumulative Score Panel */}
+                    {/* Maior Pontuação (não acumulada) */}
                     <div className="mb-8 p-1 rounded-3xl" style={{ background: "linear-gradient(135deg, rgba(210,155,33,0.4), rgba(230,126,34,0.1))" }}>
                       <div className="p-6 rounded-[1.4rem]" style={{ background: "rgba(15,23,42,0.9)", backdropFilter: "blur(12px)" }}>
-                        <div className="text-[10px] text-amber-500 uppercase font-black tracking-widest mb-1">Pontuação Total Acumulada</div>
+                        <div className="text-[10px] text-amber-500 uppercase font-black tracking-widest mb-1">Sua Maior Pontuação</div>
                         <div className="text-5xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-300 to-orange-500 drop-shadow-sm tabular-nums">
                           {profile?.max_score?.toLocaleString("pt-BR") || 0}
                         </div>
@@ -1649,27 +1728,27 @@ const QuizPage = () => {
                   </>
                 )}
 
-                {/* Ranking */}
+                {/* Ranking Top 5 */}
                 {ranking.length > 0 && (
-                  <div className="mb-8 p-6 rounded-2xl" style={{ background: "rgba(15,23,42,0.5)", border: "1px solid rgba(255,255,255,0.05)" }}>
-                    <h3 className="text-amber-400 font-bold uppercase tracking-widest text-sm mb-4">🏆 Ranking Global</h3>
+                  <div className="mb-8 p-5 md:p-6 rounded-2xl" style={{ background: "rgba(15,23,42,0.5)", border: "1px solid rgba(255,255,255,0.05)" }}>
+                    <h3 className="text-amber-400 font-bold uppercase tracking-widest text-xs md:text-sm mb-4">🏆 Top 5 — Ranking Mensal</h3>
                     <div className="flex flex-col gap-2">
-                      {ranking.map((p, idx) => {
+                      {ranking.slice(0, 5).map((p) => {
                         const isMe = p.user_id === profile?.id;
                         return (
                           <div key={p.user_id}
-                            className={`flex justify-between items-center p-3 rounded-lg ${isMe ? "" : ""}`}
+                            className="flex justify-between items-center p-3 rounded-xl transition-all"
                             style={{
                               background: isMe ? "rgba(210,155,33,0.15)" : "rgba(30,41,59,0.5)",
-                              border: isMe ? "1px solid rgba(210,155,33,0.4)" : "none",
+                              border: isMe ? "1px solid rgba(210,155,33,0.4)" : "1px solid rgba(255,255,255,0.03)",
                             }}>
                             <div className="flex items-center gap-3">
-                              <span className="text-slate-400 font-bold w-6 text-center">
-                                {p.rank_position === 1 ? "🥇" : p.rank_position === 2 ? "🥈" : p.rank_position === 3 ? "🥉" : `${p.rank_position}`}
+                              <span className="text-lg w-7 text-center">
+                                {p.rank_position === 1 ? "🥇" : p.rank_position === 2 ? "🥈" : p.rank_position === 3 ? "🥉" : `#${p.rank_position}`}
                               </span>
-                              <span className="text-white font-bold">{p.nickname} {isMe ? "(Você)" : ""}</span>
+                              <span className={`font-bold text-sm ${isMe ? "text-amber-300" : "text-white"}`}>{p.nickname} {isMe ? "(Você)" : ""}</span>
                             </div>
-                            <span className="text-amber-400 font-black">{p.max_score} pts</span>
+                            <span className="text-amber-400 font-black text-sm tabular-nums">{p.max_score.toLocaleString("pt-BR")} pts</span>
                           </div>
                         );
                       })}
@@ -1679,10 +1758,10 @@ const QuizPage = () => {
 
                 {/* Action buttons */}
                 <div className="flex gap-4">
-                  <button onClick={goToProfile}
-                    className="flex-1 py-4 rounded-xl font-bold text-white transition-all hover:bg-slate-700"
+                  <button onClick={() => { if (profile) loadProfile(profile.id); }}
+                    className="flex-1 py-4 rounded-xl font-bold text-white transition-all hover:bg-slate-700 active:scale-[0.98]"
                     style={{ border: "2px solid rgba(51,65,85,1)" }}>
-                    VOLTAR
+                    ← INÍCIO
                   </button>
                   <button onClick={startQuiz}
                     className="flex-1 py-4 rounded-xl font-bold shadow-lg transition-all hover:opacity-90 text-slate-900"

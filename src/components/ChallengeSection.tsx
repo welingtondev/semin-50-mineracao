@@ -106,6 +106,7 @@ const ChallengeSection = () => {
           </div>
         </div>
 
+
         {/* CTA */}
         <div className={`text-center transition-all duration-1000 delay-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
           <Link to="/quiz">

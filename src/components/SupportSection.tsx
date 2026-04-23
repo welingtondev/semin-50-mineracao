@@ -2,6 +2,7 @@ import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { Sparkles, Diamond } from "lucide-react";
 import cristalJrLogo from "@/assets/cristal-jr-logo.webp";
 import daeminLogo from "@/assets/daemin-logo.webp";
+import abemLogo from "@/assets/abem_logo.png";
 
 const realizacao = [
   { 
@@ -13,6 +14,11 @@ const realizacao = [
     name: "CRISTAL JR", 
     logo: cristalJrLogo,
     description: "Empresa Júnior dos cursos de Engenharia de Minas, Petróleo e Geologia da UFBA, focada em conectar alunos à prática do mercado."
+  },
+  {
+    name: "ABEM",
+    logo: abemLogo,
+    description: "Associação Baiana de Engenheiros de Minas, promovendo a valorização profissional e o desenvolvimento da mineração na Bahia."
   },
 ];
 

@@ -7,6 +7,7 @@ const footerLinks = [
   { label: "Programação", href: "#programacao" },
   { label: "Galeria", href: "#galeria" },
   { label: "O Legado", href: "#legado" },
+  { label: "Desafio", href: "#desafio" },
 //  { label: "Patrocínio", href: "#patrocinio" },
   { label: "Inscrições", href: "#inscricoes" },
 ];
