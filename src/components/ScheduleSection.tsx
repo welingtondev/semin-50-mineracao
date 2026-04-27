@@ -22,7 +22,7 @@ const schedule = {
     { time: "17:20 - 17:30", title: "Agradecimentos e Encerramento", type: "cerimônia" },
   ],
   "12/Nov": [
-    { time: "08:00 - 12:00", title: "Palestras Especiais de Ex-Alunos", type: "palestra" },
+    { time: "08:00 - 12:00", title: "Palestras Especiais de Egressos", type: "palestra" },
     { time: "12:00 - 14:00", title: "Intervalo para Almoço", type: "intervalo" },
     { time: "14:00 - 16:00", title: "Temáticas de Inovação e Mercado", type: "palestra" },
     { time: "16:00 - 17:20", title: "Painel de Debates de Novos Empreendimentos", type: "painel" },
@@ -60,7 +60,7 @@ const ScheduleSection = () => {
             <div className="w-8 md:w-12 h-[2px] bg-gradient-to-l from-transparent to-semin-yellow rounded-full" />
           </div>
           <p className="font-body text-sm md:text-base text-semin-blue/70 max-w-2xl mx-auto leading-relaxed">
-            O evento será realizado de <b>9 a 12 de Novembro</b> (com atividades especiais no dia 13), no tradicional Auditório Leopoldo Amaral da Escola Politécnica da UFBA. Nossa grade é construída em eixos temáticos focados em inovação e na trajetória de excelência dos nossos ex-alunos.
+            O evento será realizado de <b>9 a 12 de Novembro</b> (com atividades especiais no dia 13), no tradicional Auditório Leopoldo Amaral da Escola Politécnica da UFBA. Nossa grade é construída em eixos temáticos focados em inovação e na trajetória de excelência dos nossos egressos.
           </p>
         </div>
 

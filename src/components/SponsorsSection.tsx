@@ -209,7 +209,7 @@ const SponsorsSection = () => {
                 className="cta-shine relative bg-gradient-to-r from-semin-yellow via-amber-400 to-semin-orange text-semin-dark hover:from-semin-orange hover:via-amber-500 hover:to-semin-yellow font-bold text-sm md:text-lg px-12 md:px-16 py-7 md:py-9 rounded-2xl shadow-2xl shadow-semin-yellow/25 transition-all duration-300 hover:shadow-semin-yellow/50 active:scale-95 md:hover:scale-105 group"
               >
                 <Gem className="h-4 w-4 md:h-5 md:w-5 mr-2.5 group-hover:rotate-12 transition-transform duration-300" />
-                Quero Patrocinar o SEMIN 2026
+                Quero Patrocinar o SEMIN UFBA
               </Button>
             </div>
           </SponsorModal>

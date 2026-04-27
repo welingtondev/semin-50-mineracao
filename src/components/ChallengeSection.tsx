@@ -16,10 +16,10 @@ const ChallengeSection = () => {
   }, []);
 
   const steps = [
-    { num: "01", title: "Cadastre-se", desc: "Crie sua conta em segundos com email e nickname.", icon: "👤" },
-    { num: "02", title: "Responda", desc: "20 perguntas sobre mineração — de iniciante a expert.", icon: "⛏️" },
-    { num: "03", title: "Acumule Pontos", desc: "Cada resposta acrescenta pontos. Combos aumentam seu bônus.", icon: "🔥" },
-    { num: "04", title: "Vença o Mês", desc: "O jogador com mais pontos no mês ganha reconhecimento e prêmios.", icon: "🏆" },
+    { num: "01", title: "Cadastre-se", desc: "Crie sua conta e junte-se à comunidade usando seu email e nickname.", icon: "👤" },
+    { num: "02", title: "Responda", desc: "Perguntas de conhecimentos gerais, técnica mineral e causos históricos da Escola.", icon: "⛏️" },
+    { num: "03", title: "Acumule Pontos", desc: "Sua agilidade e precisão rendem pontos. Sequências de acertos elevam o bônus.", icon: "🔥" },
+    { num: "04", title: "Domine o Placar", desc: "Destaque-se no ranking do evento e concorra a brindes exclusivos da nossa comemoração.", icon: "🏆" },
   ];
 
   return (
@@ -38,10 +38,10 @@ const ChallengeSection = () => {
             Novo
           </span>
           <h2 className="text-4xl md:text-6xl font-black mb-4 text-white">
-            DESAFIO <span className="text-transparent bg-clip-text" style={{ backgroundImage: "linear-gradient(135deg, #d29b21, #b3821a)" }}>SEMIN 26</span>
+            DESAFIO <span className="text-transparent bg-clip-text" style={{ backgroundImage: "linear-gradient(135deg, #d29b21, #b3821a)" }}>SEMIN UFBA</span>
           </h2>
           <p className="text-white/50 text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
-            O primeiro quiz competitivo de mineração do Brasil. Teste seus conhecimentos, dispute o ranking mensal e prove que você domina a engenharia de minas.
+            Um quiz interativo em homenagem ao Jubileu de Ouro. Teste seus conhecimentos técnicos e descubra fatos marcantes da história da Engenharia de Minas da UFBA enquanto disputa o topo do ranking.
           </p>
         </div>
 
@@ -57,7 +57,6 @@ const ChallengeSection = () => {
               style={{
                 background: "rgba(255,255,255,0.03)",
                 border: "1px solid rgba(255,255,255,0.06)",
-                backdropFilter: "blur(8px)",
               }}
             >
               <div className="text-3xl mb-4">{step.icon}</div>
@@ -89,19 +88,19 @@ const ChallengeSection = () => {
           <div className="text-center">
             <h4 className="text-4xl font-black text-transparent bg-clip-text mb-2"
                  style={{ backgroundImage: "linear-gradient(135deg, #d29b21, #b3821a)" }}>
-              3 min
+              50 Anos
             </h4>
             <p className="text-white/30 text-sm font-medium">
-              Tempo por rodada
+              De história em jogo
             </p>
           </div>
           <div className="text-center">
             <h4 className="text-4xl font-black text-transparent bg-clip-text mb-2"
                  style={{ backgroundImage: "linear-gradient(135deg, #d29b21, #b3821a)" }}>
-              1 / mês
+              Ranking
             </h4>
             <p className="text-white/30 text-sm font-medium">
-              Vencedor premiado
+              Vencedores premiados
             </p>
           </div>
         </div>

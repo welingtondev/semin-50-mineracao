@@ -102,14 +102,14 @@ const SponsorLogosSection = () => {
     <section className="py-20 md:py-36 relative overflow-hidden" style={{ background: "linear-gradient(165deg, hsl(220 18% 8%) 0%, hsl(215 25% 12%) 30%, hsl(220 20% 9%) 60%, hsl(210 15% 7%) 100%)" }}>
       {/* ── Premium background layers ── */}
       <div className="absolute inset-0 pointer-events-none">
-        {/* Ambient glow orbs */}
-        <div className="absolute top-[10%] left-[5%] w-80 md:w-[600px] h-80 md:h-[600px] bg-gradient-to-br from-semin-yellow/[0.04] to-amber-500/[0.02] rounded-full blur-[150px]" />
-        <div className="absolute bottom-[10%] right-[5%] w-72 md:w-[500px] h-72 md:h-[500px] bg-gradient-to-tl from-sky-500/[0.04] to-indigo-500/[0.02] rounded-full blur-[130px]" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 md:w-[800px] h-96 md:h-[800px] bg-gradient-to-br from-semin-yellow/[0.015] to-transparent rounded-full blur-[100px]" />
+        {/* Ambient glow orbs — reduced on mobile */}
+        <div className="absolute top-[10%] left-[5%] w-48 md:w-[600px] h-48 md:h-[600px] bg-gradient-to-br from-semin-yellow/[0.04] to-amber-500/[0.02] rounded-full blur-[40px] md:blur-[150px]" />
+        <div className="absolute bottom-[10%] right-[5%] w-40 md:w-[500px] h-40 md:h-[500px] bg-gradient-to-tl from-sky-500/[0.04] to-indigo-500/[0.02] rounded-full blur-[30px] md:blur-[130px]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 hidden md:block md:w-[800px] md:h-[800px] bg-gradient-to-br from-semin-yellow/[0.015] to-transparent rounded-full md:blur-[100px]" />
 
         {/* Decorative rings */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] md:w-[900px] h-[500px] md:h-[900px] border border-white/[0.02] rounded-full" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] md:w-[650px] h-[350px] md:h-[650px] border border-semin-yellow/[0.03] rounded-full" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 hidden md:block md:w-[900px] md:h-[900px] border border-white/[0.02] rounded-full" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 hidden md:block md:w-[650px] md:h-[650px] border border-semin-yellow/[0.03] rounded-full" />
 
         {/* Floating gems */}
         <Diamond className="absolute top-[15%] right-[12%] h-5 w-5 md:h-7 md:w-7 text-sky-400/[0.08] float-gem-1 hidden sm:block" />
@@ -128,7 +128,7 @@ const SponsorLogosSection = () => {
         <div className={`text-center mb-16 md:mb-24 transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
           <span className="inline-flex items-center gap-2.5 font-body text-[10px] md:text-xs uppercase tracking-[0.35em] text-semin-yellow/80 font-semibold mb-4 md:mb-5">
             <Sparkles className="h-3 w-3 md:h-3.5 md:w-3.5 animate-pulse" />
-            Quem faz o SEMIN 2026 acontecer
+            Quem faz o SEMIN UFBA acontecer
           </span>
           <h2 className="font-display text-3xl sm:text-4xl md:text-6xl font-bold mb-5 md:mb-6 bg-gradient-to-r from-white via-semin-cream to-white bg-clip-text text-transparent">
             Patrocinadores & Apoiadores
@@ -154,7 +154,7 @@ const SponsorLogosSection = () => {
               {/* Tier badge with double glow lines */}
               <div className="flex items-center justify-center gap-4 md:gap-6 mb-10 md:mb-12">
                 <div className={`h-px flex-1 max-w-[60px] md:max-w-[160px] bg-gradient-to-r from-transparent ${group.accentFrom} opacity-40`} />
-                <div className={`relative inline-flex items-center gap-2.5 px-6 md:px-8 py-2.5 md:py-3 rounded-full border border-white/[0.08] bg-white/[0.03] backdrop-blur-md`}>
+                <div className={`relative inline-flex items-center gap-2.5 px-6 md:px-8 py-2.5 md:py-3 rounded-full border border-white/[0.08] bg-white/[0.03] backdrop-blur-none md:backdrop-blur-md`}>
                   {/* Badge inner glow */}
                   <div className={`absolute inset-0 rounded-full ${group.glowColor} blur-xl opacity-50`} />
                   <group.icon className={`h-4 w-4 md:h-5 md:w-5 ${group.accentText} relative z-10 drop-shadow-sm`} />
@@ -179,6 +179,8 @@ const SponsorLogosSection = () => {
                       <img
                         src={sponsor.logo}
                         alt={sponsor.name}
+                        width="256"
+                        height="160"
                         className="max-w-full max-h-full object-contain transition-all duration-500 group-hover:scale-110"
                         style={{ imageRendering: 'auto' }}
                         loading="lazy"
@@ -204,7 +206,7 @@ const SponsorLogosSection = () => {
         <div className={`mt-24 md:mt-32 transition-all duration-700 delay-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
           <div className="flex items-center justify-center gap-4 md:gap-6 mb-10 md:mb-12">
             <div className="h-px flex-1 max-w-[60px] md:max-w-[140px] bg-gradient-to-r from-transparent to-semin-yellow/25" />
-            <div className="relative inline-flex items-center gap-2.5 px-6 md:px-8 py-2.5 md:py-3 rounded-full border border-semin-yellow/15 bg-semin-yellow/[0.04] backdrop-blur-md">
+            <div className="relative inline-flex items-center gap-2.5 px-6 md:px-8 py-2.5 md:py-3 rounded-full border border-semin-yellow/15 bg-semin-yellow/[0.04] backdrop-blur-none md:backdrop-blur-md">
               <div className="absolute inset-0 rounded-full bg-semin-yellow/10 blur-xl opacity-40" />
               <Heart className="h-4 w-4 md:h-5 md:w-5 text-semin-yellow relative z-10" />
               <span className="font-body text-xs md:text-sm uppercase tracking-[0.25em] font-bold text-semin-yellow relative z-10">
@@ -226,7 +228,9 @@ const SponsorLogosSection = () => {
                   <img
                     src={sponsor.logo}
                     alt={sponsor.name}
-                    className={sponsor.className || "h-10 sm:h-14 md:h-20 lg:h-24 w-auto max-w-[140px] sm:max-w-none object-contain transition-all duration-500 group-hover:scale-110"}
+                    width="240"
+                    height="176"
+                    className={`${sponsor.className || "h-10 sm:h-14 md:h-20 lg:h-24 max-w-[140px] sm:max-w-none"} w-auto object-contain transition-all duration-500 group-hover:scale-110`}
                     style={{ imageRendering: 'auto' }}
                     loading="lazy"
                   />

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { X, MessageCircle, Users, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-// TODO: Substitua este link pelo link real do grupo do WhatsApp do SEMIN
+// TODO: Substitua este link pelo link real do grupo do WhatsApp do SEMIN UFBA
 const WHATSAPP_GROUP_LINK = "https://chat.whatsapp.com/GiV7WJficGV51jbmO0Wfm5";
 
 interface WhatsAppPopupProps {
@@ -12,23 +12,25 @@ interface WhatsAppPopupProps {
 }
 
 export function WhatsAppPopup({ forceShow = false, onClose }: WhatsAppPopupProps) {
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(forceShow);
 
   useEffect(() => {
     if (forceShow) {
       setVisible(true);
       return;
     }
-    // Auto-show after 30 seconds if never shown before
-    const shown = localStorage.getItem("semin_whatsapp_shown");
-    if (shown) return;
-    const timer = setTimeout(() => setVisible(true), 30000);
-    return () => clearTimeout(timer);
+    
+    // Auto-show after 30 seconds apenas se nunca foi fechado antes
+    const hasClosedPopup = localStorage.getItem("semin_whatsapp_popup_closed");
+    if (!hasClosedPopup) {
+      const timer = setTimeout(() => setVisible(true), 30000);
+      return () => clearTimeout(timer);
+    }
   }, [forceShow]);
 
   const handleClose = () => {
+    localStorage.setItem("semin_whatsapp_popup_closed", "true");
     setVisible(false);
-    localStorage.setItem("semin_whatsapp_shown", "true");
     onClose?.();
   };
 
@@ -40,10 +42,10 @@ export function WhatsAppPopup({ forceShow = false, onClose }: WhatsAppPopupProps
   if (!visible) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300"
+        className="absolute inset-0 bg-black/70 backdrop-blur-sm animate-in fade-in duration-500"
         onClick={handleClose}
       />
 
@@ -71,13 +73,13 @@ export function WhatsAppPopup({ forceShow = false, onClose }: WhatsAppPopupProps
             Entre na Comunidade!
           </h3>
           <p className="text-white/55 text-sm leading-relaxed mb-5 px-2">
-            Fique por dentro de tudo sobre o <span className="text-semin-yellow font-semibold">SEMIN 2026</span> — palestrantes, programação e novidades em primeira mão no nosso grupo do WhatsApp.
+            Fique por dentro de tudo sobre o <span className="text-semin-yellow font-semibold">SEMIN UFBA</span> — palestrantes, programação e novidades em primeira mão no nosso grupo do WhatsApp.
           </p>
 
           {/* Social proof */}
           <div className="flex items-center justify-center gap-2 mb-5 py-3 px-4 rounded-xl bg-white/[0.04] border border-white/[0.06]">
             <Users className="h-4 w-4 text-[#25D366]" />
-            <span className="text-white/60 text-xs">Comunidade oficial do SEMIN 2026</span>
+            <span className="text-white/60 text-xs">Comunidade oficial do SEMIN UFBA</span>
           </div>
 
           <div className="flex flex-col gap-2.5">

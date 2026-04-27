@@ -36,11 +36,11 @@ const Footer = () => (
         <div>
           <div className="flex items-center gap-2 md:gap-3 mb-2">
             <Pickaxe className="h-5 w-5 md:h-6 md:w-6 text-semin-yellow/40" />
-            <h3 className="font-display text-2xl md:text-3xl font-bold bg-gradient-to-r from-white to-semin-cream bg-clip-text text-transparent">
-              SEMIN 2026
-            </h3>
+            <h2 className="font-display text-2xl md:text-3xl font-bold bg-gradient-to-r from-white to-semin-cream bg-clip-text text-transparent">
+              SEMIN UFBA
+            </h2>
           </div>
-          <p className="font-body text-xs md:text-sm text-white/40">Semana de Mineração da UFBA</p>
+          <p className="font-body text-xs md:text-sm text-white/60">Semana de Mineração da UFBA</p>
           <p className="font-body text-[10px] md:text-xs text-semin-yellow/60 mt-2 border-l-2 border-semin-yellow/30 pl-3 flex items-center gap-2">
             <Mountain className="h-3 w-3 shrink-0" />
             Edição Comemorativa – 50 anos
@@ -48,10 +48,10 @@ const Footer = () => (
         </div>
 
         <div>
-          <h4 className="font-body text-xs md:text-sm font-semibold text-white/60 uppercase tracking-wider mb-3 md:mb-4">Links Rápidos</h4>
+          <h3 className="font-body text-xs md:text-sm font-semibold text-white/80 uppercase tracking-wider mb-3 md:mb-4">Links Rápidos</h3>
           <div className="flex flex-col gap-2 md:gap-3">
             {footerLinks.map((l) => (
-              <a key={l.href} href={l.href} className="font-body text-xs md:text-sm text-white/40 hover:text-semin-yellow transition-all duration-300 hover:translate-x-1 py-0.5">
+              <a key={l.href} href={l.href} className="font-body text-xs md:text-sm text-white/60 hover:text-semin-yellow transition-all duration-300 hover:translate-x-1 py-0.5">
                 {l.label}
               </a>
             ))}
@@ -59,23 +59,23 @@ const Footer = () => (
         </div>
 
         <div>
-          <h4 className="font-body text-xs md:text-sm font-semibold text-white/60 uppercase tracking-wider mb-3 md:mb-4">Contato</h4>
-          <a href="mailto:contato@seminufba.com.br" className="font-body text-xs md:text-sm text-white/40 hover:text-semin-yellow transition-colors flex items-center gap-2 py-0.5">
+          <h3 className="font-body text-xs md:text-sm font-semibold text-white/80 uppercase tracking-wider mb-3 md:mb-4">Contato</h3>
+          <a href="mailto:contato@seminufba.com.br" className="font-body text-xs md:text-sm text-white/60 hover:text-semin-yellow transition-colors flex items-center gap-2 py-0.5">
             <Mail className="h-3.5 w-3.5 md:h-4 md:w-4 shrink-0" /> contato@seminufba.com.br
           </a>
           <div className="flex gap-3 md:gap-4 mt-4 md:mt-5">
-            <a href="https://www.instagram.com/semin.ufba/" target="_blank" rel="noopener noreferrer" className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-white/5 flex items-center justify-center text-white/40 hover:bg-semin-yellow/10 hover:text-semin-yellow transition-all duration-300 active:scale-90">
+            <a href="https://www.instagram.com/semin.ufba/" target="_blank" rel="noopener noreferrer" aria-label="Instagram SEMIN UFBA" className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-white/5 flex items-center justify-center text-white/60 hover:bg-semin-yellow/10 hover:text-semin-yellow transition-all duration-300 active:scale-90">
               <Instagram className="h-4 w-4" />
             </a>
-            <a href="https://linkedin.com/in/daemin-diretório-acadêmico-de-engenharia-de-minas-9b167b403/?skipRedirect=true" target="_blank" rel="noopener noreferrer" className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-white/5 flex items-center justify-center text-white/40 hover:bg-semin-yellow/10 hover:text-semin-yellow transition-all duration-300 active:scale-90">
+            <a href="https://linkedin.com/in/daemin-diretório-acadêmico-de-engenharia-de-minas-9b167b403/?skipRedirect=true" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn DAEMIN" className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-white/5 flex items-center justify-center text-white/60 hover:bg-semin-yellow/10 hover:text-semin-yellow transition-all duration-300 active:scale-90">
               <Linkedin className="h-4 w-4" />
             </a>
           </div>
         </div>
       </div>
 
-      <div className="border-t border-white/5 pt-5 md:pt-6 text-center">
-        <p className="font-body text-[10px] md:text-xs text-white/20">© 2026 SEMIN – Semana de Mineração da UFBA. Todos os direitos reservados.</p>
+      <div className="border-t border-white/10 pt-5 md:pt-6 text-center">
+        <p className="font-body text-[10px] md:text-xs text-white/50">© 2026 SEMIN UFBA – Semana de Mineração da UFBA. Todos os direitos reservados.</p>
       </div>
     </div>
   </footer>

@@ -75,7 +75,7 @@ export function RegistrationModal({ children }: { children: React.ReactNode }) {
               Vagas Limitadas
             </DialogTitle>
             <DialogDescription className="text-white/60">
-              Preencha seus dados para garantir sua participação no SEMIN 2026.
+              Sua entrada é validada mediante a doação de 1kg de alimento no dia do evento. Preencha seus dados abaixo para garantir sua vaga.
             </DialogDescription>
           </DialogHeader>
 
@@ -158,7 +158,7 @@ export function RegistrationModal({ children }: { children: React.ReactNode }) {
                       <span className="text-white text-sm font-semibold">Receber novidades por e-mail</span>
                     </div>
                     <p className="text-white/45 text-xs leading-relaxed">
-                      Autorizo o SEMIN 2026 a me enviar informações sobre o evento, palestrantes e atualizações da programação pelo e-mail informado acima.
+                      Autorizo o SEMIN UFBA a me enviar informações sobre o evento, palestrantes e atualizações da programação pelo e-mail informado acima.
                     </p>
                   </div>
                 </label>
@@ -168,7 +168,7 @@ export function RegistrationModal({ children }: { children: React.ReactNode }) {
               <div className="rounded-xl bg-[#25D366]/8 border border-[#25D366]/20 p-3.5 flex items-center gap-3">
                 <MessageCircle className="h-5 w-5 text-[#25D366] shrink-0" />
                 <p className="text-white/60 text-xs leading-relaxed">
-                  Após a inscrição, você receberá um convite para entrar na <b className="text-white/80">comunidade do WhatsApp</b> do SEMIN 2026.
+                  Após a inscrição, você receberá um convite para entrar na <b className="text-white/80">comunidade do WhatsApp</b> do SEMIN UFBA.
                 </p>
               </div>
 

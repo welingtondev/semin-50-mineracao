@@ -52,8 +52,8 @@ const LegacySection = () => {
     <section id="legado" className="py-20 md:py-36 bg-semin-dark relative overflow-hidden">
       {/* Background Ornaments */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-[10%] right-[-5%] w-96 h-96 bg-semin-yellow/5 rounded-full blur-[100px]" />
-        <div className="absolute bottom-[10%] left-[-5%] w-80 h-80 bg-semin-orange/5 rounded-full blur-[80px]" />
+        <div className="absolute top-[10%] right-[-5%] w-48 md:w-96 h-48 md:h-96 bg-semin-yellow/5 rounded-full blur-[30px] md:blur-[100px]" />
+        <div className="absolute bottom-[10%] left-[-5%] w-40 md:w-80 h-40 md:h-80 bg-semin-orange/5 rounded-full blur-[25px] md:blur-[80px]" />
         <div className="absolute inset-0 opacity-[0.03]" style={{
           backgroundImage: `radial-gradient(circle at 2px 2px, hsl(40 73% 48%) 1px, transparent 0)`,
           backgroundSize: '40px 40px'
@@ -112,7 +112,7 @@ const LegacySection = () => {
 
             {/* Episode Info Area (Below Video on Mobile/Middle, Next to it on Desktop) */}
             <div className={cn(
-              "p-6 md:p-10 rounded-3xl bg-white/[0.03] backdrop-blur-xl border border-white/5 transition-all duration-700 delay-200",
+              "p-6 md:p-10 rounded-3xl bg-white/[0.03] md:backdrop-blur-xl border border-white/5 transition-all duration-700 delay-200",
               isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
             )}>
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8 border-b border-white/5 pb-8">

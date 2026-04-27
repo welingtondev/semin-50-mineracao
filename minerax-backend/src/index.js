@@ -14,6 +14,7 @@ import quizRoutes from './routes/quiz.js';
 import rankingRoutes from './routes/ranking.js';
 import userRoutes from './routes/user.js';
 import shareRoutes from './routes/share.js';
+import paymentRoutes from './routes/payment.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -49,6 +50,7 @@ app.use('/api', quizRoutes);         // GET /api/questions, POST /api/submit-mat
 app.use('/api/ranking', rankingRoutes); // GET /api/ranking/global, semanal, grupo, me
 app.use('/api/me', userRoutes);      // GET /api/me, /api/me/referrals, /api/me/matches
 app.use('/api/share', shareRoutes);  // GET /api/share/top1, top3, top10
+app.use('/api/payment', paymentRoutes); // POST /api/payment/checkout
 
 // ── Referral redirect (landing page for invite links) ──
 app.get('/desafio/:code', (req, res) => {
@@ -100,5 +102,6 @@ app.listen(PORT, () => {
   console.log(`   GET  /api/share/top1`);
   console.log(`   GET  /api/share/top3`);
   console.log(`   GET  /api/share/top10`);
+  console.log(`   POST /api/payment/checkout`);
   console.log(`   GET  /api/health\n`);
 });

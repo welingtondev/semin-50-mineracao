@@ -15,6 +15,7 @@ const links = [
   { label: "Galeria", href: "#galeria" },
   { label: "O Legado", href: "#legado" },
 //  { label: "Patrocínio", href: "#patrocinio" },
+  { label: "Apoie o Evento", href: "#apoie" },
   { label: "Inscrições", href: "#inscricoes" },
 ];
 
@@ -40,8 +41,8 @@ const Navbar = () => {
       transition={{ duration: 0.6 }}
     >
       <div className="container mx-auto flex items-center justify-between px-4">
-        <a href="#" className="flex items-center gap-2">
-          <img src={seminLogo} alt="SEMIN 2026" width="160" height="64" className="h-14 md:h-16 w-auto" />
+        <a href="#" className="flex items-center gap-2" aria-label="Página Inicial">
+          <img src={seminLogo} alt="SEMIN UFBA" width="160" height="64" className="h-14 md:h-16 w-auto" fetchPriority="high" />
         </a>
 
         {/* Desktop */}
@@ -81,7 +82,7 @@ const Navbar = () => {
           <SheetContent side="right" className="bg-semin-dark/98 backdrop-blur-xl border-semin-blue/20 w-[280px] p-0">
             <div className="flex flex-col h-full pt-16 pb-8 px-6">
               <div className="flex items-center gap-2 mb-10">
-                <img src={seminLogo} alt="SEMIN 2026" width="160" height="64" className="h-16 w-auto" />
+                <img src={seminLogo} alt="SEMIN UFBA" width="160" height="64" className="h-16 w-auto" />
               </div>
               <div className="flex flex-col gap-1 flex-1">
                 {links.map((l, i) => (

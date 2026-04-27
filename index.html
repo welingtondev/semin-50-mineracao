@@ -1,18 +1,35 @@
 <!doctype html>
-<html lang="en">
+<html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SEMIN 2026 - Semana de Mineração</title>
+    <title>SEMIN UFBA - Semana de Mineração</title>
     <meta name="description" content="Seminário de Mineração da UFBA - Edição de 50 Anos" />
     <meta name="author" content="SEMIN" />
-    <meta name="theme-color" content="#d29b21" />
+    <meta name="theme-color" content="#161b22" />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Preload critical font (Costa Rica - display font) -->
+    <link rel="preload" href="/fonts/costarica.woff" as="font" type="font/woff" crossorigin />
 
-    <meta property="og:title" content="SEMIN 2026 - Semana de Mineração da UFBA" />
+    <!-- Preconnect to Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- DNS prefetch for external resources -->
+    <link rel="dns-prefetch" href="https://transparenttextures.com" />
+
+    <!-- Google Fonts — NON-RENDER-BLOCKING via media swap trick -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    </noscript>
+
+    <meta property="og:title" content="SEMIN UFBA - Semana de Mineração da UFBA" />
     <meta property="og:description" content="Seminário de Mineração da UFBA - Edição de 50 Anos" />
     <meta property="og:type" content="website" />
     <meta property="og:image" content="/favicon.png" />
@@ -22,8 +39,9 @@
     <meta name="twitter:image" content="/favicon.png" />
     <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="shortcut icon" type="image/png" href="/favicon.png" />
-    
-    <script>setTimeout(function(){var e=document.createElement("script");e.src="https://www.googletagmanager.com/gtag/js?id=G-V7P3LDWN9S",e.async=!0,document.head.appendChild(e),window.dataLayer=window.dataLayer||[];function t(){dataLayer.push(arguments)}t("js",new Date),t("config","G-V7P3LDWN9S")},3e3);</script>
+
+    <!-- Google Analytics — deferred 4s to not block main thread -->
+    <script>setTimeout(function(){var e=document.createElement("script");e.src="https://www.googletagmanager.com/gtag/js?id=G-V7P3LDWN9S",e.async=!0,document.head.appendChild(e),window.dataLayer=window.dataLayer||[];function t(){dataLayer.push(arguments)}t("js",new Date),t("config","G-V7P3LDWN9S")},4e3);</script>
 
   </head>
 

@@ -8,8 +8,8 @@ const JubileeSection = () => {
   return (
     <section id="jubileu" className="py-16 md:py-32 bg-semin-dark relative overflow-hidden">
       {/* Background elements */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-semin-yellow/5 rounded-full blur-[120px] mix-blend-screen pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-semin-orange/5 rounded-full blur-[100px] mix-blend-screen pointer-events-none" />
+      <div className="absolute top-0 right-0 w-64 md:w-[500px] h-64 md:h-[500px] bg-semin-yellow/5 rounded-full blur-[40px] md:blur-[120px] mix-blend-screen pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-48 md:w-[400px] h-48 md:h-[400px] bg-semin-orange/5 rounded-full blur-[30px] md:blur-[100px] mix-blend-screen pointer-events-none" />
       
       {/* Gold line top */}
       <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-semin-yellow/50 to-transparent" />
@@ -34,14 +34,14 @@ const JubileeSection = () => {
           </div>
           
           <p className="font-body text-sm md:text-xl text-white/60 max-w-4xl mx-auto leading-relaxed px-2">
-            O encerramento do SEMIN 2026 será o ponto alto das celebrações do cinquentenário do curso de Engenharia de Minas da UFBA, com uma programação estruturada em quatro momentos inesquecíveis.
+            O encerramento do SEMIN UFBA será o ponto alto das celebrações do cinquentenário do curso de Engenharia de Minas da UFBA, com uma programação estruturada em quatro momentos inesquecíveis.
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 max-w-6xl mx-auto">
           {/* Card 1: Homenagem */}
           <div className={`transition-all duration-700 delay-100 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"}`}>
-            <Card className="h-full bg-white/5 backdrop-blur-md border border-white/10 hover:border-semin-yellow/40 hover:shadow-[0_0_30px_rgba(210,155,33,0.15)] group-hover:bg-white/10 transition-all duration-500 overflow-hidden group relative">
+            <Card className="h-full bg-white/5 md:backdrop-blur-md border border-white/10 hover:border-semin-yellow/40 hover:shadow-[0_0_30px_rgba(210,155,33,0.15)] group-hover:bg-white/10 transition-all duration-500 overflow-hidden group relative">
               <div className="absolute inset-0 bg-gradient-to-br from-semin-yellow/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               <CardContent className="p-6 md:p-10 relative z-10">
                 <div className="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-gradient-to-br from-semin-yellow/20 to-semin-orange/20 flex items-center justify-center mb-6 border border-semin-yellow/30 group-hover:scale-110 transition-transform duration-500">
@@ -57,7 +57,7 @@ const JubileeSection = () => {
 
           {/* Card 2: Livro */}
           <div className={`transition-all duration-700 delay-200 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"}`}>
-            <Card className="h-full bg-white/5 backdrop-blur-md border border-white/10 hover:border-semin-yellow/40 hover:shadow-[0_0_30px_rgba(210,155,33,0.15)] group-hover:bg-white/10 transition-all duration-500 overflow-hidden group relative">
+            <Card className="h-full bg-white/5 md:backdrop-blur-md border border-white/10 hover:border-semin-yellow/40 hover:shadow-[0_0_30px_rgba(210,155,33,0.15)] group-hover:bg-white/10 transition-all duration-500 overflow-hidden group relative">
               <div className="absolute inset-0 bg-gradient-to-br from-semin-yellow/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               <CardContent className="p-6 md:p-10 relative z-10">
                 <div className="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-gradient-to-br from-semin-yellow/20 to-semin-orange/20 flex items-center justify-center mb-6 border border-semin-yellow/30 group-hover:scale-110 transition-transform duration-500">
@@ -73,7 +73,7 @@ const JubileeSection = () => {
 
           {/* Card 3: Documentário */}
           <div className={`transition-all duration-700 delay-300 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"}`}>
-            <Card className="h-full bg-white/5 backdrop-blur-md border border-white/10 hover:border-semin-yellow/40 hover:shadow-[0_0_30px_rgba(210,155,33,0.15)] group-hover:bg-white/10 transition-all duration-500 overflow-hidden group relative">
+            <Card className="h-full bg-white/5 md:backdrop-blur-md border border-white/10 hover:border-semin-yellow/40 hover:shadow-[0_0_30px_rgba(210,155,33,0.15)] group-hover:bg-white/10 transition-all duration-500 overflow-hidden group relative">
               <div className="absolute inset-0 bg-gradient-to-br from-semin-yellow/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               <CardContent className="p-6 md:p-10 relative z-10">
                 <div className="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-gradient-to-br from-semin-yellow/20 to-semin-orange/20 flex items-center justify-center mb-6 border border-semin-yellow/30 group-hover:scale-110 transition-transform duration-500">
@@ -89,7 +89,7 @@ const JubileeSection = () => {
 
           {/* Card 4: Festa */}
           <div className={`transition-all duration-700 delay-400 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"}`}>
-            <Card className="h-full bg-white/5 backdrop-blur-md border border-white/10 hover:border-semin-yellow/40 hover:shadow-[0_0_30px_rgba(210,155,33,0.15)] group-hover:bg-white/10 transition-all duration-500 overflow-hidden group relative">
+            <Card className="h-full bg-white/5 md:backdrop-blur-md border border-white/10 hover:border-semin-yellow/40 hover:shadow-[0_0_30px_rgba(210,155,33,0.15)] group-hover:bg-white/10 transition-all duration-500 overflow-hidden group relative">
               {/* Highlight gradient for party */}
               <div className="absolute inset-0 bg-gradient-to-br from-semin-orange/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               <CardContent className="p-8 md:p-10 relative z-10">

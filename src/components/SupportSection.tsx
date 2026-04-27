@@ -30,8 +30,8 @@ const SupportSection = () => {
       {/* Background decorative elements */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] md:w-[500px] h-[300px] md:h-[500px] border border-semin-yellow/[0.04] rounded-full" />
-        <div className="absolute top-10 right-20 w-40 md:w-72 h-40 md:h-72 bg-semin-yellow/[0.03] rounded-full blur-[80px]" />
-        <div className="absolute bottom-10 left-20 w-32 md:w-56 h-32 md:h-56 bg-semin-orange/[0.03] rounded-full blur-[60px]" />
+        <div className="absolute top-10 right-20 w-32 md:w-72 h-32 md:h-72 bg-semin-yellow/[0.03] rounded-full blur-[25px] md:blur-[80px]" />
+        <div className="absolute bottom-10 left-20 w-24 md:w-56 h-24 md:h-56 bg-semin-orange/[0.03] rounded-full blur-[20px] md:blur-[60px]" />
       </div>
 
       <div ref={ref} className="container mx-auto px-4 relative z-10">

@@ -35,7 +35,7 @@ const SpeakersSection = () => {
             <div className="w-8 md:w-12 h-[2px] bg-gradient-to-l from-transparent to-semin-yellow rounded-full" />
           </div>
           <p className="font-body text-sm md:text-base text-semin-blue/70 max-w-2xl mx-auto">
-            Priorizamos a participação de profissionais altamente qualificados e ex-alunos da Engenharia de Minas da UFBA, valorizando a trajetória dos egressos que hoje são grandes referências em inovação tecnológica no mercado.
+            Priorizamos a participação de profissionais altamente qualificados e egressos da Engenharia de Minas da UFBA, valorizando a trajetória dos egressos que hoje são grandes referências em inovação tecnológica no mercado.
           </p>
         </div>
 

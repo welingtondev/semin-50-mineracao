@@ -261,3 +261,110 @@ html {
   animation: float-gem-3 7s ease-in-out infinite 2s;
 }
 
+/* ══════════════════════════════════════════════════════════
+   MOBILE PERFORMANCE OPTIMIZATIONS
+   Reduces GPU-heavy effects on small screens to improve
+   frame rates and reduce battery drain. Desktop is untouched.
+   ══════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  /* ── 1. Kill the full-screen noise texture overlay ── */
+  body::after {
+    display: none !important;
+  }
+
+  /* ── 2. Reduce massive blur orbs (GPU compositing killer) ── */
+  [class*="blur-[100px]"],
+  [class*="blur-[120px]"],
+  [class*="blur-[130px]"],
+  [class*="blur-[140px]"],
+  [class*="blur-[150px]"],
+  [class*="blur-[180px]"] {
+    filter: blur(40px) !important;
+  }
+
+  [class*="blur-[60px]"],
+  [class*="blur-[80px]"],
+  [class*="blur-[90px]"] {
+    filter: blur(25px) !important;
+  }
+
+  /* ── 3. Disable backdrop-blur (very expensive on mobile GPUs) ── */
+  [class*="backdrop-blur"] {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+
+  /* ── 4. Remove mix-blend-mode (forces separate compositing layer) ── */
+  [class*="mix-blend-screen"],
+  [class*="mix-blend-soft-light"] {
+    mix-blend-mode: normal !important;
+  }
+
+  /* ── 5. Pause perpetual floating/decorative animations ── */
+  .cta-float {
+    animation: none !important;
+  }
+
+  .cta-glow {
+    animation: none !important;
+    opacity: 0.5;
+  }
+
+  .cta-shine::after {
+    animation: none !important;
+    display: none;
+  }
+
+  .float-gem-1,
+  .float-gem-2,
+  .float-gem-3 {
+    animation: none !important;
+  }
+
+  /* ── 6. Reduce box-shadow complexity ── */
+  [class*="shadow-2xl"] {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15) !important;
+  }
+
+  /* ── 7. GPU-accelerate elements that transition on scroll ── */
+  [class*="transition-all"],
+  [class*="transition-transform"],
+  [class*="transition-opacity"] {
+    will-change: auto;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+  }
+
+  /* ── 8. Reduce SVG spin animation (Hero nugget) ── */
+  [class*="animate-[spin_120s"] {
+    animation: none !important;
+  }
+
+  /* ── 9. Simplify radial-gradient backgrounds ── */
+  [style*="radial-gradient(circle at 50% 50%"] {
+    background: transparent !important;
+  }
+}
+
+/* ── Prefers reduced motion (accessibility) ── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .cta-shine::after,
+  .cta-glow,
+  .cta-float,
+  .float-gem-1,
+  .float-gem-2,
+  .float-gem-3 {
+    animation: none !important;
+  }
+
+  body::after {
+    display: none !important;
+  }
+}
+

@@ -42,9 +42,9 @@ interface UserProfile {
 // ══════════════════════════════════════════════════════════
 const SPONSOR_CONFIG = {
   // Nome fixo do quiz (marca própria)
-  brandName: "DESAFIO SEMIN 26",
+  brandName: "DESAFIO SEMIN UFBA",
   // Nome do desafio (sem patrocinador = só a marca)
-  challengeName: "DESAFIO SEMIN 26",
+  challengeName: "DESAFIO SEMIN UFBA",
   // Subtítulo (deixe "" quando não houver patrocinador)
   tagline: "",
   // URL do logo da empresa (deixe "" para não exibir)
@@ -834,7 +834,7 @@ const QuizPage = () => {
     brandGrad.addColorStop(1, SPONSOR_CONFIG.accentTo);
     ctx.fillStyle = brandGrad;
     ctx.font = "900 72px 'Outfit', system-ui, sans-serif";
-    ctx.fillText("SEMIN 26", 540, 340);
+    ctx.fillText("SEMIN UFBA", 540, 340);
 
     // Tagline do patrocinador (se houver)
     if (SPONSOR_CONFIG.tagline) {
@@ -1006,7 +1006,7 @@ const QuizPage = () => {
             >
               {/* Logo do Patrocinador ou ícone padrão */}
               {SPONSOR_CONFIG.logoUrl ? (
-                <img src={SPONSOR_CONFIG.logoUrl} alt="Patrocinador" className="w-16 h-16 md:w-20 md:h-20 object-contain mx-auto mb-4 rounded-xl" />
+                <img src={SPONSOR_CONFIG.logoUrl} alt="Patrocinador" width="80" height="80" className="w-16 h-16 md:w-20 md:h-20 object-contain mx-auto mb-4 rounded-xl" loading="lazy" />
               ) : (
                 <div className="mb-6 inline-flex items-center justify-center w-20 h-20 rounded-2xl shadow-lg"
                      style={{ background: `linear-gradient(135deg, ${SPONSOR_CONFIG.accentFrom}, ${SPONSOR_CONFIG.accentTo})` }}>
@@ -1183,7 +1183,7 @@ const QuizPage = () => {
               <a href="/"
                 className="mt-6 block text-center text-slate-500 hover:text-slate-300 text-sm font-medium transition-colors py-2"
                 style={{ fontFamily: "'Outfit', sans-serif" }}>
-                ← Voltar para o site SEMIN
+                ← Voltar para o site SEMIN UFBA
               </a>
             </motion.div>
           )}
@@ -1326,7 +1326,7 @@ const QuizPage = () => {
               {/* Back to site */}
               <a href="/"
                 className="mt-4 block text-center text-slate-500 hover:text-slate-300 text-sm font-medium transition-colors py-2">
-                ← Voltar para o site SEMIN
+                ← Voltar para o site SEMIN UFBA
               </a>
             </motion.div>
           )}
@@ -1789,7 +1789,7 @@ const QuizPage = () => {
                     </button>
                     <button
                       onClick={() => {
-                        const text = `🏆 Acabei de marcar ${result.score} pontos no QUIZ SEMIN 2026!\n${result.total_acertos} acertos, combo máximo de ${result.combo_max}!\nConsegue me superar? Jogue agora:`;
+                        const text = `🏆 Acabei de marcar ${result.score} pontos no QUIZ SEMIN UFBA!\n${result.total_acertos} acertos, combo máximo de ${result.combo_max}!\nConsegue me superar? Jogue agora:`;
                         const url = window.location.origin + "/quiz";
                         window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text + " " + url)}`, "_blank");
                       }}

@@ -82,7 +82,7 @@ export function NewsletterPopup() {
                   <Bell className="h-4 w-4 text-semin-yellow" />
                 </div>
                 <div>
-                  <p className="text-white font-bold text-sm leading-tight">Fique por dentro do SEMIN 2026!</p>
+                  <p className="text-white font-bold text-sm leading-tight">Fique por dentro do SEMIN UFBA!</p>
                   <p className="text-white/45 text-xs mt-0.5">Novidades, palestrantes e avisos no seu e-mail</p>
                 </div>
               </div>
