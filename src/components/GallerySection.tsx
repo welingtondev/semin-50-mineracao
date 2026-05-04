@@ -1,11 +1,11 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Camera, X, ChevronLeft, ChevronRight, Mountain, Heart, ShieldCheck, Maximize2 } from "lucide-react";
+import { Camera, Mountain, Heart, ShieldCheck, Maximize2 } from "lucide-react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import Autoplay from "embla-carousel-autoplay";
-import mineTunnelBg from "@/assets/mine_tunnel_bg.png";
+import mineTunnelBg from "@/assets/mine_tunnel_bg.webp";
 import { PhotoUploadModal } from "./PhotoUploadModal";
 import { supabase } from "@/lib/supabase";
 
@@ -105,65 +105,64 @@ const RockShatterIntro = ({ onComplete, isMobile }: { onComplete: () => void, is
               }}
             />
             {/* Malha de Perfuração, Título e Fio Estopim */}
-            <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+            <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none p-6">
               
-              {/* O Título Oculto, revelado apenas pela lanterna */}
-              <div className="absolute -mt-48 md:-mt-64 flex flex-col items-center text-center opacity-90">
-                <h2 className="font-display text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-2 tracking-tight">Memórias em Cadeia</h2>
-                <p className="font-body text-amber-400 font-medium text-sm md:text-lg">Onde cada história é o estopim da próxima.</p>
-              </div>
-
-              {/* Grid de Pontos */}
-              <div className="grid grid-cols-4 gap-8 opacity-70 relative z-10">
-                {Array.from({length: 16}).map((_, i) => (
-                  <motion.div 
-                    key={i} 
-                    className="w-2 h-2 rounded-full bg-amber-400 shadow-[0_0_12px_#ffaa00]"
-                    animate={{ opacity: [0.2, 1, 0.2] }}
-                    transition={{ duration: 1.2 + Math.random(), repeat: Infinity, ease: "easeInOut" }}
-                  />
-                ))}
-              </div>
-
-              {/* Animação do Cordel Detonante ligando os pontos (Reação em Cadeia) */}
-              {isArming && (
-                <div className="absolute inset-0 flex items-center justify-center z-20">
-                  <svg width="140" height="140" viewBox="0 0 140 140" className="overflow-visible opacity-90">
-                    <motion.path
-                      d="M 10 10 L 50 10 L 50 50 L 90 50 L 90 90 L 130 90"
-                      stroke="#ffaa00"
-                      strokeWidth="4"
-                      fill="none"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      style={{ filter: "drop-shadow(0 0 8px #ffaa00)" }}
-                      initial={{ pathLength: 0 }}
-                      animate={{ pathLength: 1 }}
-                      transition={{ duration: 1.3, ease: "linear" }}
-                    />
-                    <motion.circle
-                      r="6"
-                      fill="#ffffff"
-                      style={{ filter: "drop-shadow(0 0 15px #ffffff)" }}
-                      animate={{
-                        cx: [10, 50, 50, 90, 90, 130],
-                        cy: [10, 10, 50, 50, 90, 90]
-                      }}
-                      transition={{ duration: 1.3, ease: "linear" }}
-                    />
-                  </svg>
+              {/* Título e Instruções - agora usando flex stack para não sobrepor */}
+              <div className="flex flex-col items-center text-center max-w-2xl mb-12 sm:mb-16">
+                <h2 className="font-display text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-3 tracking-tight">Memórias em <span className="text-semin-yellow drop-shadow-[0_0_18px_rgba(210,155,33,0.7)]">Cadeia</span></h2>
+                <p className="font-body text-white/70 font-medium text-sm md:text-base leading-relaxed mb-6">
+                  Nossa galeria colaborativa está oculta na rocha do tempo. Detone e extraia esses registros preciosos da história da Engenharia de Minas.
+                </p>
+                <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-semin-yellow/10 border border-semin-yellow/30 text-semin-yellow text-sm font-semibold uppercase tracking-wider animate-pulse">
+                  <div className="w-2 h-2 rounded-full bg-semin-yellow"></div>
+                  Clique para Detonar e Revelar
                 </div>
-              )}
+              </div>
 
-              {/* Instrução Inicial (Fio e Botão) */}
-              {!isArming && (
-                <div className="absolute top-[60%] mt-4 flex flex-col items-center">
-                  <div className="w-[1px] h-12 md:h-16 bg-gradient-to-b from-amber-500/0 via-amber-500/40 to-amber-500/80 mb-2"></div>
-                  <div className="text-amber-500/80 font-body text-[10px] md:text-xs tracking-[0.3em] uppercase animate-pulse bg-black/40 px-4 py-2 rounded-full border border-amber-500/20 backdrop-blur-sm shadow-[0_0_15px_rgba(255,170,0,0.1)]">
-                    Clique para detonar
+              {/* Wrapper do Grid e Cordel para manter alinhamento perfeito */}
+              <div className="relative flex items-center justify-center">
+                {/* Grid de Pontos */}
+                <div className="grid grid-cols-4 gap-8 opacity-70 relative z-10">
+                  {Array.from({length: 16}).map((_, i) => (
+                    <motion.div 
+                      key={i} 
+                      className="w-2 h-2 rounded-full bg-amber-400 shadow-[0_0_12px_#ffaa00]"
+                      animate={{ opacity: [0.2, 1, 0.2] }}
+                      transition={{ duration: 1.2 + Math.random(), repeat: Infinity, ease: "easeInOut" }}
+                    />
+                  ))}
+                </div>
+
+                {/* Animação do Cordel Detonante ligando os pontos (Reação em Cadeia) */}
+                {isArming && (
+                  <div className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none">
+                    <svg width="140" height="140" viewBox="0 0 140 140" className="overflow-visible opacity-90">
+                      <motion.path
+                        d="M 10 10 L 50 10 L 50 50 L 90 50 L 90 90 L 130 90"
+                        stroke="#ffaa00"
+                        strokeWidth="4"
+                        fill="none"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        style={{ filter: "drop-shadow(0 0 8px #ffaa00)" }}
+                        initial={{ pathLength: 0 }}
+                        animate={{ pathLength: 1 }}
+                        transition={{ duration: 1.3, ease: "linear" }}
+                      />
+                      <motion.circle
+                        r="6"
+                        fill="#ffffff"
+                        style={{ filter: "drop-shadow(0 0 15px #ffffff)" }}
+                        animate={{
+                          cx: [10, 50, 50, 90, 90, 130],
+                          cy: [10, 10, 50, 50, 90, 90]
+                        }}
+                        transition={{ duration: 1.3, ease: "linear" }}
+                      />
+                    </svg>
                   </div>
-                </div>
-              )}
+                )}
+              </div>
 
             </div>
           </motion.div>
@@ -313,17 +312,10 @@ const GallerySection = () => {
             Galeria do Tempo
           </span>
           <motion.h2 
-            className="font-display text-3xl sm:text-4xl md:text-5xl font-bold mb-3 md:mb-4 bg-clip-text text-transparent"
-            style={{ 
-              backgroundImage: "linear-gradient(90deg, rgba(255,255,255,0.9) 0%, #ffcc00 50%, rgba(255,255,255,0.9) 100%)",
-              backgroundSize: "200% 100%",
-            }}
-            animate={introPlayed ? { 
-              backgroundPosition: ["200% center", "-200% center"] 
-            } : {}}
-            transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
+            className="font-display text-3xl sm:text-4xl md:text-5xl font-bold mb-3 md:mb-4"
           >
-            Memórias em Cadeia
+            <span className="text-white/90">Memórias em </span>
+            <span className="text-semin-yellow drop-shadow-[0_0_20px_rgba(210,155,33,0.8)]">Cadeia</span>
           </motion.h2>
           <div className="flex items-center justify-center gap-3 mb-5">
             <div className="w-10 md:w-16 h-[1px] bg-gradient-to-r from-transparent to-amber-400/40 rounded-full" />
@@ -393,6 +385,8 @@ const GallerySection = () => {
                               src={item.image_base64} 
                               alt="Foto Histórica" 
                               className="absolute inset-0 w-full h-full object-cover object-center opacity-80 group-hover:opacity-100 transition-all duration-500 group-hover/btn:scale-105"
+                              loading="lazy"
+                              decoding="async"
                             />
                             <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/btn:opacity-100 transition-opacity z-20">
                               <div className="bg-black/60 p-3 rounded-full text-white backdrop-blur-sm shadow-xl">

@@ -18,11 +18,11 @@ const episodes: Episode[] = [
   {
     id: 1,
     title: "O Legado - Capítulo 1",
-    name: "Nome do Convidado 1",
+    name: "Angeval Brito",
     role: "Engenheiro de Minas",
-    company: "Empresa Exemplo",
-    description: "Espaço reservado para a descrição da história e o impacto do legado desta pessoa na engenharia de minas. Clique para assistir ao episódio completo.",
-    youtubeId: "", // Empty for now
+    company: "SGB",
+    description: "Neste episódio da série O Legado, recebemos o querido Angeval Brito para um papo cheio de nostalgia e gratidão. Formado pela UFBA, Brito abre o coração sobre os tempos de graduação — entre festas memoráveis como o Enferminas e os desafios das greves — e percorre sua jornada desde o \"chão de fábrica\" na Mineração Caraíba até o Serviço Geológico do Brasil.",
+    youtubeId: "wDrI0_8MSC8",
   },
   {
     id: 2,
@@ -66,8 +66,8 @@ const LegacySection = () => {
             <History className="h-3.5 w-3.5" />
             Série Especial
           </span>
-          <h2 className="font-display text-3xl sm:text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-white via-semin-cream to-white bg-clip-text text-transparent">
-            O Legado
+          <h2 className="text-4xl sm:text-5xl md:text-7xl font-black mb-6 md:mb-8 text-white tracking-tight leading-tight">
+            O <span className="text-semin-yellow">Legado</span>
           </h2>
           <div className="flex items-center justify-center gap-4 mb-6">
             <div className="w-12 md:w-20 h-px bg-gradient-to-r from-transparent via-semin-yellow/40 to-semin-yellow/60" />
@@ -96,6 +96,7 @@ const LegacySection = () => {
                   frameBorder="0"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
+                  loading="lazy"
                 ></iframe>
               ) : (
                 <div className="w-full h-full flex flex-col items-center justify-center p-8 text-center bg-gradient-to-br from-semin-dark via-semin-blue/20 to-semin-dark">
@@ -181,7 +182,7 @@ const LegacySection = () => {
             
             <div className="mt-8 p-6 rounded-2xl bg-gradient-to-br from-semin-yellow/10 to-transparent border border-semin-yellow/10">
               <p className="text-[11px] md:text-xs text-white/40 font-body leading-relaxed">
-                A série **O Legado** continua em produção. Novos capítulos serão adicionados em breve com depoimentos de grandes personalidades da nossa história.
+                A série <strong className="text-semin-yellow/80">O Legado</strong> continua em produção. Todas as sextas-feiras, um novo capítulo será adicionado, trazendo depoimentos marcantes de grandes personalidades da nossa história.
               </p>
             </div>
           </div>

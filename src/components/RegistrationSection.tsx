@@ -9,7 +9,7 @@ const RegistrationSection = () => {
   return (
     <section id="inscricoes" className="py-16 md:py-32 bg-semin-dark relative overflow-hidden">
       {/* Top gold separator line */}
-      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-semin-yellow/30 to-transparent" />
+      <div className="absolute top-0 left-0 w-full h-px bg-[linear-gradient(90deg,#06080c_0%,#06080c_35%,#d29b21_50%,#06080c_65%,#06080c_100%)] opacity-40" />
       <div className="absolute top-0 right-0 w-48 md:w-[400px] h-48 md:h-[400px] bg-semin-yellow/[0.03] rounded-full blur-[30px] md:blur-[120px]" />
       <div className="absolute bottom-0 left-0 w-40 md:w-80 h-40 md:h-80 bg-semin-orange/[0.03] rounded-full blur-[25px] md:blur-[100px]" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(26,54,93,0.1)_0%,transparent_60%)]" />
@@ -28,8 +28,8 @@ const RegistrationSection = () => {
             <span className="font-body text-[10px] md:text-xs text-semin-yellow font-medium uppercase tracking-wider">Vagas limitadas</span>
           </div>
 
-          <h2 className="font-display text-2xl sm:text-3xl md:text-5xl font-bold text-white mb-4 md:mb-6">
-            Inscreva-se no SEMIN UFBA
+          <h2 className="text-4xl sm:text-5xl md:text-7xl font-black mb-6 md:mb-8 text-white tracking-tight leading-tight">
+            Inscreva-se no <span className="text-semin-yellow">SEMIN UFBA</span>
           </h2>
           <div className="flex items-center justify-center gap-3 mb-6 md:mb-8">
             <div className="w-8 md:w-12 h-[2px] bg-gradient-to-r from-transparent to-semin-yellow rounded-full" />

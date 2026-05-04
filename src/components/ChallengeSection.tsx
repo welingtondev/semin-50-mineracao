@@ -37,8 +37,8 @@ const ChallengeSection = () => {
                 style={{ background: "rgba(210,155,33,0.1)", border: "1px solid rgba(210,155,33,0.2)", color: "#d29b21" }}>
             Novo
           </span>
-          <h2 className="text-4xl md:text-6xl font-black mb-4 text-white">
-            DESAFIO <span className="text-transparent bg-clip-text" style={{ backgroundImage: "linear-gradient(135deg, #d29b21, #b3821a)" }}>SEMIN UFBA</span>
+          <h2 className="text-4xl sm:text-5xl md:text-7xl font-black mb-6 md:mb-8 text-white tracking-tight leading-tight">
+            DESAFIO <span className="text-semin-yellow">SEMIN UFBA</span>
           </h2>
           <p className="text-white/50 text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
             Um quiz interativo em homenagem ao Jubileu de Ouro. Teste seus conhecimentos técnicos e descubra fatos marcantes da história da Engenharia de Minas da UFBA enquanto disputa o topo do ranking.

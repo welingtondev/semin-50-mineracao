@@ -12,7 +12,7 @@ const JubileeSection = () => {
       <div className="absolute bottom-0 left-0 w-48 md:w-[400px] h-48 md:h-[400px] bg-semin-orange/5 rounded-full blur-[30px] md:blur-[100px] mix-blend-screen pointer-events-none" />
       
       {/* Gold line top */}
-      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-semin-yellow/50 to-transparent" />
+      <div className="absolute top-0 left-0 w-full h-px bg-[linear-gradient(90deg,#06080c_0%,#06080c_35%,#d29b21_50%,#06080c_65%,#06080c_100%)] opacity-80" />
 
       <div ref={ref} className="container mx-auto px-4 relative z-10">
         <div className={`text-center mb-16 md:mb-24 transition-all duration-1000 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
@@ -23,8 +23,8 @@ const JubileeSection = () => {
             </span>
           </div>
           
-          <h2 className="text-3xl sm:text-4xl md:text-6xl font-black text-white mb-5 md:mb-6">
-            Jubileu de <span className="bg-gradient-to-r from-semin-yellow via-amber-300 to-semin-orange bg-clip-text text-transparent">Ouro</span>
+          <h2 className="text-4xl sm:text-5xl md:text-7xl font-black text-white mb-6 md:mb-8 tracking-tight leading-tight">
+            Jubileu de <span className="text-semin-yellow">Ouro</span>
           </h2>
           
           <div className="flex items-center justify-center gap-3 mb-8">
@@ -34,7 +34,7 @@ const JubileeSection = () => {
           </div>
           
           <p className="font-body text-sm md:text-xl text-white/60 max-w-4xl mx-auto leading-relaxed px-2">
-            O encerramento do SEMIN UFBA será o ponto alto das celebrações do cinquentenário do curso de Engenharia de Minas da UFBA, com uma programação estruturada em quatro momentos inesquecíveis.
+            O encerramento do SEMIN UFBA será a consagração de meio século de história. Uma programação monumental desenhada para documentar e celebrar o impacto da Engenharia de Minas da UFBA no desenvolvimento mineral da Bahia, honrando quem construiu o passado e inspirando quem herdará o futuro.
           </p>
         </div>
 

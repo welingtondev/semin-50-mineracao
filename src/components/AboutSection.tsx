@@ -22,13 +22,13 @@ const AboutSection = () => {
             </span>
           </div>
           
-          <h2 className="font-display text-4xl sm:text-5xl md:text-6xl font-black text-semin-blue mb-6">
-            O Maior Encontro Acadêmico de <br className="hidden md:block" />
-            <span className="bg-gradient-to-r from-semin-yellow to-semin-orange bg-clip-text text-transparent">Mineração da Bahia</span>
+          <h2 className="text-4xl sm:text-5xl md:text-7xl font-black text-semin-blue mb-6 tracking-tight">
+            Meio Século Formando os Líderes da <br className="hidden md:block" />
+            <span className="text-semin-yellow">Mineração Baiana</span>
           </h2>
           
           <p className="font-sans text-base md:text-xl text-semin-blue/70 max-w-3xl mx-auto leading-relaxed font-medium">
-            Em 2026, celebramos o <strong className="text-semin-blue">Jubileu de Ouro</strong> da Engenharia de Minas da UFBA. Um marco de 50 anos formando líderes, impulsionando a inovação e conectando gerações de profissionais que transformam o cenário mineral.
+            Em 2026, celebramos a força e a tradição de um curso que é o pilar do setor mineral na Bahia. Documentamos 50 anos de excelência acadêmica, inovação tecnológica e o compromisso inabalável com o desenvolvimento do nosso estado.
           </p>
         </div>
 
@@ -39,12 +39,12 @@ const AboutSection = () => {
           <div className={`md:col-span-8 bg-white rounded-[2rem] p-8 md:p-12 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-black/[0.03] relative overflow-hidden group transition-all duration-700 delay-100 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
             <div className="absolute -top-10 -right-10 w-48 md:w-80 h-48 md:h-80 bg-semin-yellow/15 rounded-full blur-[30px] md:blur-[80px] pointer-events-none transition-transform duration-1000 group-hover:scale-125" />
             
-            <h3 className="font-display text-2xl md:text-3xl font-bold text-semin-blue mb-4 relative z-10">O que é o SEMIN UFBA?</h3>
+            <h3 className="font-display text-2xl md:text-3xl font-bold text-semin-blue mb-4 relative z-10">Meio Século de Protagonismo Mineral</h3>
             <p className="text-sm md:text-base text-semin-blue/70 leading-relaxed max-w-2xl relative z-10 mb-8 font-medium"
                style={{ fontFamily: "'Outfit', 'Inter', system-ui, sans-serif" }}>
-              A Semana de Mineração (SEMIN UFBA) não é apenas um evento, é um marco histórico. Este ano, a edição é inteiramente dedicada a celebrar o grandioso <strong>Jubileu de Ouro — os 50 anos do curso de Engenharia de Minas da UFBA</strong>. 
+              O SEMIN UFBA 2026 marca o ápice de uma trajetória extraordinária: o <strong>Jubileu de Ouro da Engenharia de Minas da UFBA</strong>. Mais do que uma celebração, este evento é o registro histórico de um curso que nasceu para desbravar o potencial mineral da Bahia e acabou por moldar a própria identidade da mineração brasileira.
               <br/><br/>
-              Serão quatro dias promovendo o reencontro de gerações através de palestras inspiradoras, debates técnicos sobre nossa realidade e uma oportunidade rara de estar, no mesmo ambiente, com nomes que ajudaram a construir (e que guiarão o futuro) da mineração no Brasil.
+              Ao longo de 50 anos, a Escola Politécnica foi o berço das lideranças que hoje comandam as maiores operações minerais do estado. Este encontro documenta esse legado vivo, unindo veteranos que ergueram os alicerces da indústria e jovens talentos que liderarão a próxima fronteira tecnológica e sustentável do setor.
             </p>
 
             <div className="flex flex-wrap gap-3 relative z-10">
@@ -71,7 +71,7 @@ const AboutSection = () => {
               <div className="font-display text-5xl font-black text-white relative z-10">
                 50<span className="text-semin-yellow text-3xl"> anos</span>
               </div>
-              <p className="font-sans text-white/60 text-sm mt-2 relative z-10 font-medium">de tradição e excelência</p>
+              <p className="font-sans text-white/60 text-sm mt-2 relative z-10 font-medium">Liderando a Mineração Baiana</p>
             </div>
 
             <div className={`bg-white rounded-[2rem] p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-black/[0.03] flex flex-col justify-center items-center text-center group transition-all duration-700 delay-300 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>

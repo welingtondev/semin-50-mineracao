@@ -1,11 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, lazy, Suspense } from "react";
 import { Menu } from "lucide-react";
 import { Link } from "react-router-dom";
 import seminLogo from "@/assets/semin_logo.webp";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { motion } from "framer-motion";
-import { RegistrationModal } from "./RegistrationModal";
+
+// Lazy-load — only needed when user clicks "Inscreva-se"
+const RegistrationModal = lazy(() => import("./RegistrationModal").then(m => ({ default: m.RegistrationModal })));
 
 const links = [
   { label: "Sobre", href: "#sobre" },
@@ -30,15 +31,12 @@ const Navbar = () => {
   }, []);
 
   return (
-    <motion.nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+    <nav
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 animate-fade-in-up ${
         scrolled
           ? "bg-semin-dark/95 backdrop-blur-xl shadow-2xl shadow-black/20 py-2 md:py-3"
           : "bg-transparent py-4 md:py-6"
       }`}
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.6 }}
     >
       <div className="container mx-auto flex items-center justify-between px-4">
         <a href="#" className="flex items-center gap-2" aria-label="Página Inicial">
@@ -62,13 +60,15 @@ const Navbar = () => {
                 Desafio Semin
               </Button>
             </Link>
-            <RegistrationModal>
-              <div className="cursor-pointer">
-                <Button className="bg-gradient-to-r from-semin-yellow to-semin-orange text-semin-dark hover:from-semin-orange hover:to-semin-yellow font-semibold shadow-lg shadow-semin-yellow/20 transition-all duration-300 hover:shadow-semin-yellow/40">
-                  Inscreva-se
-                </Button>
-              </div>
-            </RegistrationModal>
+            <Suspense fallback={null}>
+              <RegistrationModal>
+                <div className="cursor-pointer">
+                  <Button className="bg-gradient-to-r from-semin-yellow to-semin-orange text-semin-dark hover:from-semin-orange hover:to-semin-yellow font-semibold shadow-lg shadow-semin-yellow/20 transition-all duration-300 hover:shadow-semin-yellow/40">
+                    Inscreva-se
+                  </Button>
+                </div>
+              </RegistrationModal>
+            </Suspense>
           </div>
         </div>
 
@@ -86,17 +86,15 @@ const Navbar = () => {
               </div>
               <div className="flex flex-col gap-1 flex-1">
                 {links.map((l, i) => (
-                  <motion.a
+                  <a
                     key={l.href}
                     href={l.href}
                     onClick={() => setOpen(false)}
-                    className="text-white/70 hover:text-semin-yellow hover:bg-white/5 font-body text-base font-medium transition-all py-3 px-4 rounded-lg active:bg-white/10"
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.08 }}
+                    className="text-white/70 hover:text-semin-yellow hover:bg-white/5 font-body text-base font-medium transition-all py-3 px-4 rounded-lg active:bg-white/10 animate-fade-in-up opacity-0"
+                    style={{ animationDelay: `${i * 80}ms` }}
                   >
                     {l.label}
-                  </motion.a>
+                  </a>
                 ))}
               </div>
               <div className="flex flex-col gap-3 mt-4">
@@ -105,19 +103,21 @@ const Navbar = () => {
                     Desafio Semin
                   </Button>
                 </Link>
-                <RegistrationModal>
-                  <div onClick={() => setOpen(false)} className="cursor-pointer">
-                    <Button className="w-full bg-gradient-to-r from-semin-yellow to-semin-orange text-semin-dark hover:from-semin-orange hover:to-semin-yellow font-semibold py-6 text-base">
-                      Inscreva-se
-                    </Button>
-                  </div>
-                </RegistrationModal>
+                <Suspense fallback={null}>
+                  <RegistrationModal>
+                    <div onClick={() => setOpen(false)} className="cursor-pointer">
+                      <Button className="w-full bg-gradient-to-r from-semin-yellow to-semin-orange text-semin-dark hover:from-semin-orange hover:to-semin-yellow font-semibold py-6 text-base">
+                        Inscreva-se
+                      </Button>
+                    </div>
+                  </RegistrationModal>
+                </Suspense>
               </div>
             </div>
           </SheetContent>
         </Sheet>
       </div>
-    </motion.nav>
+    </nav>
   );
 };
 

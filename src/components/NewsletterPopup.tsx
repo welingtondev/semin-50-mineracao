@@ -3,7 +3,8 @@ import { X, Mail, Sparkles, Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyZSoH6DStsVd3mohww3xFPH0sHrhyPKyizCLC5fkvO-J4n-_XFkkmo_qTlf2vquQRq/exec";
+const DEFAULT_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyZSoH6DStsVd3mohww3xFPH0sHrhyPKyizCLC5fkvO-J4n-_XFkkmo_qTlf2vquQRq/exec";
+const GOOGLE_SCRIPT_URL = import.meta.env.VITE_NEWSLETTER_SCRIPT_URL || DEFAULT_SCRIPT_URL;
 
 export function NewsletterPopup() {
   const [visible, setVisible] = useState(false);

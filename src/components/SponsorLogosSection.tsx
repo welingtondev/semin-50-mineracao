@@ -1,8 +1,9 @@
 import { Heart, Mountain, Diamond, Gem, Sparkles, Crown, Star } from "lucide-react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
-import ufbaLogo from "@/assets/ufba_logo.png";
+import ufbaLogo from "@/assets/ufba_logo.webp";
 import sindimibaLogo from "@/assets/sindimiba-logo.webp";
-import jmcLogo from "@/assets/jmc_logo.png";
+import jmcLogo from "@/assets/jmc_logo.webp";
+import creaLogo from "@/assets/crea_logo.webp";
 
 type SponsorLogo = {
   name: string;
@@ -11,8 +12,9 @@ type SponsorLogo = {
 };
 
 const organizadores: SponsorLogo[] = [
-  { name: "UFBA", logo: ufbaLogo, className: "h-16 sm:h-20 md:h-28 lg:h-32 max-w-[180px] md:max-w-[280px]" },
-  { name: "SINDIMIBA", logo: sindimibaLogo, className: "h-20 sm:h-24 md:h-36 lg:h-40 max-w-[240px] md:max-w-[320px]" },
+  { name: "UFBA", logo: ufbaLogo, className: "h-20 sm:h-24 md:h-32 lg:h-36 max-w-[140px] md:max-w-[220px]" },
+  { name: "SINDIMIBA", logo: sindimibaLogo, className: "h-20 sm:h-24 md:h-32 lg:h-36 max-w-[180px] md:max-w-[260px]" },
+  { name: "CREA-BA", logo: creaLogo, className: "h-20 sm:h-24 md:h-32 lg:h-36 max-w-[160px] md:max-w-[240px]" },
 ];
 
 type TierGroup = {
@@ -99,47 +101,33 @@ const SponsorLogosSection = () => {
   const { ref, isVisible } = useScrollAnimation(0.1);
 
   return (
-    <section className="py-20 md:py-36 relative overflow-hidden" style={{ background: "linear-gradient(165deg, hsl(220 18% 8%) 0%, hsl(215 25% 12%) 30%, hsl(220 20% 9%) 60%, hsl(210 15% 7%) 100%)" }}>
-      {/* ── Premium background layers ── */}
+    <section id="parceiros" className="py-24 md:py-36 bg-gray-50 relative overflow-hidden">
+      {/* Background Ornaments adapted for light theme */}
       <div className="absolute inset-0 pointer-events-none">
-        {/* Ambient glow orbs — reduced on mobile */}
-        <div className="absolute top-[10%] left-[5%] w-48 md:w-[600px] h-48 md:h-[600px] bg-gradient-to-br from-semin-yellow/[0.04] to-amber-500/[0.02] rounded-full blur-[40px] md:blur-[150px]" />
-        <div className="absolute bottom-[10%] right-[5%] w-40 md:w-[500px] h-40 md:h-[500px] bg-gradient-to-tl from-sky-500/[0.04] to-indigo-500/[0.02] rounded-full blur-[30px] md:blur-[130px]" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 hidden md:block md:w-[800px] md:h-[800px] bg-gradient-to-br from-semin-yellow/[0.015] to-transparent rounded-full md:blur-[100px]" />
-
-        {/* Decorative rings */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 hidden md:block md:w-[900px] md:h-[900px] border border-white/[0.02] rounded-full" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 hidden md:block md:w-[650px] md:h-[650px] border border-semin-yellow/[0.03] rounded-full" />
-
-        {/* Floating gems */}
-        <Diamond className="absolute top-[15%] right-[12%] h-5 w-5 md:h-7 md:w-7 text-sky-400/[0.08] float-gem-1 hidden sm:block" />
-        <Gem className="absolute bottom-[20%] left-[10%] h-4 w-4 md:h-6 md:w-6 text-amber-400/[0.06] float-gem-2 hidden sm:block" />
-        <Star className="absolute top-[30%] left-[20%] h-3 w-3 md:h-4 md:w-4 text-semin-yellow/[0.08] float-gem-3 hidden sm:block" />
-        <Crown className="absolute bottom-[30%] right-[15%] h-5 w-5 md:h-6 md:w-6 text-rose-400/[0.06] float-gem-1 hidden sm:block" />
-
-        {/* Subtle noise grain texture */}
-        <div className="absolute inset-0 opacity-[0.015]" style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`
+        <div className="absolute top-[10%] right-[-5%] w-48 md:w-96 h-48 md:h-96 bg-semin-yellow/5 rounded-full blur-[30px] md:blur-[100px]" />
+        <div className="absolute bottom-[10%] left-[-5%] w-40 md:w-80 h-40 md:h-80 bg-semin-orange/5 rounded-full blur-[25px] md:blur-[80px]" />
+        <div className="absolute inset-0 opacity-[0.05]" style={{
+          backgroundImage: `radial-gradient(circle at 2px 2px, #d29b21 1px, transparent 0)`,
+          backgroundSize: '40px 40px'
         }} />
       </div>
 
       <div ref={ref} className="container mx-auto px-4 relative z-10">
-        {/* ── Header ── */}
-        <div className={`text-center mb-16 md:mb-24 transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
-          <span className="inline-flex items-center gap-2.5 font-body text-[10px] md:text-xs uppercase tracking-[0.35em] text-semin-yellow/80 font-semibold mb-4 md:mb-5">
-            <Sparkles className="h-3 w-3 md:h-3.5 md:w-3.5 animate-pulse" />
-            Quem faz o SEMIN UFBA acontecer
+        <div className={`text-center mb-16 md:mb-24 transition-all duration-1000 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
+          <span className="inline-flex items-center gap-2 font-body text-[10px] md:text-xs uppercase tracking-[0.35em] text-semin-yellow font-semibold mb-3 md:mb-4">
+            <Gem className="h-3.5 w-3.5" />
+            Rede de Valor
           </span>
-          <h2 className="font-display text-3xl sm:text-4xl md:text-6xl font-bold mb-5 md:mb-6 bg-gradient-to-r from-white via-semin-cream to-white bg-clip-text text-transparent">
-            Patrocinadores & Apoiadores
+          <h2 className="text-4xl sm:text-5xl md:text-7xl font-black mb-6 md:mb-8 tracking-tight leading-tight text-semin-blue">
+            Patrocinadores & <span className="text-semin-yellow">Apoiadores</span>
           </h2>
-          <div className="flex items-center justify-center gap-4 mb-5">
-            <div className="w-12 md:w-20 h-px bg-gradient-to-r from-transparent via-semin-yellow/40 to-semin-yellow/60 rounded-full" />
-            <Diamond className="h-4 w-4 md:h-5 md:w-5 text-semin-yellow/50" />
-            <div className="w-12 md:w-20 h-px bg-gradient-to-l from-transparent via-semin-yellow/40 to-semin-yellow/60 rounded-full" />
+          <div className="flex items-center justify-center gap-3 mb-6 md:mb-8">
+            <div className="w-10 md:w-16 h-[2px] bg-gradient-to-r from-transparent to-semin-yellow/40 rounded-full" />
+            <Mountain className="h-4 w-4 md:h-5 md:w-5 text-semin-yellow/40" />
+            <div className="w-10 md:w-16 h-[2px] bg-gradient-to-l from-transparent to-semin-yellow/40 rounded-full" />
           </div>
-          <p className="font-body text-xs md:text-sm text-white/35 max-w-lg mx-auto leading-relaxed">
-            Empresas e instituições que acreditam no futuro da mineração e investem na formação de excelência
+          <p className="font-body text-base md:text-xl text-gray-500 max-w-2xl mx-auto leading-relaxed font-medium">
+            Empresas e instituições que acreditam no potencial da Engenharia de Minas e na força da nossa história.
           </p>
         </div>
 
@@ -153,24 +141,21 @@ const SponsorLogosSection = () => {
             >
               {/* Tier badge with double glow lines */}
               <div className="flex items-center justify-center gap-4 md:gap-6 mb-10 md:mb-12">
-                <div className={`h-px flex-1 max-w-[60px] md:max-w-[160px] bg-gradient-to-r from-transparent ${group.accentFrom} opacity-40`} />
-                <div className={`relative inline-flex items-center gap-2.5 px-6 md:px-8 py-2.5 md:py-3 rounded-full border border-white/[0.08] bg-white/[0.03] backdrop-blur-none md:backdrop-blur-md`}>
-                  {/* Badge inner glow */}
-                  <div className={`absolute inset-0 rounded-full ${group.glowColor} blur-xl opacity-50`} />
+                <div className={`h-px flex-1 max-w-[60px] md:max-w-[160px] bg-gradient-to-r from-transparent ${group.accentFrom} opacity-20`} />
+                <div className={`relative inline-flex items-center gap-2.5 px-6 md:px-8 py-2.5 md:py-3 rounded-full border border-gray-200 bg-white shadow-sm`}>
                   <group.icon className={`h-4 w-4 md:h-5 md:w-5 ${group.accentText} relative z-10 drop-shadow-sm`} />
-                  <span className={`font-body text-xs md:text-sm uppercase tracking-[0.25em] font-bold ${group.accentText} relative z-10`}>
+                  <span className={`font-body text-xs md:text-sm uppercase tracking-[0.25em] font-bold ${group.accentText.replace('text-', 'text-')} relative z-10`}>
                     {group.label}
                   </span>
                 </div>
-                <div className={`h-px flex-1 max-w-[60px] md:max-w-[160px] bg-gradient-to-l from-transparent ${group.accentTo} opacity-40`} />
+                <div className={`h-px flex-1 max-w-[60px] md:max-w-[160px] bg-gradient-to-l from-transparent ${group.accentTo} opacity-20`} />
               </div>
 
-              {/* Logo cards with glassmorphism */}
-              <div className="flex flex-wrap justify-center items-center gap-6 md:gap-8">
+              <div className="flex flex-wrap justify-center items-center gap-3 sm:gap-6 md:gap-8 max-w-5xl mx-auto">
                 {group.sponsors.map((sponsor) => (
                   <div
                     key={sponsor.name}
-                    className={`${logoSizes[group.tier]} relative rounded-2xl bg-white/[0.97] shadow-xl shadow-black/15 ring-1 ${group.ringColor} hover:-translate-y-3 hover:shadow-2xl transition-all duration-500 flex items-center justify-center p-3 md:p-4 group cursor-pointer`}
+                    className="relative group w-[calc(50%-6px)] sm:w-[calc(50%-12px)] md:w-64 h-24 sm:h-32 md:h-40 flex items-center justify-center p-3 sm:p-6 bg-white rounded-2xl border border-gray-200 shadow-lg hover:shadow-xl hover:border-semin-yellow/40 transition-all duration-500 cursor-pointer hover:-translate-y-1 sm:hover:-translate-y-2"
                   >
                     {/* Card top accent line */}
                     <div className={`absolute top-0 left-[15%] right-[15%] h-[2px] bg-gradient-to-r ${group.accentFrom} ${group.accentTo} opacity-60 rounded-full`} />
@@ -187,10 +172,10 @@ const SponsorLogosSection = () => {
                       />
                     ) : (
                       <div className="text-center">
-                        <div className="w-14 h-14 md:w-18 md:h-18 mx-auto mb-3 rounded-2xl bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center group-hover:scale-110 transition-all duration-500 shadow-inner">
-                          <group.icon className={`h-7 w-7 md:h-9 md:w-9 ${group.accentText} opacity-50 group-hover:opacity-90 transition-opacity duration-300`} />
+                        <div className="w-10 h-10 sm:w-14 sm:h-14 md:w-16 md:h-16 mx-auto mb-2 sm:mb-3 rounded-xl sm:rounded-2xl bg-gray-50 border border-gray-100 flex items-center justify-center group-hover:scale-110 transition-all duration-500">
+                          <group.icon className={`h-5 w-5 sm:h-7 sm:w-7 md:h-8 md:w-8 ${group.accentText} opacity-70 group-hover:opacity-100 transition-opacity duration-300`} />
                         </div>
-                        <span className="font-body text-[10px] md:text-xs text-gray-400 group-hover:text-gray-600 text-center leading-tight transition-colors duration-300 font-medium">
+                        <span className="font-body text-[9px] sm:text-[10px] md:text-xs text-gray-400 group-hover:text-semin-dark text-center leading-tight transition-colors duration-300 font-semibold px-1 block">
                           {sponsor.name}
                         </span>
                       </div>
@@ -205,35 +190,34 @@ const SponsorLogosSection = () => {
         {/* ── Apoio Institucional ── */}
         <div className={`mt-24 md:mt-32 transition-all duration-700 delay-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
           <div className="flex items-center justify-center gap-4 md:gap-6 mb-10 md:mb-12">
-            <div className="h-px flex-1 max-w-[60px] md:max-w-[140px] bg-gradient-to-r from-transparent to-semin-yellow/25" />
-            <div className="relative inline-flex items-center gap-2.5 px-6 md:px-8 py-2.5 md:py-3 rounded-full border border-semin-yellow/15 bg-semin-yellow/[0.04] backdrop-blur-none md:backdrop-blur-md">
-              <div className="absolute inset-0 rounded-full bg-semin-yellow/10 blur-xl opacity-40" />
+            <div className="h-px flex-1 max-w-[60px] md:max-w-[140px] bg-gradient-to-r from-transparent to-semin-yellow/20" />
+            <div className="relative inline-flex items-center gap-2.5 px-6 md:px-8 py-2.5 md:py-3 rounded-full border border-semin-yellow/10 bg-white shadow-sm">
               <Heart className="h-4 w-4 md:h-5 md:w-5 text-semin-yellow relative z-10" />
-              <span className="font-body text-xs md:text-sm uppercase tracking-[0.25em] font-bold text-semin-yellow relative z-10">
+              <span className="font-body text-xs md:text-sm uppercase tracking-[0.25em] font-bold text-semin-dark relative z-10">
                 Apoio Institucional
               </span>
             </div>
-            <div className="h-px flex-1 max-w-[60px] md:max-w-[140px] bg-gradient-to-l from-transparent to-semin-yellow/25" />
+            <div className="h-px flex-1 max-w-[60px] md:max-w-[140px] bg-gradient-to-l from-transparent to-semin-yellow/20" />
           </div>
 
-          <div className="flex flex-wrap justify-center items-center gap-5 sm:gap-8 md:gap-14">
+          <div className="flex flex-wrap justify-center items-center gap-3 sm:gap-5 md:gap-14 max-w-5xl mx-auto">
             {organizadores.map((sponsor) => (
               <div
                 key={sponsor.name}
-                className="group cursor-pointer"
+                className="group cursor-pointer w-[calc(50%-6px)] sm:w-[calc(50%-10px)] md:w-auto"
               >
-                <div className="relative bg-white rounded-2xl px-4 py-3 sm:px-6 sm:py-4 md:px-6 md:py-4 shadow-xl shadow-black/15 ring-1 ring-semin-yellow/10 hover:shadow-2xl hover:ring-semin-yellow/25 hover:-translate-y-2 transition-all duration-500 flex items-center justify-center min-w-[160px] md:min-w-[240px] h-32 md:h-44">
+                <div className="relative bg-white rounded-2xl px-3 sm:px-6 py-4 sm:py-6 shadow-xl shadow-black/15 ring-1 ring-semin-yellow/10 hover:shadow-2xl hover:ring-semin-yellow/25 hover:-translate-y-1 sm:hover:-translate-y-2 transition-all duration-500 flex items-center justify-center w-full h-24 sm:h-32 md:w-64 md:h-40">
                   {/* Gold accent top line */}
                   <div className="absolute top-0 left-[20%] right-[20%] h-[2px] bg-gradient-to-r from-semin-yellow/40 via-amber-400/60 to-semin-yellow/40 rounded-full" />
-                  <img
-                    src={sponsor.logo}
-                    alt={sponsor.name}
-                    width="240"
-                    height="176"
-                    className={`${sponsor.className || "h-10 sm:h-14 md:h-20 lg:h-24 max-w-[140px] sm:max-w-none"} w-auto object-contain transition-all duration-500 group-hover:scale-110`}
-                    style={{ imageRendering: 'auto' }}
-                    loading="lazy"
-                  />
+                    <img
+                      src={sponsor.logo}
+                      alt={sponsor.name}
+                      width="240"
+                      height="176"
+                      className={`${sponsor.className || "h-8 sm:h-10 md:h-20 lg:h-24 max-w-[100px] sm:max-w-none"} w-auto object-contain transition-all duration-500 group-hover:scale-110`}
+                      style={{ imageRendering: 'auto' }}
+                      loading="lazy"
+                    />
                 </div>
               </div>
             ))}

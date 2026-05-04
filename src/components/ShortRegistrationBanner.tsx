@@ -38,7 +38,7 @@ const ShortRegistrationBanner = () => {
                   </p>
                 </div>
 
-                <p className="font-bold text-semin-dark flex items-center gap-2">
+                <p className="font-bold text-semin-dark leading-relaxed">
                   Juntos, vamos bater a meta de arrecadação para o{" "}
                   <a 
                     href="https://investidoresdaesperanca.org/" 
@@ -46,7 +46,7 @@ const ShortRegistrationBanner = () => {
                     rel="noopener noreferrer"
                     className="hover:text-white underline underline-offset-4 transition-colors"
                   >
-                    Instituto IDE
+                    <span className="whitespace-nowrap">Instituto IDE</span>
                   </a>!
                 </p>
               </div>

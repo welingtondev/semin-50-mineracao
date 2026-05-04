@@ -7,7 +7,7 @@ import { SponsorModal } from "./SponsorModal";
 const tiers = [
   {
     name: "Diamante",
-    price: "R$ 15.000",
+    price: "R$ 20.000",
     icon: Diamond,
     featured: true,
     benefits: [
@@ -18,11 +18,12 @@ const tiers = [
       "Representante em um dos painéis do evento para expor a visão da empresa",
       "Logomarca no porta-moedas da moeda comemorativa dos 50 anos de Engenharia de Minas",
       "Logomarca como mecenas / patrocinador do documentário dos 50 anos da Engenharia de Minas na UFBA",
+      "Patrocinador Oficial do DESAFIO SEMIN UFBA",
     ],
   },
   {
     name: "Córindon",
-    price: "R$ 7.500",
+    price: "R$ 10.000",
     icon: Gem,
     featured: false,
     accentFrom: "from-rose-500",
@@ -38,6 +39,7 @@ const tiers = [
       "Espaço para exposição da empresa (material de responsabilidade do patrocinador)",
       "Palestra de 30 min + 10 min de Q & A sobre tema inspirado no norte do congresso",
       "Representante em um dos painéis do evento para expor a visão da empresa",
+      "Patrocinador Oficial do DESAFIO SEMIN UFBA",
     ],
   },
   {
@@ -107,8 +109,8 @@ const SponsorsSection = () => {
             <Gem className="h-3 w-3 md:h-3.5 md:w-3.5" />
             Invista no futuro da mineração
           </span>
-          <h2 className="font-display text-3xl sm:text-4xl md:text-6xl font-bold text-semin-blue mb-4 md:mb-5">
-            Cotas de Patrocínio
+          <h2 className="text-4xl sm:text-5xl md:text-7xl font-black mb-6 md:mb-8 tracking-tight leading-tight text-semin-blue">
+            Cotas de <span className="text-semin-yellow">Patrocínio</span>
           </h2>
           <div className="flex items-center justify-center gap-4 mb-5 md:mb-7">
             <div className="w-10 md:w-16 h-[2px] bg-gradient-to-r from-transparent via-semin-yellow/50 to-semin-yellow rounded-full" />
@@ -142,7 +144,7 @@ const SponsorsSection = () => {
                 </div>
                 <Diamond className="h-14 w-14 md:h-20 md:w-20 mx-auto text-sky-400 drop-shadow-lg" />
                 <div className="mt-4 md:mt-5">
-                  <span className="font-display text-4xl md:text-5xl font-bold bg-gradient-to-r from-sky-600 via-indigo-600 to-sky-600 bg-clip-text text-transparent">R$ 15.000</span>
+                  <span className="font-display text-4xl md:text-5xl font-bold bg-gradient-to-r from-sky-600 via-indigo-600 to-sky-600 bg-clip-text text-transparent">R$ 20.000</span>
                 </div>
               </CardHeader>
               <CardContent className="px-6 md:px-12 pb-10">

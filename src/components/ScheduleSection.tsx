@@ -28,6 +28,12 @@ const schedule = {
     { time: "16:00 - 17:20", title: "Painel de Debates de Novos Empreendimentos", type: "painel" },
     { time: "17:20 - 17:30", title: "Agradecimentos Finais", type: "cerimônia" },
   ],
+  "13/Nov": [
+    { time: "09:00 - 11:00", title: "Homenagem aos Veteranos & In Memoriam", type: "cerimônia" },
+    { time: "11:00 - 12:30", title: "Lançamento: Livro Prof. China - 2ª Edição", type: "lançamento" },
+    { time: "14:00 - 16:30", title: "Estreia do Documentário Histórico 50 Anos", type: "cinema" },
+    { time: "18:00 - 23:00", title: "Festa do Eng. de Minas", type: "celebração" },
+  ],
 };
 
 const typeColors: Record<string, string> = {
@@ -36,6 +42,10 @@ const typeColors: Record<string, string> = {
   workshop: "bg-emerald-100 text-emerald-700 border-emerald-200",
   cerimônia: "bg-semin-cream text-semin-dark border-semin-orange/20",
   intervalo: "bg-zinc-100 text-zinc-500 border-zinc-200",
+  visita: "bg-amber-100 text-amber-700 border-amber-200",
+  lançamento: "bg-purple-100 text-purple-700 border-purple-200",
+  cinema: "bg-sky-100 text-sky-700 border-sky-200",
+  celebração: "bg-rose-100 text-rose-700 border-rose-200",
 };
 
 const ScheduleSection = () => {
@@ -51,8 +61,8 @@ const ScheduleSection = () => {
             <Pickaxe className="h-3 w-3 md:h-3.5 md:w-3.5" />
             Cronograma
           </span>
-          <h2 className="font-display text-2xl sm:text-3xl md:text-5xl font-bold text-semin-blue mb-3 md:mb-4">
-            Programação
+          <h2 className="text-4xl sm:text-5xl md:text-7xl font-black mb-6 md:mb-8 tracking-tight leading-tight text-semin-blue">
+            Nossa <span className="text-semin-yellow">Programação</span>
           </h2>
           <div className="flex items-center justify-center gap-3 mb-4 md:mb-6">
             <div className="w-8 md:w-12 h-[2px] bg-gradient-to-r from-transparent to-semin-yellow rounded-full" />

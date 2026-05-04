@@ -2,7 +2,6 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
 
-
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
   server: {
@@ -21,12 +20,27 @@ export default defineConfig(({ mode }) => ({
   build: {
     rollupOptions: {
       output: {
-        manualChunks: {
-          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
-          'vendor-motion': ['framer-motion'],
-          'vendor-ui': ['lucide-react', 'embla-carousel-react', 'embla-carousel-autoplay'],
-          'vendor-charts': ['recharts'],
-          'vendor-supabase': ['@supabase/supabase-js'],
+        manualChunks(id) {
+          // Core React — very stable, cache forever
+          if (id.includes('react-dom') || id.includes('react-router-dom')) {
+            return 'vendor-react';
+          }
+          // Framer Motion — heavy (~60KB), isolate so pages without it don't pay
+          if (id.includes('framer-motion')) {
+            return 'vendor-motion';
+          }
+          // UI libraries (carousel, icons)
+          if (id.includes('lucide-react') || id.includes('embla-carousel')) {
+            return 'vendor-ui';
+          }
+          // Supabase client
+          if (id.includes('@supabase/supabase-js')) {
+            return 'vendor-supabase';
+          }
+          // Radix UI primitives — group to avoid many small chunks
+          if (id.includes('@radix-ui')) {
+            return 'vendor-radix';
+          }
         }
       }
     },
@@ -34,7 +48,13 @@ export default defineConfig(({ mode }) => ({
     target: 'es2020',
     // Inline small assets to reduce HTTP requests
     assetsInlineLimit: 4096,
-    // Disable module preloading to prevent downloading unused chunks (fixes Lighthouse JS warning)
+    // Disable module preloading to prevent downloading unused chunks
     modulePreload: false,
+    // Enable CSS code splitting so each lazy chunk gets its own CSS
+    cssCodeSplit: true,
+    // Produce smaller output
+    minify: 'esbuild',
+    // No sourcemaps in production for smaller bundles
+    sourcemap: false,
   }
 }));

@@ -26,7 +26,7 @@ const SpeakersSection = () => {
             <Gem className="h-3 w-3 md:h-3.5 md:w-3.5" />
             Quem estará lá
           </span>
-          <h2 className="font-display text-2xl sm:text-3xl md:text-5xl font-bold text-semin-blue mb-3 md:mb-4">
+          <h2 className="text-4xl sm:text-5xl md:text-7xl font-black text-semin-blue mb-6 md:mb-8 tracking-tight leading-tight">
             Palestrantes
           </h2>
           <div className="flex items-center justify-center gap-3 mb-4 md:mb-6">

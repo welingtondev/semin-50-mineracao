@@ -50,16 +50,15 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
 
       if (error) {
         console.error("Supabase edge function error:", error);
-        throw new Error("Erro ao se conectar com o serviço de pagamento.");
+        throw new Error("Erro ao se conectar com o serviço de doação.");
       }
 
       if (data && data.success) {
-        if (billingType === "PIX") {
-          setPixData(data.pixData);
-        }
+        // Armazena os dados do PIX ou apenas a URL da fatura para outros métodos
+        setPixData(billingType === "PIX" ? data.pixData : { invoiceUrl: data.invoiceUrl });
         setStep(3);
       } else {
-        alert(data.error || "Erro ao processar pagamento");
+        alert(data.error || "Erro ao processar doação");
       }
     } catch (error) {
       console.error("Checkout error:", error);
@@ -76,19 +75,19 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
     }
   };
 
-  if (!isOpen) return null;
-
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-        {/* Backdrop */}
-        <motion.div 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          onClick={onClose}
-          className="absolute inset-0 bg-black/80 backdrop-blur-sm"
-        />
+      {isOpen && (
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
+          {/* Backdrop */}
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={onClose}
+            className="absolute inset-0 bg-black/90 backdrop-blur-md"
+          />
+
 
         {/* Modal Card */}
         <motion.div
@@ -145,28 +144,39 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <label className="text-xs uppercase tracking-widest font-bold text-white/40 ml-1">CPF</label>
+                      <label className="text-xs uppercase tracking-widest font-bold text-white/40 ml-1">CPF ou CNPJ</label>
                       <Input 
                         name="cpf" 
                         value={formData.cpf} 
                         onChange={handleInputChange} 
                         required 
-                        placeholder="000.000.000-00"
+                        placeholder="000.000.000-00 ou CNPJ"
                         className="bg-white/5 border-white/10 text-white h-12 rounded-xl focus:border-semin-yellow/50 transition-all"
                       />
                     </div>
                     <div className="space-y-2">
-                      <label className="text-xs uppercase tracking-widest font-bold text-white/40 ml-1">Valor (R$)</label>
+                      <label className="text-xs uppercase tracking-widest font-bold text-white/40 ml-1">WhatsApp / Telefone</label>
                       <Input 
-                        name="value" 
-                        type="number"
-                        step="0.01"
-                        value={formData.value} 
+                        name="phone" 
+                        value={formData.phone} 
                         onChange={handleInputChange} 
                         required 
-                        className="bg-white/5 border-white/10 text-white h-12 rounded-xl focus:border-semin-yellow/50 text-xl font-bold"
+                        placeholder="(00) 00000-0000"
+                        className="bg-white/5 border-white/10 text-white h-12 rounded-xl focus:border-semin-yellow/50 transition-all"
                       />
                     </div>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-xs uppercase tracking-widest font-bold text-white/40 ml-1">Valor da Doação (R$)</label>
+                    <Input 
+                      name="value" 
+                      type="number"
+                      step="0.01"
+                      value={formData.value} 
+                      onChange={handleInputChange} 
+                      required 
+                      className="bg-white/5 border-white/10 text-semin-yellow h-14 rounded-xl focus:border-semin-yellow/50 text-2xl font-black text-center"
+                    />
                   </div>
                 </div>
 
@@ -174,7 +184,7 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
                   type="submit"
                   className="w-full h-14 rounded-2xl bg-gradient-to-r from-semin-yellow to-semin-orange text-semin-dark font-black text-lg group"
                 >
-                  Continuar para Pagamento
+                  Continuar para Doação
                   <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </motion.div>
@@ -275,7 +285,7 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
                     </div>
                     <h4 className="text-2xl font-black text-white">Quase Lá!</h4>
                     <p className="text-white/60 text-sm">
-                      Para finalizar seu pagamento com Cartão, abra a fatura segura do Asaas no botão abaixo.
+                      Para finalizar sua doação, abra a fatura segura do Asaas no botão abaixo.
                     </p>
                     <Button 
                       onClick={() => window.open(pixData?.invoiceUrl || "https://asaas.com", "_blank")}
@@ -304,6 +314,7 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
           </div>
         </motion.div>
       </div>
+      )}
     </AnimatePresence>
   );
 };

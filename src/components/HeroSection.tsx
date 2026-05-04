@@ -1,10 +1,11 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, lazy, Suspense } from "react";
 import { Button } from "@/components/ui/button";
 import { ChevronDown, Mountain, Pickaxe, Gem, HardHat, ArrowRight } from "lucide-react";
 
-import { motion } from "framer-motion";
-import { RegistrationModal } from "./RegistrationModal";
-import { SponsorModal } from "./SponsorModal";
+
+// Lazy-load modal components — they are only needed on button click
+const RegistrationModal = lazy(() => import("./RegistrationModal").then(m => ({ default: m.RegistrationModal })));
+const SponsorModal = lazy(() => import("./SponsorModal").then(m => ({ default: m.SponsorModal })));
 
 const Counter = ({ end, label, suffix = "" }: { end: number; label: string; suffix?: string }) => {
   const [count, setCount] = useState(0);
@@ -87,6 +88,7 @@ const HeroSection = () => {
         <svg 
           viewBox="0 0 200 200" 
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] md:w-[800px] h-[350px] md:h-[800px] animate-[spin_120s_linear_infinite] block opacity-[0.05] sm:opacity-[0.07] pointer-events-none"
+          style={{ contain: "layout paint", willChange: "transform" }}
         >
           {/* Outline shape of a gold nugget */}
           <path 
@@ -117,11 +119,7 @@ const HeroSection = () => {
       </div>
 
       <div className="container mx-auto px-4 relative z-10 text-center -mt-10 sm:mt-0">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-        >
+        <div className="animate-fade-in-up opacity-0 [animation-delay:100ms]">
           <div className="relative inline-flex items-center mb-8 md:mb-10 group cta-float">
             {/* Glow ring outsite */}
             <div className="absolute inset-0 bg-gradient-to-r from-semin-yellow via-semin-orange to-semin-yellow opacity-40 blur-xl rounded-full" />
@@ -135,11 +133,11 @@ const HeroSection = () => {
             </div>
           </div>
 
-          <h1 className="text-5xl sm:text-6xl md:text-8xl lg:text-[10rem] font-black text-white mb-4 md:mb-6 leading-tight">
-            <span className="bg-gradient-to-r from-semin-yellow via-semin-cream to-semin-yellow bg-clip-text text-transparent">
+          <h1 className="text-5xl sm:text-6xl md:text-8xl lg:text-[10rem] font-black mb-4 md:mb-6 leading-tight tracking-tighter">
+            <span className="text-golden-mirror filter drop-shadow-[0_0_15px_rgba(210,155,33,0.4)]">
               SEMIN UFBA
             </span>
-            <span className="block text-xl sm:text-2xl md:text-3xl lg:text-4xl font-medium mt-2 md:mt-4 tracking-wider bg-gradient-to-r from-semin-cream/60 via-white to-semin-cream/60 bg-clip-text text-transparent drop-shadow-sm">
+            <span className="block text-xl sm:text-2xl md:text-3xl lg:text-4xl font-medium mt-2 md:mt-4 tracking-wider bg-gradient-to-r from-white/60 via-white to-white/60 bg-clip-text text-transparent drop-shadow-sm">
               Semana de Mineração da UFBA
             </span>
           </h1>
@@ -151,37 +149,41 @@ const HeroSection = () => {
           </div>
 
           <p className="font-body text-lg sm:text-xl md:text-[26px] text-white/50 max-w-4xl mx-auto mb-8 md:mb-12 leading-relaxed px-2">
-            Celebrando meio século de excelência em Engenharia de Minas — unindo tradição, inovação e o futuro da mineração
+            Celebrando meio século de excelência em Engenharia de Minas — unindo tradição, inovação e o futuro da mineração baiana.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 md:gap-5 justify-center mb-14 md:mb-20 px-4 sm:px-0">
-            <RegistrationModal>
-              <div className="relative inline-flex w-full sm:w-auto cta-float cursor-pointer">
-                {/* Glow ring behind CTA */}
-                <div className="absolute -inset-1 md:-inset-1.5 rounded-2xl bg-gradient-to-r from-semin-yellow via-semin-orange to-semin-yellow opacity-50 blur-md cta-glow" />
-                <Button
-                  size="lg"
-                  className="cta-shine relative w-full sm:w-auto md:w-[320px] bg-gradient-to-r from-semin-yellow via-amber-400 to-semin-orange text-semin-dark hover:from-semin-orange hover:via-amber-500 hover:to-semin-yellow font-display font-bold text-sm md:text-lg px-6 py-4 md:py-8 rounded-xl shadow-2xl shadow-semin-yellow/30 transition-all duration-300 hover:shadow-semin-yellow/50 active:scale-95 md:hover:scale-105 group"
-                >
-                  <HardHat className="h-4 w-4 md:h-6 md:w-6 mr-2 group-hover:rotate-12 transition-transform duration-300" />
-                  Inscreva-se
-                  <ArrowRight className="ml-2 h-4 w-4 md:h-5 md:w-5 group-hover:translate-x-1 transition-transform duration-300" />
-                </Button>
-              </div>
-            </RegistrationModal>
-            <SponsorModal>
-              <div className="relative inline-flex w-full sm:w-auto cursor-pointer">
-                <div className="absolute -inset-[1px] rounded-xl bg-gradient-to-r from-semin-yellow/60 via-semin-orange/40 to-semin-yellow/60 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="relative w-full sm:w-auto md:w-[320px] border-2 border-semin-yellow/40 text-semin-yellow hover:bg-semin-yellow/10 hover:border-semin-yellow/80 font-display font-semibold text-sm md:text-lg px-6 py-4 md:py-8 rounded-xl backdrop-blur-sm transition-all duration-300 active:scale-95 md:hover:scale-105 group hover:shadow-lg hover:shadow-semin-yellow/15"
-                >
-                  <Gem className="h-4 w-4 md:h-6 md:w-6 mr-2 group-hover:rotate-12 transition-transform duration-300" />
-                  Seja um Patrocinador
-                </Button>
-              </div>
-            </SponsorModal>
+            <Suspense fallback={null}>
+              <RegistrationModal>
+                <div className="relative inline-flex w-full sm:w-auto cta-float cursor-pointer">
+                  {/* Glow ring behind CTA */}
+                  <div className="absolute -inset-1 md:-inset-1.5 rounded-2xl bg-gradient-to-r from-semin-yellow via-semin-orange to-semin-yellow opacity-50 blur-md cta-glow" />
+                  <Button
+                    size="lg"
+                    className="cta-shine relative w-full sm:w-auto md:w-[320px] bg-gradient-to-r from-semin-yellow via-amber-400 to-semin-orange text-semin-dark hover:from-semin-orange hover:via-amber-500 hover:to-semin-yellow font-display font-bold text-sm md:text-lg px-6 py-4 md:py-8 rounded-xl shadow-2xl shadow-semin-yellow/30 transition-all duration-300 hover:shadow-semin-yellow/50 active:scale-95 md:hover:scale-105 group"
+                  >
+                    <HardHat className="h-4 w-4 md:h-6 md:w-6 mr-2 group-hover:rotate-12 transition-transform duration-300" />
+                    Inscreva-se
+                    <ArrowRight className="ml-2 h-4 w-4 md:h-5 md:w-5 group-hover:translate-x-1 transition-transform duration-300" />
+                  </Button>
+                </div>
+              </RegistrationModal>
+            </Suspense>
+            <Suspense fallback={null}>
+              <SponsorModal>
+                <div className="relative inline-flex w-full sm:w-auto cursor-pointer">
+                  <div className="absolute -inset-[1px] rounded-xl bg-gradient-to-r from-semin-yellow/60 via-semin-orange/40 to-semin-yellow/60 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="relative w-full sm:w-auto md:w-[320px] border-2 border-semin-yellow/40 text-semin-yellow hover:bg-semin-yellow/10 hover:border-semin-yellow/80 font-display font-semibold text-sm md:text-lg px-6 py-4 md:py-8 rounded-xl backdrop-blur-sm transition-all duration-300 active:scale-95 md:hover:scale-105 group hover:shadow-lg hover:shadow-semin-yellow/15"
+                  >
+                    <Gem className="h-4 w-4 md:h-6 md:w-6 mr-2 group-hover:rotate-12 transition-transform duration-300" />
+                    Seja um Patrocinador
+                  </Button>
+                </div>
+              </SponsorModal>
+            </Suspense>
           </div>
 
           <div className="flex justify-center gap-8 sm:gap-12 md:gap-16 lg:gap-24">
@@ -189,14 +191,14 @@ const HeroSection = () => {
             <Counter end={4} label="Edições realizadas" />
             <Counter end={400} label="Participantes" suffix="+" />
           </div>
-        </motion.div>
+        </div>
 
-        <motion.a
+        <a
           href="#sobre"
           className="absolute bottom-4 md:bottom-8 left-1/2 -translate-x-1/2 text-white/30 hover:text-semin-yellow transition-colors animate-bounce p-2"
         >
           <ChevronDown className="h-6 w-6 md:h-8 md:w-8" />
-        </motion.a>
+        </a>
       </div>
     </section>
   );
