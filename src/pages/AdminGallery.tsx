@@ -29,6 +29,13 @@ export default function AdminGallery() {
   
   const [photos, setPhotos] = useState<PendingPhoto[]>([]);
   const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState<"gallery" | "fundraising">("gallery");
+
+  // Fundraising State
+  const [fundDonations, setFundDonations] = useState(0);
+  const [fundSponsorships, setFundSponsorships] = useState(0);
+  const [fundId, setFundId] = useState<string | null>(null);
+  const [savingFund, setSavingFund] = useState(false);
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,24 +48,80 @@ export default function AdminGallery() {
     }
   };
 
-  const fetchPhotos = async () => {
+  const fetchData = async () => {
     setLoading(true);
-    const { data, error } = await supabase
+    // Fetch photos (excluding system rows)
+    const { data: photosData, error: photosError } = await supabase
       .from("gallery_photos")
       .select("*")
+      .neq("author_name", "SYSTEM_FUNDRAISING")
       .order("created_at", { ascending: false });
 
-    if (error) {
+    if (photosError) {
       toast.error("Erro ao buscar fotos");
     } else {
-      setPhotos(data || []);
+      setPhotos(photosData || []);
     }
+
+    // Fetch fundraising settings
+    const { data: fundData } = await supabase
+      .from("gallery_photos")
+      .select("*")
+      .eq("author_name", "SYSTEM_FUNDRAISING")
+      .limit(1);
+
+    if (fundData && fundData.length > 0) {
+      setFundId(fundData[0].id);
+      try {
+        const parsed = JSON.parse(fundData[0].description || "{}");
+        setFundDonations(parsed.donations || 0);
+        setFundSponsorships(parsed.sponsorships || 0);
+      } catch (e) {
+        console.error("Erro ao parsear config de arrecadação");
+      }
+    }
+    
     setLoading(false);
+  };
+
+  const handleSaveFundraising = async () => {
+    setSavingFund(true);
+    const payload = JSON.stringify({
+      donations: fundDonations,
+      sponsorships: fundSponsorships
+    });
+
+    if (fundId) {
+      const { error } = await supabase
+        .from("gallery_photos")
+        .update({ description: payload })
+        .eq("id", fundId);
+      if (error) toast.error("Erro ao atualizar arrecadação");
+      else toast.success("Valores de arrecadação atualizados!");
+    } else {
+      const { data, error } = await supabase
+        .from("gallery_photos")
+        .insert({
+          author_name: "SYSTEM_FUNDRAISING",
+          year_cohort: "SYSTEM",
+          status: "system",
+          image_base64: "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7",
+          description: payload
+        })
+        .select();
+      if (error) {
+        toast.error("Erro ao criar registro de arrecadação");
+      } else if (data && data.length > 0) {
+        setFundId(data[0].id);
+        toast.success("Valores de arrecadação criados!");
+      }
+    }
+    setSavingFund(false);
   };
 
   useEffect(() => {
     if (isAuthenticated) {
-      fetchPhotos();
+      fetchData();
     }
   }, [isAuthenticated]);
 
@@ -110,7 +173,7 @@ export default function AdminGallery() {
       toast.error(`Erro ao ${newStatus === "approved" ? "aprovar" : "rejeitar"} foto`);
     } else {
       toast.success(`Foto ${newStatus === "approved" ? "aprovada" : "rejeitada"}!`);
-      fetchPhotos();
+      fetchData();
     }
   };
 
@@ -126,7 +189,7 @@ export default function AdminGallery() {
       toast.error("Erro ao deletar foto");
     } else {
       toast.success("Foto deletada do banco de dados.");
-      fetchPhotos();
+      fetchData();
     }
   };
 
@@ -178,24 +241,19 @@ export default function AdminGallery() {
   return (
     <div className="min-h-screen bg-semin-dark text-white p-6 md:p-12 font-sans">
       <div className="max-w-6xl mx-auto">
-        <div className="flex items-center justify-between border-b border-white/10 pb-6 mb-8">
+        <div className="flex items-center justify-between border-b border-white/10 pb-6 mb-8 flex-wrap gap-4">
           <div>
             <h1 className="text-3xl font-display font-bold text-semin-yellow flex items-center gap-3">
               <ShieldCheck className="h-8 w-8" />
-              Moderação da Galeria do Tempo
+              Painel de Moderação
             </h1>
             <p className="text-white/60 mt-2">
-              Aprove ou rejeite as fotos enviadas pelos usuários. Fotos aprovadas aparecem no site na mesma hora.
+              Gerencie a Galeria do Tempo e as configurações do Termômetro de Arrecadação.
             </p>
           </div>
           <div className="flex gap-3">
-            <PhotoUploadModal isAdmin={true}>
-              <Button className="bg-semin-yellow text-semin-dark hover:bg-amber-400 font-bold hidden sm:flex">
-                <UploadCloud className="w-4 h-4 mr-2" /> Submeter Nova
-              </Button>
-            </PhotoUploadModal>
-            <Button onClick={fetchPhotos} className="bg-semin-yellow text-semin-dark hover:bg-amber-400 font-bold">
-              Atualizar
+            <Button onClick={fetchData} className="bg-semin-yellow text-semin-dark hover:bg-amber-400 font-bold">
+              Atualizar Dados
             </Button>
             <Button onClick={handleLogout} variant="outline" className="border-red-500/30 text-red-400 hover:bg-red-500/10">
               <LogOut className="w-4 h-4 sm:mr-2" /> <span className="hidden sm:inline">Sair</span>
@@ -203,7 +261,77 @@ export default function AdminGallery() {
           </div>
         </div>
 
-        {loading ? (
+        {/* Tabs */}
+        <div className="flex gap-4 mb-8 border-b border-white/10 pb-4">
+          <button
+            onClick={() => setActiveTab("gallery")}
+            className={`px-6 py-2 rounded-full font-bold text-sm transition-all ${
+              activeTab === "gallery" ? "bg-white/10 text-white" : "text-white/50 hover:text-white"
+            }`}
+          >
+            Galeria de Fotos
+          </button>
+          <button
+            onClick={() => setActiveTab("fundraising")}
+            className={`px-6 py-2 rounded-full font-bold text-sm transition-all ${
+              activeTab === "fundraising" ? "bg-white/10 text-white" : "text-white/50 hover:text-white"
+            }`}
+          >
+            Termômetro de Arrecadação
+          </button>
+        </div>
+
+        {activeTab === "fundraising" && (
+          <div className="bg-white/5 border border-white/10 rounded-2xl p-8 max-w-2xl">
+            <h2 className="text-2xl font-display font-bold text-semin-yellow mb-6">Configurar Valores de Arrecadação</h2>
+            
+            <div className="space-y-6">
+              <div className="space-y-2">
+                <Label htmlFor="donations" className="text-white/80 font-bold">Total Doações da Comunidade (R$)</Label>
+                <Input
+                  id="donations"
+                  type="number"
+                  value={fundDonations}
+                  onChange={(e) => setFundDonations(Number(e.target.value))}
+                  className="bg-black/20 border-white/10 text-white text-lg"
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="sponsorships" className="text-white/80 font-bold">Total Patrocínios Corporativos (R$)</Label>
+                <Input
+                  id="sponsorships"
+                  type="number"
+                  value={fundSponsorships}
+                  onChange={(e) => setFundSponsorships(Number(e.target.value))}
+                  className="bg-black/20 border-white/10 text-white text-lg"
+                />
+              </div>
+
+              <div className="pt-4">
+                <Button 
+                  onClick={handleSaveFundraising} 
+                  disabled={savingFund}
+                  className="bg-semin-yellow text-semin-dark font-bold hover:bg-amber-400 w-full md:w-auto"
+                >
+                  {savingFund ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
+                  Salvar Valores
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === "gallery" && (
+          <>
+            <div className="flex justify-end mb-6">
+              <PhotoUploadModal isAdmin={true}>
+                <Button className="bg-semin-yellow text-semin-dark hover:bg-amber-400 font-bold flex">
+                  <UploadCloud className="w-4 h-4 mr-2" /> Submeter Nova Foto
+                </Button>
+              </PhotoUploadModal>
+            </div>
+            {loading ? (
           <div className="flex justify-center py-20">
             <Loader2 className="h-8 w-8 animate-spin text-semin-yellow" />
           </div>
@@ -301,6 +429,8 @@ export default function AdminGallery() {
               </div>
             ))}
           </div>
+        )}
+        </>
         )}
       </div>
     </div>
