@@ -12,7 +12,7 @@ const CrowdfundingSection = () => {
   // --- CONFIGURAÇÃO DO TERMÔMETRO ---
   const [currentDonations, setCurrentDonations] = useState(0);
   const [currentSponsorships, setCurrentSponsorships] = useState(0);
-  const GOAL_AMOUNT = 102500;        // Meta total: R$ 102.500,00
+  const GOAL_AMOUNT = 102700;        // Meta total: R$ 102.700,00
 
   useEffect(() => {
     const fetchFundraisingData = async () => {
