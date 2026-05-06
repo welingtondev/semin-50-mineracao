@@ -129,27 +129,27 @@ const CrowdfundingSection = () => {
             
             <div className="flex flex-col md:flex-row justify-between items-center md:items-end mb-10 gap-8 relative z-10">
               <div className="text-center md:text-left">
-                <h3 className="font-display text-3xl md:text-5xl font-black text-white mb-3 tracking-tight">Meta de Arrecadação</h3>
-                <p className="font-body text-sm md:text-lg text-white/50 max-w-md">Acompanhe o nosso progresso em tempo real rumo ao SEMIN 50 Anos.</p>
+                <h3 className="font-display text-3xl md:text-5xl font-black text-white mb-3 tracking-tight">Meta do Termômetro</h3>
+                <p className="font-body text-sm md:text-lg text-white/50 max-w-md">Nos ajude a bater a meta histórica do nosso cinquentenário.</p>
               </div>
               <div className="text-center md:text-right bg-white/5 px-8 py-4 rounded-3xl border border-white/5 shadow-inner">
                 <p className="font-display text-5xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-br from-semin-yellow to-amber-500 drop-shadow-[0_0_20px_rgba(210,155,33,0.4)]">
-                  {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(TOTAL_RAISED)}
+                  {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(GOAL_AMOUNT)}
                 </p>
-                <p className="font-body text-sm md:text-base font-bold text-white/40 uppercase tracking-[0.2em] mt-2">
-                  Meta: {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(GOAL_AMOUNT)}
+                <p className="font-body text-sm md:text-base font-bold text-white/70 uppercase tracking-[0.1em] mt-2">
+                  Acumulado: <span className="text-rose-500 font-black">{new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(TOTAL_RAISED)}</span>
                 </p>
               </div>
             </div>
 
-            {/* Barra de Progresso - Design Premium */}
+            {/* Barra de Progresso - Design Premium Termômetro Clássico (Tons de Vermelho/Laranja) */}
             <div className="relative h-10 md:h-12 w-full bg-[#05070a] rounded-full overflow-hidden border border-white/10 shadow-[inset_0_10px_30px_rgba(0,0,0,0.8)] flex p-1.5 gap-1.5 z-10 group/bar">
               {/* Background grid pattern inside the empty bar */}
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:10px_10px] opacity-20 pointer-events-none" />
 
-              {/* Doações da Comunidade */}
+              {/* Doações da Comunidade (Vermelho Clássico de Termômetro) */}
               <div 
-                className="h-full rounded-full bg-gradient-to-r from-semin-orange to-rose-500 transition-all duration-[2000ms] ease-out relative shadow-[0_0_20px_rgba(224,115,19,0.5)] overflow-hidden"
+                className="h-full rounded-full bg-gradient-to-r from-red-700 via-rose-600 to-red-500 transition-all duration-[2000ms] ease-out relative shadow-[0_0_25px_rgba(239,68,68,0.6)] overflow-hidden"
                 style={{ width: `${percentageDonations}%` }}
               >
                 {/* Flowing light effect inside the bar */}
@@ -157,9 +157,9 @@ const CrowdfundingSection = () => {
                 <div className="absolute inset-0 bg-white/0 hover:bg-white/10 transition-colors rounded-full cursor-help" title={`Doações Comunitárias: ${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(currentDonations)}`} />
               </div>
               
-              {/* Patrocínios */}
+              {/* Patrocínios (Laranja/Ouro Termômetro) */}
               <div 
-                className="h-full rounded-full bg-gradient-to-r from-amber-400 to-semin-yellow transition-all duration-[2000ms] ease-out relative shadow-[0_0_20px_rgba(210,155,33,0.5)] overflow-hidden"
+                className="h-full rounded-full bg-gradient-to-r from-red-500 via-orange-500 to-amber-500 transition-all duration-[2000ms] ease-out relative shadow-[0_0_25px_rgba(249,115,22,0.6)] overflow-hidden"
                 style={{ width: `${percentageSponsorships}%` }}
               >
                 <div className="absolute inset-0 bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.4),transparent)] -translate-x-full group-hover/bar:animate-[shimmer_2s_infinite_0.5s]" />
@@ -169,7 +169,7 @@ const CrowdfundingSection = () => {
               {/* Sparkle at the current edge if there's progress */}
               {TOTAL_RAISED > 0 && TOTAL_RAISED < GOAL_AMOUNT && (
                 <div 
-                  className="absolute top-1/2 -translate-y-1/2 w-4 h-4 bg-white rounded-full shadow-[0_0_20px_5px_rgba(255,255,255,0.8)] z-20 pointer-events-none transition-all duration-[2000ms] ease-out"
+                  className="absolute top-1/2 -translate-y-1/2 w-4 h-4 bg-white rounded-full shadow-[0_0_20px_5px_rgba(255,255,255,0.9)] z-20 pointer-events-none transition-all duration-[2000ms] ease-out animate-pulse"
                   style={{ left: `calc(${PERCENTAGE_TOTAL}% - 8px)` }}
                 />
               )}
