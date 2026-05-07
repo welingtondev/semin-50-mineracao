@@ -62,8 +62,8 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
     const rawValue = formData.value.replace(/[^\d]/g, "");
     const parsedValue = rawValue ? parseFloat(rawValue) / 100 : 0;
 
-    if (parsedValue <= 0) {
-      alert("Por favor, insira um valor válido para a contribuição.");
+    if (parsedValue < 5) {
+      alert("O valor mínimo para contribuição é de R$ 5,00.");
       return;
     }
 
@@ -123,18 +123,18 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
           initial={{ scale: 0.9, opacity: 0, y: 20 }}
           animate={{ scale: 1, opacity: 1, y: 0 }}
           exit={{ scale: 0.9, opacity: 0, y: 20 }}
-          className="relative w-full max-w-xl bg-[#0a0d12] border border-white/10 rounded-[2.5rem] shadow-[0_30px_60px_rgba(0,0,0,0.8)] overflow-hidden"
+          className="relative w-full max-w-xl bg-white border border-black/[0.08] rounded-[2.5rem] shadow-[0_30px_70px_rgba(0,0,0,0.18)] overflow-hidden"
         >
           {/* Header */}
-          <div className="p-6 md:p-8 border-b border-white/5 flex items-center justify-between">
+          <div className="p-6 md:p-8 border-b border-black/[0.05] flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-semin-yellow/10 rounded-full flex items-center justify-center border border-semin-yellow/20">
-                <Heart className="h-5 w-5 text-semin-yellow" fill="currentColor" />
+              <div className="w-10 h-10 bg-semin-orange/10 rounded-full flex items-center justify-center border border-semin-orange/20">
+                <Heart className="h-5 w-5 text-semin-orange" fill="currentColor" />
               </div>
-              <h3 className="text-xl md:text-2xl font-black text-white">Contribuição Jubileu</h3>
+              <h3 className="text-xl md:text-2xl font-black text-semin-blue">Contribuição Jubileu</h3>
             </div>
-            <button onClick={onClose} className="p-2 hover:bg-white/5 rounded-full transition-colors">
-              <X className="h-6 w-6 text-white/40" />
+            <button onClick={onClose} className="p-2 hover:bg-black/5 rounded-full transition-colors group">
+              <X className="h-6 w-6 text-black/30 group-hover:text-black/60 transition-colors" />
             </button>
           </div>
 
@@ -148,18 +148,18 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
                 <div className="space-y-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <label className="text-xs uppercase tracking-widest font-bold text-white/40 ml-1">Nome Completo</label>
+                      <label className="text-xs uppercase tracking-widest font-bold text-semin-blue/60 ml-1">Nome Completo</label>
                       <Input 
                         name="name" 
                         value={formData.name} 
                         onChange={handleInputChange} 
                         required 
                         placeholder="Seu nome"
-                        className="bg-white/5 border-white/10 text-white h-12 rounded-xl focus:border-semin-yellow/50 transition-all"
+                        className="bg-black/[0.025] border-black/[0.08] text-semin-dark h-12 rounded-xl focus:border-semin-orange/50 focus:bg-white focus:ring-4 focus:ring-semin-orange/10 transition-all placeholder:text-black/30"
                       />
                     </div>
                     <div className="space-y-2">
-                      <label className="text-xs uppercase tracking-widest font-bold text-white/40 ml-1">E-mail</label>
+                      <label className="text-xs uppercase tracking-widest font-bold text-semin-blue/60 ml-1">E-mail</label>
                       <Input 
                         name="email" 
                         type="email"
@@ -167,36 +167,36 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
                         onChange={handleInputChange} 
                         required 
                         placeholder="seu@email.com"
-                        className="bg-white/5 border-white/10 text-white h-12 rounded-xl focus:border-semin-yellow/50 transition-all"
+                        className="bg-black/[0.025] border-black/[0.08] text-semin-dark h-12 rounded-xl focus:border-semin-orange/50 focus:bg-white focus:ring-4 focus:ring-semin-orange/10 transition-all placeholder:text-black/30"
                       />
                     </div>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <label className="text-xs uppercase tracking-widest font-bold text-white/40 ml-1">CPF ou CNPJ</label>
+                      <label className="text-xs uppercase tracking-widest font-bold text-semin-blue/60 ml-1">CPF ou CNPJ</label>
                       <Input 
                         name="cpf" 
                         value={formData.cpf} 
                         onChange={handleInputChange} 
                         required 
-                        placeholder="000.000.000-00 ou CNPJ"
-                        className="bg-white/5 border-white/10 text-white h-12 rounded-xl focus:border-semin-yellow/50 transition-all"
+                        placeholder="000.000.000-00"
+                        className="bg-black/[0.025] border-black/[0.08] text-semin-dark h-12 rounded-xl focus:border-semin-orange/50 focus:bg-white focus:ring-4 focus:ring-semin-orange/10 transition-all placeholder:text-black/30"
                       />
                     </div>
                     <div className="space-y-2">
-                      <label className="text-xs uppercase tracking-widest font-bold text-white/40 ml-1">WhatsApp / Telefone</label>
+                      <label className="text-xs uppercase tracking-widest font-bold text-semin-blue/60 ml-1">WhatsApp / Telefone</label>
                       <Input 
                         name="phone" 
                         value={formData.phone} 
                         onChange={handleInputChange} 
                         required 
                         placeholder="(00) 00000-0000"
-                        className="bg-white/5 border-white/10 text-white h-12 rounded-xl focus:border-semin-yellow/50 transition-all"
+                        className="bg-black/[0.025] border-black/[0.08] text-semin-dark h-12 rounded-xl focus:border-semin-orange/50 focus:bg-white focus:ring-4 focus:ring-semin-orange/10 transition-all placeholder:text-black/30"
                       />
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <label className="text-xs uppercase tracking-widest font-bold text-white/40 ml-1">Valor da Doação</label>
+                    <label className="text-xs uppercase tracking-widest font-bold text-semin-blue/60 ml-1">Valor da Doação</label>
                     <Input 
                       name="value" 
                       type="text"
@@ -205,14 +205,15 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
                       onChange={handleInputChange} 
                       required 
                       placeholder="R$ 0,00"
-                      className="bg-white/5 border-white/10 text-semin-yellow h-14 rounded-xl focus:border-semin-yellow/50 text-2xl font-black text-center"
+                      className="bg-black/[0.025] border-black/[0.08] text-semin-orange h-14 rounded-xl focus:border-semin-orange/50 focus:bg-white focus:ring-4 focus:ring-semin-orange/10 text-2xl font-black text-center"
                     />
+                    <p className="text-[11px] text-semin-blue/50 text-center font-bold mt-1">Contribuição mínima recomendada: R$ 5,00</p>
                   </div>
                 </div>
 
                 <Button 
                   type="submit"
-                  className="w-full h-14 rounded-2xl bg-gradient-to-r from-semin-yellow to-semin-orange text-semin-dark font-black text-lg group"
+                  className="w-full h-14 rounded-2xl bg-gradient-to-r from-semin-orange to-amber-500 text-white font-black text-lg group shadow-lg shadow-semin-orange/25 hover:shadow-xl hover:shadow-semin-orange/35 hover:scale-[1.01] transition-all duration-300"
                 >
                   Continuar para Doação
                   <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
@@ -232,11 +233,11 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
                     onClick={() => setBillingType("PIX")}
                     className={`p-6 rounded-3xl border transition-all duration-300 flex flex-col items-center gap-4 ${
                       billingType === "PIX" 
-                      ? "bg-semin-yellow/10 border-semin-yellow shadow-[0_0_20px_rgba(210,155,33,0.2)]" 
-                      : "bg-white/5 border-white/10 text-white/40 hover:border-white/20"
+                      ? "bg-semin-orange/5 border-semin-orange shadow-[0_0_20px_rgba(224,115,19,0.1)] text-semin-orange" 
+                      : "bg-black/[0.02] border-black/10 text-black/40 hover:border-black/20 hover:text-black/60"
                     }`}
                   >
-                    <QrCode className={`h-10 w-10 ${billingType === "PIX" ? "text-semin-yellow" : ""}`} />
+                    <QrCode className={`h-10 w-10 ${billingType === "PIX" ? "text-semin-orange" : "text-black/30"}`} />
                     <span className="font-bold uppercase tracking-widest text-xs">PIX (Instantâneo)</span>
                   </button>
                   <button
@@ -244,20 +245,20 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
                     onClick={() => setBillingType("CREDIT_CARD")}
                     className={`p-6 rounded-3xl border transition-all duration-300 flex flex-col items-center gap-4 ${
                       billingType === "CREDIT_CARD" 
-                      ? "bg-semin-yellow/10 border-semin-yellow shadow-[0_0_20px_rgba(210,155,33,0.2)]" 
-                      : "bg-white/5 border-white/10 text-white/40 hover:border-white/20"
+                      ? "bg-semin-orange/5 border-semin-orange shadow-[0_0_20px_rgba(224,115,19,0.1)] text-semin-orange" 
+                      : "bg-black/[0.02] border-black/10 text-black/40 hover:border-black/20 hover:text-black/60"
                     }`}
                   >
-                    <CreditCard className={`h-10 w-10 ${billingType === "CREDIT_CARD" ? "text-semin-yellow" : ""}`} />
+                    <CreditCard className={`h-10 w-10 ${billingType === "CREDIT_CARD" ? "text-semin-orange" : "text-black/30"}`} />
                     <span className="font-bold uppercase tracking-widest text-xs">Cartão de Crédito</span>
                   </button>
                 </div>
 
                 {billingType === "CREDIT_CARD" && (
-                  <div className="p-4 bg-amber-500/10 border border-amber-500/20 rounded-2xl flex items-start gap-3">
-                    <ShieldCheck className="h-5 w-5 text-amber-400 mt-0.5 shrink-0" />
-                    <p className="text-xs text-amber-200/70 leading-relaxed">
-                      Implementando checkout transparente direto no Asaas. Para cartão de crédito, você será redirecionado para o ambiente seguro do Asaas para finalizar.
+                  <div className="p-4 bg-amber-50 border border-amber-200 rounded-2xl flex items-start gap-3 shadow-inner">
+                    <ShieldCheck className="h-5 w-5 text-amber-600 mt-0.5 shrink-0" />
+                    <p className="text-xs text-amber-800 leading-relaxed font-body">
+                      Para cartão de crédito, você será redirecionado com total segurança para o checkout autenticado da nossa plataforma de pagamentos (Asaas).
                     </p>
                   </div>
                 )}
@@ -266,14 +267,14 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
                   <Button 
                     variant="outline" 
                     onClick={() => setStep(1)}
-                    className="flex-1 h-14 rounded-2xl bg-transparent border-white/20 text-white hover:bg-white/10 hover:text-white"
+                    className="flex-1 h-14 rounded-2xl bg-white border-black/15 text-black/60 hover:bg-black/5 hover:text-black/80 transition-all duration-300"
                   >
                     Voltar
                   </Button>
                   <Button 
                     type="submit"
                     disabled={loading}
-                    className="flex-[2] h-14 rounded-2xl bg-gradient-to-r from-semin-yellow to-semin-orange text-semin-dark font-black text-lg"
+                    className="flex-[2] h-14 rounded-2xl bg-gradient-to-r from-semin-orange to-amber-500 text-white font-black text-lg shadow-lg shadow-semin-orange/20"
                   >
                     {loading ? <Loader2 className="h-6 w-6 animate-spin" /> : "Finalizar Doação"}
                   </Button>
@@ -289,37 +290,37 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
               >
                 {billingType === "PIX" && pixData ? (
                   <div className="space-y-6">
-                    <div className="w-20 h-20 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-green-500/20">
-                      <CheckCircle2 className="h-10 w-10 text-green-400" />
+                    <div className="w-20 h-20 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-4 border border-green-200">
+                      <CheckCircle2 className="h-10 w-10 text-green-500" />
                     </div>
-                    <h4 className="text-2xl font-black text-white">QR Code Gerado!</h4>
-                    <p className="text-white/60 text-sm max-w-xs mx-auto">
-                      Escaneie o código abaixo no seu app de banco para finalizar a contribuição de <span className="text-semin-yellow font-bold">{formData.value}</span>.
+                    <h4 className="text-2xl font-black text-semin-blue">QR Code Gerado!</h4>
+                    <p className="text-black/60 text-sm max-w-xs mx-auto">
+                      Escaneie o código abaixo no seu app de banco para finalizar a contribuição de <span className="text-semin-orange font-bold">{formData.value}</span>.
                     </p>
                     
-                    <div className="bg-white p-4 rounded-3xl w-48 h-48 mx-auto shadow-[0_0_30px_rgba(255,255,255,0.1)]">
+                    <div className="bg-semin-cream p-4 rounded-3xl w-48 h-48 mx-auto shadow-inner border border-black/[0.05]">
                       <img src={`data:image/png;base64,${pixData.encodedImage}`} alt="PIX QR Code" className="w-full h-full" />
                     </div>
 
                     <div className="flex flex-col gap-3">
-                      <Button onClick={copyPix} className="w-full h-12 rounded-xl bg-white hover:bg-white/90 text-semin-dark font-bold gap-2 border-0 shadow-lg shadow-black/10">
-                        <Copy className="h-4 w-4 text-semin-dark" />
+                      <Button onClick={copyPix} className="w-full h-12 rounded-xl bg-semin-dark hover:bg-black text-white font-bold gap-2 border-0 shadow-lg shadow-black/10">
+                        <Copy className="h-4 w-4 text-white" />
                         Copiar Código PIX
                       </Button>
                     </div>
                   </div>
                 ) : (
                   <div className="space-y-6">
-                    <div className="w-20 h-20 bg-semin-yellow/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-semin-yellow/20">
-                      <CheckCircle2 className="h-10 w-10 text-semin-yellow" />
+                    <div className="w-20 h-20 bg-semin-orange/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-semin-orange/20">
+                      <CheckCircle2 className="h-10 w-10 text-semin-orange" />
                     </div>
-                    <h4 className="text-2xl font-black text-white">Quase Lá!</h4>
-                    <p className="text-white/60 text-sm">
+                    <h4 className="text-2xl font-black text-semin-blue">Quase Lá!</h4>
+                    <p className="text-black/60 text-sm">
                       Para finalizar sua doação, abra a fatura segura do Asaas no botão abaixo.
                     </p>
                     <Button 
                       onClick={() => window.open(pixData?.invoiceUrl || "https://asaas.com", "_blank")}
-                      className="w-full h-14 rounded-2xl bg-semin-yellow text-semin-dark font-black"
+                      className="w-full h-14 rounded-2xl bg-semin-orange hover:bg-semin-orange/95 text-white font-black shadow-lg shadow-semin-orange/20"
                     >
                       Abrir Checkout Seguro
                       <ExternalLink className="ml-2 h-5 w-5" />
@@ -329,7 +330,7 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
 
                 <button 
                   onClick={onClose}
-                  className="text-white/30 hover:text-white/60 text-xs uppercase tracking-widest font-bold transition-colors"
+                  className="text-black/35 hover:text-black/60 text-xs uppercase tracking-widest font-bold transition-colors"
                 >
                   Fechar Janela
                 </button>
@@ -338,9 +339,9 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
           </form>
 
           {/* Footer Security */}
-          <div className="p-6 bg-white/[0.02] border-t border-white/5 flex items-center justify-center gap-3">
-            <ShieldCheck className="h-4 w-4 text-white/20" />
-            <span className="text-[10px] uppercase tracking-[0.2em] text-white/20 font-bold">Ambiente Criptografado e Seguro via ASAAS</span>
+          <div className="p-6 bg-black/[0.015] border-t border-black/[0.05] flex items-center justify-center gap-3">
+            <ShieldCheck className="h-4 w-4 text-black/20" />
+            <span className="text-[10px] uppercase tracking-[0.2em] text-black/35 font-bold">Ambiente Criptografado e Seguro via ASAAS</span>
           </div>
         </motion.div>
       </div>
