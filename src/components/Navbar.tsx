@@ -22,19 +22,40 @@ const links = [
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
+  const [visible, setVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 50);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      
+      // Determine if scrolled down past threshold
+      setScrolled(currentScrollY > 20);
+
+      // Hide on scroll down, show on scroll up
+      if (currentScrollY <= 80) {
+        setVisible(true);
+      } else if (currentScrollY > lastScrollY) {
+        setVisible(false); // Scrolling down
+      } else {
+        setVisible(true); // Scrolling up
+      }
+
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [lastScrollY]);
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 animate-fade-in-up ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+        visible ? "translate-y-0" : "-translate-y-full"
+      } ${
         scrolled
-          ? "bg-semin-dark/95 backdrop-blur-xl shadow-2xl shadow-black/20 py-2 md:py-3"
+          ? "bg-[#0a0d12]/90 backdrop-blur-md border-b border-semin-yellow/15 shadow-lg py-2 md:py-3"
           : "bg-transparent py-4 md:py-6"
       }`}
     >

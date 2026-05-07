@@ -27,7 +27,7 @@ const SpeakersSection = () => {
             Quem estará lá
           </span>
           <h2 className="text-4xl sm:text-5xl md:text-7xl font-black text-semin-blue mb-6 md:mb-8 tracking-tight leading-tight">
-            Palestrantes
+            Nossos <span className="text-semin-yellow">Palestrantes</span>
           </h2>
           <div className="flex items-center justify-center gap-3 mb-4 md:mb-6">
             <div className="w-8 md:w-12 h-[2px] bg-gradient-to-r from-transparent to-semin-yellow rounded-full" />

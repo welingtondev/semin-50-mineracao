@@ -63,11 +63,11 @@ const ShortRegistrationBanner = () => {
               </div>
             </div>
             
-            <div className="flex-shrink-0 w-full lg:w-auto flex justify-center">
+            <div className="flex-shrink-0 w-auto lg:w-auto flex justify-center mx-auto lg:mx-0">
               <RegistrationModal>
                 <Button
                   size="lg"
-                  className="bg-semin-dark text-white hover:bg-black font-display font-bold text-lg px-10 py-8 rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.3)] transition-all duration-300 active:scale-95 hover:scale-105 hover:shadow-[0_15px_50px_rgba(0,0,0,0.4)] w-full sm:w-auto relative overflow-hidden group"
+                  className="bg-semin-dark text-white hover:bg-black font-display font-bold text-base md:text-lg px-8 py-5 md:px-10 md:py-8 rounded-full md:rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.3)] transition-all duration-300 active:scale-95 hover:scale-105 hover:shadow-[0_15px_50px_rgba(0,0,0,0.4)] w-auto min-w-[240px] sm:w-auto relative overflow-hidden group"
                 >
                   <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-[100%] group-hover:translate-x-[100%] transition-transform duration-700"></span>
                   <HardHat className="h-6 w-6 mr-3 text-semin-yellow" />

@@ -26,18 +26,19 @@ const SupportSection = () => {
   const { ref, isVisible } = useScrollAnimation();
 
   return (
-    <section className="py-16 md:py-28 bg-semin-dark relative overflow-hidden">
+    <section className="py-20 md:py-32 bg-semin-dark relative overflow-hidden">
       {/* Background decorative elements */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] md:w-[500px] h-[300px] md:h-[500px] border border-semin-yellow/[0.04] rounded-full" />
-        <div className="absolute top-10 right-20 w-32 md:w-72 h-32 md:h-72 bg-semin-yellow/[0.03] rounded-full blur-[25px] md:blur-[80px]" />
-        <div className="absolute bottom-10 left-20 w-24 md:w-56 h-24 md:h-56 bg-semin-orange/[0.03] rounded-full blur-[20px] md:blur-[60px]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] md:w-[600px] h-[350px] md:h-[600px] border border-semin-yellow/[0.04] rounded-full animate-[spin_100s_linear_infinite]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] md:w-[900px] h-[550px] md:h-[900px] border border-semin-yellow/[0.02] rounded-full border-dashed animate-[spin_150s_linear_infinite]" />
+        <div className="absolute top-10 right-20 w-32 md:w-72 h-32 md:h-72 bg-semin-yellow/[0.03] rounded-full blur-[40px] md:blur-[100px]" />
+        <div className="absolute bottom-10 left-20 w-24 md:w-56 h-24 md:h-56 bg-semin-orange/[0.03] rounded-full blur-[30px] md:blur-[80px]" />
       </div>
 
       <div ref={ref} className="container mx-auto px-4 relative z-10">
-        <div className={`text-center mb-10 md:mb-16 transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
+        <div className={`text-center mb-16 md:mb-24 transition-all duration-1000 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
           <span className="inline-flex items-center gap-2 font-body text-[10px] md:text-xs uppercase tracking-[0.3em] text-semin-yellow font-semibold mb-3 md:mb-4">
-            <Sparkles className="h-3 w-3 md:h-3.5 md:w-3.5" />
+            <Sparkles className="h-3.5 w-3.5 text-semin-yellow" />
             Organização do evento
           </span>
           <h2 className="text-4xl sm:text-5xl md:text-7xl font-black mb-6 md:mb-8 tracking-tight leading-tight text-white">
@@ -50,28 +51,37 @@ const SupportSection = () => {
           </div>
         </div>
 
-        <div className="flex flex-wrap justify-center items-stretch gap-8 md:gap-12 lg:gap-16">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 max-w-6xl mx-auto">
           {realizacao.map((s, i) => (
             <div
               key={s.name}
-              className={`flex-1 min-w-[240px] max-w-[340px] text-center group transition-all duration-500 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}
-              style={{ transitionDelay: `${i * 200 + 200}ms` }}
+              className={`transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"}`}
+              style={{ transitionDelay: `${i * 150}ms` }}
             >
-              <div className="relative bg-white rounded-2xl px-6 py-5 md:px-10 md:py-8 shadow-xl shadow-black/15 ring-1 ring-white/10 group-hover:shadow-2xl group-hover:shadow-semin-yellow/10 transition-all duration-500 group-hover:-translate-y-2 h-full flex flex-col justify-between mx-auto overflow-hidden">
-                {/* Top accent */}
-                <div className="absolute top-0 left-[20%] right-[20%] h-[2px] bg-gradient-to-r from-semin-yellow/30 via-semin-yellow/60 to-semin-yellow/30 rounded-full" />
-                <div>
-                  <img
-                    src={s.logo}
-                    alt={s.name}
-                    width="96"
-                    height="96"
-                    className="h-16 md:h-24 w-auto object-contain mx-auto transition-all duration-500 group-hover:scale-105 mb-4 md:mb-6"
-                    style={{ imageRendering: 'auto' }}
-                    loading="lazy"
-                  />
-                  <h3 className="font-display text-lg md:text-xl font-bold text-semin-dark mb-2">{s.name}</h3>
-                  <p className="font-body text-xs md:text-sm text-gray-600 leading-relaxed">
+              <div className="relative bg-white/[0.02] backdrop-blur-md border border-white/10 rounded-[2rem] px-6 py-8 md:px-8 md:py-10 shadow-2xl hover:shadow-[0_20px_50px_rgba(210,155,33,0.12)] hover:border-semin-yellow/30 hover:bg-white/[0.05] transition-all duration-500 hover:-translate-y-2 h-full flex flex-col justify-between mx-auto overflow-hidden group/card">
+                {/* Top accent line */}
+                <div className="absolute top-0 left-[20%] right-[20%] h-[1px] bg-gradient-to-r from-transparent via-semin-yellow/40 to-transparent" />
+                
+                <div className="flex flex-col items-center text-center">
+                  {/* High-contrast solid white logo badge */}
+                  <div className="w-24 h-24 md:w-28 md:h-28 rounded-full bg-white border-2 border-transparent group-hover/card:border-semin-yellow/40 flex items-center justify-center mb-6 transition-all duration-500 relative shadow-[0_8px_24px_rgba(0,0,0,0.25)] p-4">
+                    {/* Golden glow behind logo badge */}
+                    <div className="absolute inset-0 bg-semin-yellow/10 rounded-full blur-md opacity-0 group-hover/card:opacity-100 transition-opacity duration-500" />
+                    <img
+                      src={s.logo}
+                      alt={s.name}
+                      width="96"
+                      height="96"
+                      className="h-full w-full object-contain transition-all duration-500 group-hover/card:scale-105"
+                      loading="lazy"
+                    />
+                  </div>
+                  
+                  <h3 className="font-display text-lg md:text-xl font-bold text-white mb-3 group-hover/card:text-semin-yellow transition-colors duration-300">
+                    {s.name}
+                  </h3>
+                  
+                  <p className="font-body text-xs md:text-sm text-white/50 leading-relaxed group-hover/card:text-white/70 transition-colors duration-300">
                     {s.description}
                   </p>
                 </div>

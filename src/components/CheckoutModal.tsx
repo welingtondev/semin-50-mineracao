@@ -272,8 +272,8 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
                     </div>
 
                     <div className="flex flex-col gap-3">
-                      <Button onClick={copyPix} variant="outline" className="w-full h-12 rounded-xl border-white/10 text-white gap-2">
-                        <Copy className="h-4 w-4" />
+                      <Button onClick={copyPix} className="w-full h-12 rounded-xl bg-white hover:bg-white/90 text-semin-dark font-bold gap-2 border-0 shadow-lg shadow-black/10">
+                        <Copy className="h-4 w-4 text-semin-dark" />
                         Copiar Código PIX
                       </Button>
                     </div>

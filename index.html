@@ -47,6 +47,38 @@
       body { margin: 0; background-color: #161b22; }
     </style>
 
+    <!-- Automatic chunk loading error recovery (handles deployments/caching issues gracefully) -->
+    <script>
+      (function() {
+        function safeReload() {
+          var now = Date.now();
+          var lastReload = sessionStorage.getItem('last_chunk_reload');
+          if (!lastReload || (now - parseInt(lastReload, 10)) > 10000) {
+            sessionStorage.setItem('last_chunk_reload', now.toString());
+            window.location.reload();
+          } else {
+            console.error('Asset load error detected, but reload was prevented to avoid infinite loops.');
+          }
+        }
+
+        window.addEventListener('error', function(e) {
+          var msg = e.message || '';
+          if (msg.indexOf('Failed to fetch dynamically imported module') !== -1 || msg.indexOf('error loading dynamically imported module') !== -1) {
+            console.warn('Asset loading failed. Reloading to fetch latest version...');
+            safeReload();
+          }
+        }, true);
+
+        window.addEventListener('unhandledrejection', function(e) {
+          var msg = (e.reason && e.reason.message) || '';
+          if (msg.indexOf('Failed to fetch dynamically imported module') !== -1 || msg.indexOf('error loading dynamically imported module') !== -1) {
+            console.warn('Promise asset loading failed. Reloading to fetch latest version...');
+            safeReload();
+          }
+        });
+      })();
+    </script>
+
     <!-- Google Analytics — deferred 4s to not block main thread -->
     <script>setTimeout(function(){var e=document.createElement("script");e.src="https://www.googletagmanager.com/gtag/js?id=G-V7P3LDWN9S",e.async=!0,document.head.appendChild(e),window.dataLayer=window.dataLayer||[];function t(){dataLayer.push(arguments)}t("js",new Date),t("config","G-V7P3LDWN9S")},4e3);</script>
 

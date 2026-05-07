@@ -52,35 +52,38 @@ const ScheduleSection = () => {
   const { ref, isVisible } = useScrollAnimation();
 
   return (
-    <section id="programacao" className="py-16 md:py-32 bg-white relative overflow-hidden">
-      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-semin-yellow via-semin-orange to-semin-yellow" />
+    <section id="programacao" className="py-16 md:py-32 bg-semin-dark relative overflow-hidden">
+      {/* Top gold separator line */}
+      <div className="absolute top-0 left-0 w-full h-px bg-[linear-gradient(90deg,transparent_0%,transparent_35%,hsl(var(--semin-yellow))_50%,transparent_65%,transparent_100%)] opacity-30" />
+      <div className="absolute top-0 right-0 w-48 md:w-[400px] h-48 md:h-[400px] bg-semin-yellow/10 rounded-full blur-[30px] md:blur-[120px] opacity-60 pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-40 md:w-80 h-40 md:h-80 bg-semin-orange/5 rounded-full blur-[25px] md:blur-[100px] opacity-60 pointer-events-none" />
 
-      <div ref={ref} className="container mx-auto px-4">
+      <div ref={ref} className="container mx-auto px-4 relative z-10">
         <div className={`text-center mb-10 md:mb-14 transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
           <span className="inline-flex items-center gap-2 font-body text-[10px] md:text-xs uppercase tracking-[0.3em] text-semin-orange font-semibold mb-3 md:mb-4">
             <Pickaxe className="h-3 w-3 md:h-3.5 md:w-3.5" />
             Cronograma
           </span>
-          <h2 className="text-4xl sm:text-5xl md:text-7xl font-black mb-6 md:mb-8 tracking-tight leading-tight text-semin-blue">
+          <h2 className="text-4xl sm:text-5xl md:text-7xl font-black mb-6 md:mb-8 tracking-tight leading-tight text-white">
             Nossa <span className="text-semin-yellow">Programação</span>
           </h2>
           <div className="flex items-center justify-center gap-3 mb-4 md:mb-6">
-            <div className="w-8 md:w-12 h-[2px] bg-gradient-to-r from-transparent to-semin-yellow rounded-full" />
-            <Gem className="h-3.5 w-3.5 md:h-4 md:w-4 text-semin-yellow" />
-            <div className="w-8 md:w-12 h-[2px] bg-gradient-to-l from-transparent to-semin-yellow rounded-full" />
+            <div className="w-8 md:w-12 h-[2px] bg-gradient-to-r from-transparent to-semin-orange/30 rounded-full" />
+            <Gem className="h-3.5 w-3.5 md:h-4 md:w-4 text-semin-orange/50" />
+            <div className="w-8 md:w-12 h-[2px] bg-gradient-to-l from-transparent to-semin-orange/30 rounded-full" />
           </div>
-          <p className="font-body text-sm md:text-base text-semin-blue/70 max-w-2xl mx-auto leading-relaxed">
+          <p className="font-body text-sm md:text-base text-white/60 max-w-2xl mx-auto leading-relaxed">
             O evento será realizado de <b>9 a 12 de Novembro</b> (com atividades especiais no dia 13), no tradicional Auditório Leopoldo Amaral da Escola Politécnica da UFBA. Nossa grade é construída em eixos temáticos focados em inovação e na trajetória de excelência dos nossos egressos.
           </p>
         </div>
 
         <Tabs defaultValue="11/Nov" className="max-w-4xl mx-auto">
-          <TabsList className="w-full bg-semin-cream/70 backdrop-blur-sm mb-6 md:mb-8 p-1 md:p-1.5 rounded-xl ring-1 ring-black/[0.04]">
+          <TabsList className="w-full bg-white/[0.03] border border-white/5 backdrop-blur-md mb-6 md:mb-8 p-1 md:p-1.5 rounded-xl">
             {Object.keys(schedule).map((day) => (
               <TabsTrigger
                 key={day}
                 value={day}
-                className="flex-1 font-body text-sm md:text-base font-semibold rounded-lg data-[state=active]:bg-semin-blue data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-300 py-2.5"
+                className="flex-1 font-body text-sm md:text-base font-semibold rounded-lg data-[state=active]:bg-semin-yellow data-[state=active]:text-semin-dark data-[state=active]:shadow-lg text-white/60 data-[state=active]:text-semin-dark transition-all duration-300 py-2.5"
               >
                 {day}
               </TabsTrigger>
@@ -92,17 +95,17 @@ const ScheduleSection = () => {
               {items.map((item, i) => (
                 <div
                   key={i}
-                  className={`transition-all duration-500 ${isVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-4"}`}
+                  className={`transition-all duration-500 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 -translate-x-4"}`}
                   style={{ transitionDelay: `${i * 60 + 200}ms` }}
                 >
-                  <Card className="border-l-4 border-l-semin-yellow border-t-0 border-r-0 border-b-0 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group active:scale-[0.99] ring-1 ring-black/[0.03]">
+                  <Card className="bg-white/[0.02] hover:bg-white/[0.04] border-t-0 border-r-0 border-b-0 border-l-4 border-l-semin-yellow border-white/5 hover:border-white/10 shadow-lg shadow-black/20 hover:-translate-y-0.5 transition-all duration-300 group active:scale-[0.99]">
                     <CardContent className="p-4 md:p-5 flex flex-col sm:flex-row sm:items-center gap-2 md:gap-3">
-                      <div className="flex items-center gap-2 text-semin-blue/50 sm:min-w-[150px]">
+                      <div className="flex items-center gap-2 text-white/40 sm:min-w-[150px]">
                         <Clock className="h-3.5 w-3.5 md:h-4 md:w-4 group-hover:text-semin-yellow transition-colors shrink-0" />
                         <span className="font-body text-xs md:text-sm font-medium">{item.time}</span>
                       </div>
                       <div className="flex-1 flex items-center justify-between gap-2">
-                        <h4 className="font-body text-sm md:text-base font-semibold text-semin-blue group-hover:text-semin-orange transition-colors">
+                        <h4 className="font-body text-sm md:text-base font-semibold text-white/80 group-hover:text-semin-yellow transition-colors">
                           {item.title}
                         </h4>
                         <Badge className={`${typeColors[item.type]} border text-[10px] md:text-xs capitalize shrink-0`}>

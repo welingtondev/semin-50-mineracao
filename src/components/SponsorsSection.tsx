@@ -83,14 +83,14 @@ const SponsorsSection = () => {
   const { ref, isVisible } = useScrollAnimation();
 
   return (
-    <section id="patrocinio" className="py-20 md:py-36 relative overflow-hidden" style={{ background: "linear-gradient(170deg, hsl(39 10% 97%) 0%, hsl(35 20% 95%) 30%, hsl(210 10% 96%) 60%, hsl(39 12% 98%) 100%)" }}>
+    <section id="patrocinio" className="py-20 md:py-36 bg-semin-cream relative overflow-hidden">
       {/* Decorative top accent */}
-      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-sky-400 via-rose-400 via-amber-400 to-slate-400" />
+      <div className="absolute top-0 left-0 w-full h-px bg-[linear-gradient(90deg,transparent_0%,transparent_35%,hsl(var(--semin-yellow))_50%,transparent_65%,transparent_100%)] opacity-30" />
 
       {/* Background ornaments */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-[8%] right-[5%] w-80 md:w-[500px] h-80 md:h-[500px] bg-sky-100/30 rounded-full blur-[120px]" />
-        <div className="absolute bottom-[8%] left-[5%] w-72 md:w-[400px] h-72 md:h-[400px] bg-amber-100/25 rounded-full blur-[100px]" />
+        <div className="absolute top-[8%] right-[5%] w-80 md:w-[500px] h-80 md:h-[500px] bg-semin-yellow/15 rounded-full blur-[120px]" />
+        <div className="absolute bottom-[8%] left-[5%] w-72 md:w-[400px] h-72 md:h-[400px] bg-semin-orange/10 rounded-full blur-[100px]" />
         <Diamond className="absolute top-[18%] left-[8%] h-8 w-8 md:h-12 md:w-12 text-sky-200/20 float-gem-2 hidden md:block" />
         <Crown className="absolute bottom-[22%] right-[10%] h-6 w-6 md:h-10 md:w-10 text-amber-200/20 float-gem-3 hidden md:block" />
         <Star className="absolute top-[40%] right-[5%] h-5 w-5 text-rose-200/15 float-gem-1 hidden md:block" />

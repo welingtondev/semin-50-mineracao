@@ -47,8 +47,10 @@ const PastEditionSection = () => {
   const goPrev = () => { if (selectedIndex !== null) setSelectedIndex((selectedIndex - 1 + galleryItems.length) % galleryItems.length); };
 
   return (
-    <section id="ultima-edicao" className="py-16 md:py-28 bg-semin-blue/5 relative overflow-hidden">
+    <section id="ultima-edicao" className="py-16 md:py-28 bg-semin-cream relative overflow-hidden">
       {/* Background Ornaments */}
+      <div className="absolute top-0 right-0 w-48 md:w-[400px] h-48 md:h-[400px] bg-semin-yellow/15 rounded-full blur-[30px] md:blur-[120px] opacity-70 pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-40 md:w-80 h-40 md:h-80 bg-semin-orange/10 rounded-full blur-[25px] md:blur-[100px] opacity-70 pointer-events-none" />
       <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{
         backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 40px, #d29b21 40px, #d29b21 41px)`
       }} />

@@ -101,11 +101,11 @@ const SponsorLogosSection = () => {
   const { ref, isVisible } = useScrollAnimation(0.1);
 
   return (
-    <section id="parceiros" className="py-24 md:py-36 bg-gray-50 relative overflow-hidden">
+    <section id="parceiros" className="py-24 md:py-36 bg-semin-cream relative overflow-hidden">
       {/* Background Ornaments adapted for light theme */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-[10%] right-[-5%] w-48 md:w-96 h-48 md:h-96 bg-semin-yellow/5 rounded-full blur-[30px] md:blur-[100px]" />
-        <div className="absolute bottom-[10%] left-[-5%] w-40 md:w-80 h-40 md:h-80 bg-semin-orange/5 rounded-full blur-[25px] md:blur-[80px]" />
+        <div className="absolute top-[10%] right-[-5%] w-48 md:w-96 h-48 md:h-96 bg-semin-yellow/15 rounded-full blur-[30px] md:blur-[100px] opacity-70" />
+        <div className="absolute bottom-[10%] left-[-5%] w-40 md:w-80 h-40 md:h-80 bg-semin-orange/10 rounded-full blur-[25px] md:blur-[80px] opacity-70" />
         <div className="absolute inset-0 opacity-[0.05]" style={{
           backgroundImage: `radial-gradient(circle at 2px 2px, #d29b21 1px, transparent 0)`,
           backgroundSize: '40px 40px'

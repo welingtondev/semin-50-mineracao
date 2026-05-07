@@ -67,7 +67,7 @@ const Footer = () => (
             <a href="https://www.instagram.com/semin.ufba/" target="_blank" rel="noopener noreferrer" aria-label="Instagram SEMIN UFBA" className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-white/5 flex items-center justify-center text-white/60 hover:bg-semin-yellow/10 hover:text-semin-yellow transition-all duration-300 active:scale-90">
               <Instagram className="h-4 w-4" />
             </a>
-            <a href="https://linkedin.com/in/daemin-diretório-acadêmico-de-engenharia-de-minas-9b167b403/?skipRedirect=true" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn DAEMIN" className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-white/5 flex items-center justify-center text-white/60 hover:bg-semin-yellow/10 hover:text-semin-yellow transition-all duration-300 active:scale-90">
+            <a href="https://www.linkedin.com/in/daeminufba" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn DAEMIN" className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-white/5 flex items-center justify-center text-white/60 hover:bg-semin-yellow/10 hover:text-semin-yellow transition-all duration-300 active:scale-90">
               <Linkedin className="h-4 w-4" />
             </a>
           </div>

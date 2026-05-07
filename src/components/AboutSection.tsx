@@ -5,10 +5,10 @@ const AboutSection = () => {
   const { ref, isVisible } = useScrollAnimation();
 
   return (
-    <section id="sobre" className="py-20 md:py-32 bg-[#F8F9FA] relative overflow-hidden">
-      {/* Premium Background Elements — reduced on mobile */}
-      <div className="absolute top-0 right-0 w-48 md:w-[600px] h-48 md:h-[600px] bg-semin-yellow/5 rounded-full blur-[40px] md:blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-0 left-[-200px] hidden md:block md:w-[500px] md:h-[500px] bg-semin-blue/5 rounded-full md:blur-[100px] pointer-events-none" />
+    <section id="sobre" className="py-20 md:py-32 bg-semin-cream relative overflow-hidden">
+      {/* Premium Background Elements — adjusted for light-cream theme */}
+      <div className="absolute top-0 right-0 w-48 md:w-[600px] h-48 md:h-[600px] bg-semin-yellow/15 rounded-full blur-[40px] md:blur-[120px] opacity-70 pointer-events-none" />
+      <div className="absolute bottom-0 left-[-200px] hidden md:block md:w-[500px] md:h-[500px] bg-semin-blue/10 rounded-full md:blur-[100px] opacity-70 pointer-events-none" />
       <div className="absolute inset-0 opacity-[0.02] hidden md:block" style={{backgroundImage:"url(\"data:image/svg+xml,%3Csvg width='40' height='40' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='40' height='40' fill='none' stroke='%23999' stroke-width='0.5'/%3E%3C/svg%3E\")"}} />
 
       <div ref={ref} className="container mx-auto px-4 sm:px-6 relative z-10 max-w-6xl">
@@ -90,7 +90,7 @@ const AboutSection = () => {
           {[
             { icon: Pickaxe, title: "Grandes Projetos", desc: "Visão aprofundada dos maiores empreendimentos minerais em desenvolvimento." },
             { icon: MessageSquare, title: "Debate Técnico", desc: "Diálogos francos sobre os desafios tecnológicos e ambientais da atualidade." },
-            { icon: Users, title: "Networking", desc: "Prospecção de talentos e conexão direta com os tomadores de decisão do setor." }
+            { icon: Users, title: "Encontro de Amigos", desc: "O reencontro afetuoso de gerações que compartilharam a Escola Politécnica, celebrando amizades e revivendo histórias inesquecíveis." }
           ].map((item, i) => (
             <div 
               key={item.title} 

@@ -76,8 +76,8 @@ const HeroSection = () => {
         </svg>
 
         {/* Dynamic Glass Orbs Cênicos — third orb hidden on mobile for perf */}
-        <div className="absolute top-[-10%] left-[-10%] w-48 md:w-[600px] h-48 md:h-[600px] bg-semin-yellow/15 rounded-full blur-[60px] md:blur-[140px] mix-blend-screen" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-56 md:w-[700px] h-56 md:h-[700px] bg-semin-orange/10 rounded-full blur-[60px] md:blur-[180px] mix-blend-screen" />
+        <div className="absolute top-[-10%] left-[-10%] w-72 sm:w-80 md:w-[600px] h-72 sm:h-80 md:h-[600px] bg-semin-yellow/20 rounded-full blur-[50px] md:blur-[140px] mix-blend-screen" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-80 sm:w-96 md:w-[700px] h-80 sm:h-96 md:h-[700px] bg-semin-orange/15 rounded-full blur-[60px] md:blur-[180px] mix-blend-screen" />
         <div className="absolute top-[40%] right-[20%] hidden md:block md:w-[400px] md:h-[300px] bg-amber-500/10 rounded-full md:blur-[120px] mix-blend-screen" />
 
         <div className="absolute inset-0 opacity-[0.05] sm:opacity-[0.06]" style={{
@@ -118,7 +118,7 @@ const HeroSection = () => {
         <HardHat className="absolute bottom-[30%] left-[15%] h-5 w-5 md:h-6 md:w-6 text-semin-yellow/8 hidden sm:block" />
       </div>
 
-      <div className="container mx-auto px-4 relative z-10 text-center -mt-10 sm:mt-0">
+      <div className="container mx-auto px-4 relative z-10 text-center -mt-10 sm:mt-16 md:mt-24">
         <div className="animate-fade-in-up opacity-0 [animation-delay:100ms]">
           <div className="relative inline-flex items-center mb-8 md:mb-10 group cta-float">
             {/* Glow ring outsite */}
@@ -133,11 +133,11 @@ const HeroSection = () => {
             </div>
           </div>
 
-          <h1 className="text-5xl sm:text-6xl md:text-8xl lg:text-[10rem] font-black mb-4 md:mb-6 leading-tight tracking-tighter">
+          <h1 className="text-6xl sm:text-7xl md:text-8xl lg:text-[10rem] font-black mb-4 md:mb-6 leading-tight tracking-tighter">
             <span className="text-golden-mirror filter drop-shadow-[0_0_15px_rgba(210,155,33,0.4)]">
               SEMIN UFBA
             </span>
-            <span className="block text-xl sm:text-2xl md:text-3xl lg:text-4xl font-medium mt-2 md:mt-4 tracking-wider bg-gradient-to-r from-white/60 via-white to-white/60 bg-clip-text text-transparent drop-shadow-sm">
+            <span className="block text-lg sm:text-2xl md:text-3xl lg:text-4xl font-medium mt-2 md:mt-4 tracking-wider bg-gradient-to-r from-white/60 via-white to-white/60 bg-clip-text text-transparent drop-shadow-sm">
               Semana de Mineração da UFBA
             </span>
           </h1>
@@ -148,19 +148,19 @@ const HeroSection = () => {
             <div className="w-10 md:w-16 h-[2px] bg-gradient-to-l from-transparent to-semin-yellow rounded-full" />
           </div>
 
-          <p className="font-body text-lg sm:text-xl md:text-[26px] text-white/50 max-w-4xl mx-auto mb-8 md:mb-12 leading-relaxed px-2">
-            Celebrando meio século de excelência em Engenharia de Minas — unindo tradição, inovação e o futuro da mineração baiana.
+          <p className="font-body text-sm sm:text-lg md:text-xl lg:text-[24px] text-white/75 sm:text-white/50 max-w-4xl mx-auto mb-8 md:mb-12 leading-relaxed px-4">
+            Celebrando 50 anos de excelência na Engenharia de Minas da UFBA — unindo tradição, inovação e o futuro do setor.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 md:gap-5 justify-center mb-14 md:mb-20 px-4 sm:px-0">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 md:gap-5 mb-14 md:mb-20 px-4 sm:px-0">
             <Suspense fallback={null}>
               <RegistrationModal>
-                <div className="relative inline-flex w-full sm:w-auto cta-float cursor-pointer">
+                <div className="relative inline-flex w-auto sm:w-auto cta-float cursor-pointer">
                   {/* Glow ring behind CTA */}
-                  <div className="absolute -inset-1 md:-inset-1.5 rounded-2xl bg-gradient-to-r from-semin-yellow via-semin-orange to-semin-yellow opacity-50 blur-md cta-glow" />
+                  <div className="absolute -inset-1 md:-inset-1.5 rounded-full md:rounded-xl bg-gradient-to-r from-semin-yellow via-semin-orange to-semin-yellow opacity-50 blur-md cta-glow" />
                   <Button
                     size="lg"
-                    className="cta-shine relative w-full sm:w-auto md:w-[320px] bg-gradient-to-r from-semin-yellow via-amber-400 to-semin-orange text-semin-dark hover:from-semin-orange hover:via-amber-500 hover:to-semin-yellow font-display font-bold text-sm md:text-lg px-6 py-4 md:py-8 rounded-xl shadow-2xl shadow-semin-yellow/30 transition-all duration-300 hover:shadow-semin-yellow/50 active:scale-95 md:hover:scale-105 group"
+                    className="cta-shine relative w-auto min-w-[240px] sm:w-auto md:w-[320px] bg-gradient-to-r from-semin-yellow via-amber-400 to-semin-orange text-semin-dark hover:from-semin-orange hover:via-amber-500 hover:to-semin-yellow font-display font-bold text-sm md:text-lg px-8 py-4 md:py-8 rounded-full md:rounded-xl shadow-2xl shadow-semin-yellow/30 transition-all duration-300 hover:shadow-semin-yellow/50 active:scale-95 md:hover:scale-105 group"
                   >
                     <HardHat className="h-4 w-4 md:h-6 md:w-6 mr-2 group-hover:rotate-12 transition-transform duration-300" />
                     Inscreva-se
@@ -171,12 +171,12 @@ const HeroSection = () => {
             </Suspense>
             <Suspense fallback={null}>
               <SponsorModal>
-                <div className="relative inline-flex w-full sm:w-auto cursor-pointer">
-                  <div className="absolute -inset-[1px] rounded-xl bg-gradient-to-r from-semin-yellow/60 via-semin-orange/40 to-semin-yellow/60 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <div className="relative inline-flex w-auto sm:w-auto cursor-pointer">
+                  <div className="absolute -inset-[1px] rounded-full md:rounded-xl bg-gradient-to-r from-semin-yellow/60 via-semin-orange/40 to-semin-yellow/60 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                   <Button
                     size="lg"
                     variant="outline"
-                    className="relative w-full sm:w-auto md:w-[320px] border-2 border-semin-yellow/40 text-semin-yellow hover:bg-semin-yellow/10 hover:border-semin-yellow/80 font-display font-semibold text-sm md:text-lg px-6 py-4 md:py-8 rounded-xl backdrop-blur-sm transition-all duration-300 active:scale-95 md:hover:scale-105 group hover:shadow-lg hover:shadow-semin-yellow/15"
+                    className="relative w-auto min-w-[240px] sm:w-auto md:w-[320px] border-2 border-semin-yellow/40 text-semin-yellow hover:bg-semin-yellow/10 hover:border-semin-yellow/80 font-display font-semibold text-sm md:text-lg px-8 py-4 md:py-8 rounded-full md:rounded-xl backdrop-blur-sm transition-all duration-300 active:scale-95 md:hover:scale-105 group hover:shadow-lg hover:shadow-semin-yellow/15"
                   >
                     <Gem className="h-4 w-4 md:h-6 md:w-6 mr-2 group-hover:rotate-12 transition-transform duration-300" />
                     Seja um Patrocinador

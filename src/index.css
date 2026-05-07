@@ -118,11 +118,11 @@
 @layer base {
   @font-face {
     font-family: 'Costa Rica';
-    src: url('/fonts/CostaRica.otf') format('opentype'),
-         url('/fonts/costarica.woff') format('woff');
+    src: url('/fonts/costarica.woff') format('woff'),
+         url('/fonts/CostaRica.otf') format('opentype');
     font-weight: normal;
     font-style: normal;
-    font-display: optional;
+    font-display: swap;
   }
 
   * {
