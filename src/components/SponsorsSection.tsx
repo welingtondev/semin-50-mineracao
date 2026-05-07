@@ -1,8 +1,10 @@
+import { useState } from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Check, Sparkles, Gem, Mountain, Diamond, Crown, Star } from "lucide-react";
+import { Check, Sparkles, Gem, Mountain, Diamond, Crown, Star, ChevronDown } from "lucide-react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { SponsorModal } from "./SponsorModal";
+import { motion, AnimatePresence } from "framer-motion";
 
 const tiers = [
   {
@@ -81,6 +83,11 @@ const tiers = [
 
 const SponsorsSection = () => {
   const { ref, isVisible } = useScrollAnimation();
+  const [expandedTiers, setExpandedTiers] = useState<Record<string, boolean>>({});
+
+  const toggleTier = (name: string) => {
+    setExpandedTiers(prev => ({ ...prev, [name]: !prev[name] }));
+  };
 
   return (
     <section id="patrocinio" className="py-20 md:py-36 bg-semin-cream relative overflow-hidden">
@@ -148,16 +155,36 @@ const SponsorsSection = () => {
                 </div>
               </CardHeader>
               <CardContent className="px-6 md:px-12 pb-10">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-x-12 md:gap-y-5">
-                  {tiers[0].benefits.map((b) => (
-                    <div key={b} className="flex items-start gap-4">
-                      <div className="mt-1.5 shrink-0 w-5 h-5 rounded-full bg-gradient-to-br from-sky-400 to-indigo-400 flex items-center justify-center shadow-sm shadow-sky-300/30">
-                        <Check className="h-3 w-3 text-white" />
-                      </div>
-                      <span className="font-body text-sm md:text-base text-semin-blue/75 leading-relaxed tracking-wide">{b}</span>
-                    </div>
-                  ))}
+                <div className="text-center mb-6">
+                  <Button
+                    variant="outline"
+                    onClick={() => toggleTier("Diamante")}
+                    className="border-sky-200 hover:bg-sky-50 text-sky-600 font-bold gap-2 rounded-xl transition-all duration-300"
+                  >
+                    {expandedTiers["Diamante"] ? "Ocultar Benefícios" : "Ver Benefícios Inclusos"}
+                    <ChevronDown className={`h-4 w-4 transition-transform duration-300 ${expandedTiers["Diamante"] ? "rotate-180" : ""}`} />
+                  </Button>
                 </div>
+
+                <AnimatePresence>
+                  {expandedTiers["Diamante"] && (
+                    <motion.div 
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-x-12 md:gap-y-5 border-t border-sky-100 pt-6 animate-in fade-in slide-in-from-top-3 duration-300 overflow-hidden"
+                    >
+                      {tiers[0].benefits.map((b) => (
+                        <div key={b} className="flex items-start gap-4">
+                          <div className="mt-1.5 shrink-0 w-5 h-5 rounded-full bg-gradient-to-br from-sky-400 to-indigo-400 flex items-center justify-center shadow-sm shadow-sky-300/30">
+                            <Check className="h-3 w-3 text-white" />
+                          </div>
+                          <span className="font-body text-sm md:text-base text-semin-blue/75 leading-relaxed tracking-wide">{b}</span>
+                        </div>
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </CardContent>
             </Card>
           </div>
@@ -186,15 +213,37 @@ const SponsorsSection = () => {
                     <span className="font-display text-2xl md:text-3xl font-bold text-semin-blue">{t.price}</span>
                   </div>
                 </CardHeader>
-                <CardContent className="space-y-4 pt-2 px-5 md:px-8 pb-8 flex-1">
-                  {t.benefits.map((b) => (
-                    <div key={b} className="flex items-start gap-3">
-                      <div className={`mt-1.5 shrink-0 w-4 h-4 rounded-full bg-gradient-to-br ${t.accentFrom || "from-slate-400"} ${t.accentTo || "to-gray-400"} flex items-center justify-center shadow-sm`}>
-                        <Check className="h-2.5 w-2.5 text-white" />
-                      </div>
-                      <span className="font-body text-xs md:text-sm text-semin-blue/70 leading-relaxed tracking-wide">{b}</span>
-                    </div>
-                  ))}
+                <CardContent className="pt-2 px-5 md:px-8 pb-8 flex-1 flex flex-col justify-between">
+                  <div className="text-center mt-2 mb-4">
+                    <Button
+                      variant="outline"
+                      onClick={() => toggleTier(t.name)}
+                      className="w-full border-black/10 text-semin-blue/70 hover:bg-black/5 font-bold gap-2 rounded-xl transition-all duration-300"
+                    >
+                      {expandedTiers[t.name] ? "Ocultar Benefícios" : "Ver Benefícios"}
+                      <ChevronDown className={`h-4 w-4 transition-transform duration-300 ${expandedTiers[t.name] ? "rotate-180" : ""}`} />
+                    </Button>
+                  </div>
+
+                  <AnimatePresence>
+                    {expandedTiers[t.name] && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        className="space-y-4 border-t border-black/5 pt-4 animate-in fade-in slide-in-from-top-2 duration-200 overflow-hidden"
+                      >
+                        {t.benefits.map((b) => (
+                          <div key={b} className="flex items-start gap-3">
+                            <div className={`mt-1.5 shrink-0 w-4 h-4 rounded-full bg-gradient-to-br ${t.accentFrom || "from-slate-400"} ${t.accentTo || "to-gray-400"} flex items-center justify-center shadow-sm`}>
+                              <Check className="h-2.5 w-2.5 text-white" />
+                            </div>
+                            <span className="font-body text-xs md:text-sm text-semin-blue/70 leading-relaxed tracking-wide">{b}</span>
+                          </div>
+                        ))}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </CardContent>
               </Card>
             </div>
