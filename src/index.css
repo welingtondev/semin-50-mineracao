@@ -98,21 +98,20 @@
 
 .text-golden-mirror {
   background: linear-gradient(
-    90deg,
-    #a67c00 0%,
-    #ffbf00 20%,
-    #ffffff 40%,
-    #ffbf00 60%,
-    #a67c00 80%,
-    #a67c00 100%
+    135deg,
+    #8a640f 0%,
+    #b38728 15%,
+    #fbf5b7 30%,
+    #daac3a 45%,
+    #fbf5b7 60%,
+    #aa7c11 75%,
+    #e2b13c 90%,
+    #8a640f 100%
   );
-  background-size: 200% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: golden-wave 6s linear infinite;
   display: inline-block;
-  will-change: background-position;
-  contain: layout paint;
+  filter: drop-shadow(0px 2px 3px rgba(0,0,0,0.3));
 }
 
 @layer base {
