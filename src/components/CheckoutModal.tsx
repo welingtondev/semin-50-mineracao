@@ -94,12 +94,14 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
         if (DONATION_SCRIPT_URL) {
           try {
             const urlParams = new URLSearchParams();
+            urlParams.append("id_cobranca", data.paymentId || "");
             urlParams.append("nome", formData.name);
             urlParams.append("email", formData.email);
             urlParams.append("cpf", formData.cpf);
             urlParams.append("tel", formData.phone);
             urlParams.append("valor", parsedValue.toFixed(2));
             urlParams.append("metodo_de_pagamento", billingType);
+            urlParams.append("status", "Pendente");
             urlParams.append("data_hora", new Date().toLocaleString("pt-BR"));
 
             await fetch(DONATION_SCRIPT_URL, {
