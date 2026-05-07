@@ -108,8 +108,13 @@ const RockShatterIntro = ({ onComplete, isMobile }: { onComplete: () => void, is
             <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none p-6">
               
               {/* Título e Instruções - agora usando flex stack para não sobrepor */}
-              <div className="flex flex-col items-center text-center max-w-2xl mb-12 sm:mb-16">
-                <h2 className="font-display text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-3 tracking-tight">Memórias em <span className="text-semin-yellow drop-shadow-[0_0_18px_rgba(210,155,33,0.7)]">Cadeia</span></h2>
+              <div className="flex flex-col items-center text-center max-w-4xl mb-12 sm:mb-16">
+                <h2 className="font-display text-4xl sm:text-6xl md:text-8xl lg:text-9xl font-black text-white mb-4 tracking-tighter leading-none">
+                  Memórias em{" "}
+                  <span className="bg-gradient-to-r from-semin-yellow via-amber-400 to-semin-orange bg-clip-text text-transparent drop-shadow-[0_0_35px_rgba(245,158,11,0.55)] block md:inline-block">
+                    Cadeia
+                  </span>
+                </h2>
                 <p className="font-body text-white/70 font-medium text-sm md:text-base leading-relaxed mb-6">
                   Nossa galeria colaborativa está oculta na rocha do tempo. Detone e extraia esses registros preciosos da história da Engenharia de Minas.
                 </p>
@@ -312,10 +317,10 @@ const GallerySection = () => {
             Galeria do Tempo
           </span>
           <motion.h2 
-            className="font-display text-3xl sm:text-4xl md:text-5xl font-bold mb-3 md:mb-4"
+            className="font-display text-4xl sm:text-6xl md:text-8xl lg:text-9xl font-black mb-4 tracking-tighter leading-none"
           >
-            <span className="text-white/90">Memórias em </span>
-            <span className="text-semin-yellow drop-shadow-[0_0_20px_rgba(210,155,33,0.8)]">Cadeia</span>
+            <span className="text-white/95">Memórias em </span>
+            <span className="bg-gradient-to-r from-semin-yellow via-amber-400 to-semin-orange bg-clip-text text-transparent drop-shadow-[0_0_35px_rgba(245,158,11,0.55)] block md:inline-block">Cadeia</span>
           </motion.h2>
           <div className="flex items-center justify-center gap-3 mb-5">
             <div className="w-10 md:w-16 h-[1px] bg-gradient-to-r from-transparent to-amber-400/40 rounded-full" />
