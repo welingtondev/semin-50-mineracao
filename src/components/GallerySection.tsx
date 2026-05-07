@@ -660,7 +660,7 @@ const GallerySection = () => {
                 <div className="flex items-center justify-between border-b border-white/5 pb-2">
                   <h4 className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
                     <MessageSquare className="w-4 h-4 text-semin-yellow" />
-                    Comentários Aprovados
+                    Comentários
                   </h4>
                   <span className="text-[10px] text-white/40 font-bold bg-white/5 px-2 py-0.5 rounded">
                     {comments.length}
@@ -673,7 +673,7 @@ const GallerySection = () => {
                   </div>
                 ) : comments.length === 0 ? (
                   <p className="text-xs text-white/40 italic py-2">
-                    Nenhum comentário aprovado ainda. Escreva o seu abaixo! ✨
+                    Nenhum comentário ainda. Escreva o seu abaixo! ✨
                   </p>
                 ) : (
                   <div className="space-y-3 max-h-[22vh] md:max-h-[28vh] overflow-y-auto pr-2 custom-scrollbar">
