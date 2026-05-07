@@ -75,10 +75,13 @@ const HeroSection = () => {
           <path fill="hsl(30 100% 38%)" d="M0,256L80,234.7C160,213,320,171,480,165.3C640,160,800,192,960,202.7C1120,213,1280,203,1360,197.3L1440,192L1440,320L0,320Z" />
         </svg>
 
-        {/* Dynamic Glass Orbs Cênicos — third orb hidden on mobile for perf */}
-        <div className="absolute top-[-10%] left-[-10%] w-72 sm:w-80 md:w-[600px] h-72 sm:h-80 md:h-[600px] bg-semin-yellow/20 rounded-full blur-[50px] md:blur-[140px] mix-blend-screen" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-80 sm:w-96 md:w-[700px] h-80 sm:h-96 md:h-[700px] bg-semin-orange/15 rounded-full blur-[60px] md:blur-[180px] mix-blend-screen" />
-        <div className="absolute top-[40%] right-[20%] hidden md:block md:w-[400px] md:h-[300px] bg-amber-500/10 rounded-full md:blur-[120px] mix-blend-screen" />
+        {/* Dynamic Glass Orbs Cênicos — Amplified Golden Ambient Illumination */}
+        <div className="absolute top-[-10%] left-[-10%] w-72 sm:w-80 md:w-[700px] h-72 sm:h-80 md:h-[700px] bg-semin-yellow/35 rounded-full blur-[70px] md:blur-[160px] mix-blend-screen" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-80 sm:w-96 md:w-[800px] h-80 sm:h-96 md:h-[800px] bg-semin-orange/25 rounded-full blur-[80px] md:blur-[200px] mix-blend-screen" />
+        <div className="absolute top-[35%] right-[15%] hidden md:block md:w-[500px] md:h-[400px] bg-amber-500/20 rounded-full md:blur-[150px] mix-blend-screen" />
+        
+        {/* Cinematic Golden Central Glow Sunburst (directly behind the title block) */}
+        <div className="absolute top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] sm:w-[700px] md:w-[1000px] h-[350px] sm:h-[700px] md:h-[1000px] bg-gradient-to-r from-semin-yellow/25 via-semin-orange/15 to-amber-500/10 rounded-full blur-[80px] sm:blur-[120px] md:blur-[200px] pointer-events-none mix-blend-screen" />
 
         <div className="absolute inset-0 opacity-[0.05] sm:opacity-[0.06]" style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg width='240' height='160' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23d29b21' stroke-width='1.5'%3E%3Cpath d='M0 40 L240 40 M0 120 L240 120' stroke-opacity='0.25'/%3E%3Cpath d='M60 40 L180 120 M180 40 L240 80 M0 80 L60 120' stroke-opacity='0.35' stroke-dasharray='12 8'/%3E%3Cg stroke-opacity='0.5'%3E%3Ccircle cx='60' cy='40' r='8'/%3E%3Ccircle cx='180' cy='40' r='8'/%3E%3Ccircle cx='60' cy='120' r='8'/%3E%3Ccircle cx='180' cy='120' r='8'/%3E%3C/g%3E%3Cg stroke='none' fill='%23d29b21' fill-opacity='0.8'%3E%3Ccircle cx='60' cy='40' r='3.5'/%3E%3Ccircle cx='180' cy='40' r='3.5'/%3E%3Ccircle cx='60' cy='120' r='3.5'/%3E%3Ccircle cx='180' cy='120' r='3.5'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
