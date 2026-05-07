@@ -1,9 +1,11 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Camera, Mountain, Heart, ShieldCheck, Maximize2 } from "lucide-react";
+import { Camera, Mountain, Heart, ShieldCheck, Maximize2, Loader2, MessageSquare } from "lucide-react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { toast } from "sonner";
 import Autoplay from "embla-carousel-autoplay";
 import mineTunnelBg from "@/assets/mine_tunnel_bg.webp";
 import { PhotoUploadModal } from "./PhotoUploadModal";
@@ -15,12 +17,14 @@ type PhotoItem = {
   author?: string;
   year?: string;
   image_base64?: string;
+  likes_count?: number;
 };
 
 // Fallback inicial enquanto carrega (sem autores fictícios)
 const defaultPhotos: PhotoItem[] = Array.from({ length: 8 }).map((_, i) => ({
   id: `placeholder-${i}`,
   caption: "Espaço Reservado",
+  likes_count: 0
 }));
 
 // — A Ambientação: Frente de Lavra e Estopim de Luz —
@@ -228,12 +232,55 @@ const GallerySection = () => {
   const { ref, isVisible } = useScrollAnimation(0.2);
   const [photos, setPhotos] = useState<PhotoItem[]>(defaultPhotos);
 
+  // Community Interactions States
+  const [selectedPhoto, setSelectedPhoto] = useState<PhotoItem | null>(null);
+  const [comments, setComments] = useState<any[]>([]);
+  const [loadingComments, setLoadingComments] = useState(false);
+  const [newCommentName, setNewCommentName] = useState("");
+  const [newCommentText, setNewCommentText] = useState("");
+  const [isSubmittingComment, setIsSubmittingComment] = useState(false);
+  const [likedPhotos, setLikedPhotos] = useState<string[]>([]);
+
+  useEffect(() => {
+    const saved = localStorage.getItem("semin_liked_photos");
+    if (saved) {
+      try {
+        setLikedPhotos(JSON.parse(saved));
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  }, []);
+
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
     checkMobile();
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
+
+  const fetchComments = async (photoId: string | number) => {
+    setLoadingComments(true);
+    const { data, error } = await supabase
+      .from("gallery_comments")
+      .select("*")
+      .eq("photo_id", photoId)
+      .eq("status", "approved")
+      .order("created_at", { ascending: true });
+
+    if (!error && data) {
+      setComments(data);
+    }
+    setLoadingComments(false);
+  };
+
+  useEffect(() => {
+    if (selectedPhoto) {
+      fetchComments(selectedPhoto.id);
+    } else {
+      setComments([]);
+    }
+  }, [selectedPhoto]);
 
   useEffect(() => {
     // Busca fotos aprovadas no Supabase
@@ -250,7 +297,8 @@ const GallerySection = () => {
           caption: dbPhoto.description || "Acervo Histórico",
           author: dbPhoto.author_name,
           year: dbPhoto.year_cohort,
-          image_base64: dbPhoto.image_base64
+          image_base64: dbPhoto.image_base64,
+          likes_count: dbPhoto.likes_count || 0
         }));
         
         // Se houver menos que 4 fotos, preenchemos com os placeholders para não quebrar o carrossel
@@ -264,6 +312,62 @@ const GallerySection = () => {
 
     fetchPhotos();
   }, []);
+
+  const handleLike = async (photo: PhotoItem) => {
+    if (likedPhotos.includes(photo.id.toString())) {
+      toast.error("Você já curtiu esta foto!");
+      return;
+    }
+
+    const newLikes = (photo.likes_count || 0) + 1;
+    const updatedLiked = [...likedPhotos, photo.id.toString()];
+    setLikedPhotos(updatedLiked);
+    localStorage.setItem("semin_liked_photos", JSON.stringify(updatedLiked));
+
+    setPhotos(prev => prev.map(p => p.id === photo.id ? { ...p, likes_count: newLikes } : p));
+    if (selectedPhoto && selectedPhoto.id === photo.id) {
+      setSelectedPhoto({ ...selectedPhoto, likes_count: newLikes });
+    }
+
+    const { error } = await supabase
+      .from("gallery_photos")
+      .update({ likes_count: newLikes })
+      .eq("id", photo.id);
+
+    if (error) {
+      toast.error("Erro ao registrar curtida.");
+    } else {
+      toast.success("Obrigado pela curtida! ❤️");
+    }
+  };
+
+  const handleAddComment = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedPhoto) return;
+    if (!newCommentName.trim() || !newCommentText.trim()) {
+      toast.error("Preencha seu nome e o comentário.");
+      return;
+    }
+
+    setIsSubmittingComment(true);
+    const { error } = await supabase
+      .from("gallery_comments")
+      .insert({
+        photo_id: selectedPhoto.id,
+        author_name: newCommentName.trim(),
+        comment_text: newCommentText.trim(),
+        status: "pending"
+      });
+
+    if (error) {
+      toast.error("Erro ao enviar comentário.");
+    } else {
+      toast.success("Comentário enviado! Aguardando moderação. ✨");
+      setNewCommentName("");
+      setNewCommentText("");
+    }
+    setIsSubmittingComment(false);
+  };
 
   useEffect(() => {
     if (isVisible && !introStarted) setIntroStarted(true);
@@ -382,34 +486,33 @@ const GallerySection = () => {
                       transition={{ duration: 3 + (i % 3), repeat: Infinity, ease: "easeInOut", delay: i * 0.2 }}
                     />
 
+                    {/* Likes Count Overlay Pill */}
+                    {item.likes_count !== undefined && item.likes_count > 0 && (
+                      <div className="absolute top-3 left-3 bg-black/60 border border-white/10 px-2.5 py-1 rounded-full flex items-center gap-1.5 backdrop-blur-md z-30">
+                        <Heart className="w-3 h-3 text-red-500 fill-current" />
+                        <span className="text-[10px] text-white font-bold">{item.likes_count}</span>
+                      </div>
+                    )}
+
                     {item.image_base64 ? (
-                      <Dialog>
-                        <DialogTrigger asChild>
-                          <button className="absolute inset-0 w-full h-full cursor-pointer group/btn">
-                            <img 
-                              src={item.image_base64} 
-                              alt="Foto Histórica" 
-                              className="absolute inset-0 w-full h-full object-cover object-center opacity-80 group-hover:opacity-100 transition-all duration-500 group-hover/btn:scale-105"
-                              loading="lazy"
-                              decoding="async"
-                            />
-                            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/btn:opacity-100 transition-opacity z-20">
-                              <div className="bg-black/60 p-3 rounded-full text-white backdrop-blur-sm shadow-xl">
-                                <Maximize2 className="w-6 h-6" />
-                              </div>
-                            </div>
-                          </button>
-                        </DialogTrigger>
-                        <DialogContent className="max-w-5xl w-[95vw] h-[85vh] bg-[#0a0c12]/95 border border-white/10 p-4 md:p-6 flex flex-col justify-center items-center shadow-2xl backdrop-blur-xl rounded-2xl z-[100] [&>button]:!bg-semin-yellow [&>button]:!text-semin-dark [&>button]:!opacity-100 [&>button]:hover:!bg-amber-400 [&>button]:hover:!scale-110 [&>button]:!transition-all [&>button]:!w-12 [&>button]:!h-12 [&>button]:!right-4 [&>button]:!top-4 [&>button]:!rounded-full [&>button]:!shadow-xl [&>button]:!flex [&>button]:!items-center [&>button]:!justify-center [&>button>svg]:!w-6 [&>button>svg]:!h-6">
-                          <div className="w-full h-full relative flex items-center justify-center bg-black/60 rounded-xl overflow-hidden ring-1 ring-white/10 shadow-inner">
-                            <img
-                              src={item.image_base64}
-                              alt="Zoomed"
-                              className="max-w-full max-h-full object-contain"
-                            />
+                      <button 
+                        onClick={() => setSelectedPhoto(item)}
+                        className="absolute inset-0 w-full h-full cursor-pointer group/btn"
+                      >
+                        <img 
+                          src={item.image_base64} 
+                          alt="Foto Histórica" 
+                          className="absolute inset-0 w-full h-full object-cover object-center opacity-80 group-hover:opacity-100 transition-all duration-500 group-hover/btn:scale-105"
+                          loading="lazy"
+                          decoding="async"
+                        />
+                        <div className="absolute inset-0 flex flex-col items-center justify-center opacity-0 group-hover/btn:opacity-100 bg-black/40 transition-opacity z-20 gap-2">
+                          <div className="bg-semin-yellow text-semin-dark font-black px-4 py-2 rounded-full shadow-xl flex items-center gap-1.5 text-xs tracking-wider uppercase transition-transform scale-90 group-hover/btn:scale-100 duration-300">
+                            <MessageSquare className="w-4 h-4" />
+                            Comentar / Curtir
                           </div>
-                        </DialogContent>
-                      </Dialog>
+                        </div>
+                      </button>
                     ) : (
                       <div className="flex flex-col items-center justify-center opacity-40 group-hover:opacity-60 transition-opacity duration-300 relative z-10">
                         <Camera className="h-8 w-8 mb-3 text-amber-400" />
@@ -491,7 +594,138 @@ const GallerySection = () => {
         </motion.div>
       </div>
 
-      {/* Lightbox is disabled while there are no photos */}
+      {/* Premium Controlled Dialog for Image Interactivity */}
+      <Dialog open={selectedPhoto !== null} onOpenChange={(open) => { if (!open) setSelectedPhoto(null); }}>
+        <DialogContent className="max-w-6xl w-[95vw] h-[92vh] md:h-[80vh] bg-[#0c0e17] border border-white/10 p-0 overflow-hidden shadow-2xl backdrop-blur-xl rounded-2xl z-[100] flex flex-col md:grid md:grid-cols-12 [&>button]:!bg-semin-yellow [&>button]:!text-semin-dark [&>button]:!opacity-100 [&>button]:hover:!bg-amber-400 [&>button]:hover:!scale-110 [&>button]:!transition-all [&>button]:!w-10 [&>button]:!h-10 [&>button]:!right-4 [&>button]:!top-4 [&>button]:!rounded-full [&>button]:!shadow-xl [&>button]:!flex [&>button]:!items-center [&>button]:!justify-center">
+          
+          {/* Left Panel: The Photo (Zoomed) */}
+          <div className="md:col-span-7 bg-black/40 relative flex items-center justify-center p-4 h-[35vh] md:h-full border-b md:border-b-0 md:border-r border-white/10 overflow-hidden">
+            {selectedPhoto?.image_base64 && (
+              <img
+                src={selectedPhoto.image_base64}
+                alt={selectedPhoto.caption || "Foto ampliada"}
+                className="max-w-full max-h-full object-contain rounded-lg shadow-2xl"
+              />
+            )}
+            <div className="absolute bottom-4 left-4 bg-black/60 px-4 py-2 rounded-full border border-white/5 backdrop-blur-md hidden sm:block">
+              <span className="text-white/60 text-xs font-body font-medium">Memórias em Cadeia</span>
+            </div>
+          </div>
+
+          {/* Right Panel: Information & Live Discussion */}
+          <div className="md:col-span-5 flex flex-col h-[57vh] md:h-full justify-between bg-white/[0.01]">
+            
+            {/* Header Content & Comments List Scrollable */}
+            <div className="p-5 md:p-6 overflow-y-auto flex-1 space-y-6 custom-scrollbar">
+              
+              {/* Image Info */}
+              <div>
+                <h3 className="text-lg md:text-xl font-bold font-display text-white mb-2 leading-snug">{selectedPhoto?.caption}</h3>
+                <div className="flex flex-wrap gap-2">
+                  {selectedPhoto?.author && (
+                    <span className="text-[10px] md:text-xs bg-white/5 border border-white/10 px-3 py-1 rounded-full text-white/70">
+                      👤 Acervo: <strong className="text-white">{selectedPhoto.author}</strong>
+                    </span>
+                  )}
+                  {selectedPhoto?.year && (
+                    <span className="text-[10px] md:text-xs bg-semin-yellow/10 border border-semin-yellow/20 px-3 py-1 rounded-full text-semin-yellow">
+                      📅 Turma: <strong className="text-white">{selectedPhoto.year}</strong>
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              {/* Liking Button Card */}
+              <div className="flex items-center gap-4 bg-white/[0.02] border border-white/5 p-4 rounded-xl shadow-inner">
+                <button
+                  type="button"
+                  onClick={() => selectedPhoto && handleLike(selectedPhoto)}
+                  className={`p-3 rounded-xl flex items-center justify-center transition-all duration-300 ${
+                    likedPhotos.includes(selectedPhoto?.id?.toString() || "")
+                      ? "bg-red-500/20 text-red-500 border border-red-500/30 shadow-[0_0_15px_rgba(239,68,68,0.25)]"
+                      : "bg-white/5 text-white/50 border border-white/10 hover:bg-white/10 hover:text-red-400 hover:scale-105"
+                  }`}
+                >
+                  <Heart className={`w-5 h-5 ${likedPhotos.includes(selectedPhoto?.id?.toString() || "") ? "fill-current scale-110" : ""}`} />
+                </button>
+                <div>
+                  <p className="text-xs font-semibold text-white/60">Curtidas da Comunidade</p>
+                  <p className="text-xl font-black text-semin-yellow mt-0.5">{selectedPhoto?.likes_count || 0}</p>
+                </div>
+              </div>
+
+              {/* Dynamic Live Comments Section */}
+              <div className="space-y-4">
+                <div className="flex items-center justify-between border-b border-white/5 pb-2">
+                  <h4 className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                    <MessageSquare className="w-4 h-4 text-semin-yellow" />
+                    Comentários Aprovados
+                  </h4>
+                  <span className="text-[10px] text-white/40 font-bold bg-white/5 px-2 py-0.5 rounded">
+                    {comments.length}
+                  </span>
+                </div>
+
+                {loadingComments ? (
+                  <div className="flex justify-center py-6">
+                    <Loader2 className="w-5 h-5 animate-spin text-semin-yellow" />
+                  </div>
+                ) : comments.length === 0 ? (
+                  <p className="text-xs text-white/40 italic py-2">
+                    Nenhum comentário aprovado ainda. Escreva o seu abaixo! ✨
+                  </p>
+                ) : (
+                  <div className="space-y-3 max-h-[22vh] md:max-h-[28vh] overflow-y-auto pr-2 custom-scrollbar">
+                    {comments.map((comment) => (
+                      <div key={comment.id} className="bg-white/[0.02] border border-white/5 rounded-xl p-3 space-y-1.5 transition-all hover:bg-white/[0.04]">
+                        <div className="flex justify-between items-center">
+                          <span className="text-xs font-bold text-semin-yellow/90">{comment.author_name}</span>
+                          <span className="text-[9px] text-white/30">
+                            {new Date(comment.created_at).toLocaleDateString("pt-BR")}
+                          </span>
+                        </div>
+                        <p className="text-xs text-white/80 leading-relaxed font-body">{comment.comment_text}</p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Comment Form Input Panel */}
+            <form onSubmit={handleAddComment} className="p-5 border-t border-white/10 bg-[#080910] space-y-3 relative z-30">
+              <div className="space-y-2.5">
+                <Input
+                  placeholder="Seu nome"
+                  value={newCommentName}
+                  onChange={(e) => setNewCommentName(e.target.value)}
+                  className="bg-white/5 border-white/10 text-xs h-9 text-white focus-visible:ring-semin-yellow rounded-lg"
+                  required
+                />
+                <textarea
+                  placeholder="Escreva sua mensagem ou recordação..."
+                  value={newCommentText}
+                  onChange={(e) => setNewCommentText(e.target.value)}
+                  className="bg-white/5 border border-white/10 rounded-lg text-xs p-3 h-16 text-white focus:outline-none focus:ring-1 focus:ring-semin-yellow focus:border-semin-yellow resize-none w-full"
+                  required
+                />
+              </div>
+              <Button
+                type="submit"
+                disabled={isSubmittingComment}
+                className="w-full bg-semin-yellow hover:bg-amber-400 text-semin-dark font-bold text-xs py-2 h-9 rounded-lg transition-all duration-300 shadow-lg shadow-semin-yellow/10"
+              >
+                {isSubmittingComment ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  "Enviar Comentário"
+                )}
+              </Button>
+            </form>
+
+          </div>
+        </DialogContent>
+      </Dialog>
     </section>
   );
 };

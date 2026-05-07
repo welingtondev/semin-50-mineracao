@@ -28,8 +28,9 @@ export default function AdminGallery() {
   const [password, setPassword] = useState("");
   
   const [photos, setPhotos] = useState<PendingPhoto[]>([]);
+  const [adminComments, setAdminComments] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<"gallery" | "fundraising">("gallery");
+  const [activeTab, setActiveTab] = useState<"gallery" | "fundraising" | "comments">("gallery");
 
   // Fundraising State
   const [fundDonations, setFundDonations] = useState(0);
@@ -61,6 +62,16 @@ export default function AdminGallery() {
       toast.error("Erro ao buscar fotos");
     } else {
       setPhotos(photosData || []);
+    }
+
+    // Fetch comments
+    const { data: commentsData, error: commentsError } = await supabase
+      .from("gallery_comments")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (!commentsError) {
+      setAdminComments(commentsData || []);
     }
 
     // Fetch fundraising settings
@@ -193,6 +204,36 @@ export default function AdminGallery() {
     }
   };
 
+  const handleUpdateCommentStatus = async (id: string, newStatus: string) => {
+    const { error } = await supabase
+      .from("gallery_comments")
+      .update({ status: newStatus })
+      .eq("id", id);
+
+    if (error) {
+      toast.error(`Erro ao ${newStatus === "approved" ? "aprovar" : "rejeitar"} comentário`);
+    } else {
+      toast.success(`Comentário ${newStatus === "approved" ? "aprovado" : "rejeitado"} com sucesso!`);
+      fetchData();
+    }
+  };
+
+  const handleDeleteComment = async (id: string) => {
+    if (!confirm("Tem certeza que deseja apagar este comentário permanentemente?")) return;
+
+    const { error } = await supabase
+      .from("gallery_comments")
+      .delete()
+      .eq("id", id);
+
+    if (error) {
+      toast.error("Erro ao deletar comentário");
+    } else {
+      toast.success("Comentário deletado do banco de dados.");
+      fetchData();
+    }
+  };
+
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen bg-semin-dark flex items-center justify-center p-4">
@@ -262,7 +303,7 @@ export default function AdminGallery() {
         </div>
 
         {/* Tabs */}
-        <div className="flex gap-4 mb-8 border-b border-white/10 pb-4">
+        <div className="flex gap-4 mb-8 border-b border-white/10 pb-4 flex-wrap">
           <button
             onClick={() => setActiveTab("gallery")}
             className={`px-6 py-2 rounded-full font-bold text-sm transition-all ${
@@ -270,6 +311,14 @@ export default function AdminGallery() {
             }`}
           >
             Galeria de Fotos
+          </button>
+          <button
+            onClick={() => setActiveTab("comments")}
+            className={`px-6 py-2 rounded-full font-bold text-sm transition-all ${
+              activeTab === "comments" ? "bg-white/10 text-white" : "text-white/50 hover:text-white"
+            }`}
+          >
+            Moderar Comentários
           </button>
           <button
             onClick={() => setActiveTab("fundraising")}
@@ -431,6 +480,93 @@ export default function AdminGallery() {
           </div>
         )}
         </>
+        )}
+
+        {/* Moderate Comments Tab */}
+        {activeTab === "comments" && (
+          <div className="space-y-6">
+            <h2 className="text-2xl font-display font-bold text-semin-yellow mb-2">Moderação de Comentários</h2>
+            <p className="text-sm text-white/50 mb-6">Aprove ou rejeite comentários enviados pela comunidade na Galeria do Tempo.</p>
+            {loading ? (
+              <div className="flex justify-center py-20">
+                <Loader2 className="h-8 w-8 animate-spin text-semin-yellow" />
+              </div>
+            ) : adminComments.length === 0 ? (
+              <div className="text-center py-20 bg-white/5 rounded-2xl border border-white/10">
+                <ImageIcon className="h-12 w-12 text-white/20 mx-auto mb-4" />
+                <p className="text-white/60 text-lg">Nenhum comentário submetido até o momento.</p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {adminComments.map((comment) => {
+                  const relatedPhoto = photos.find(p => p.id === comment.photo_id);
+                  return (
+                    <div key={comment.id} className="bg-white/5 border border-white/10 rounded-2xl p-6 flex flex-col md:flex-row gap-6 items-start justify-between">
+                      <div className="flex gap-4 items-start flex-1">
+                        {/* Thumbnail of the commented image */}
+                        {relatedPhoto?.image_base64 && (
+                          <div className="w-20 h-20 bg-black/50 rounded-xl overflow-hidden shrink-0 border border-white/10">
+                            <img src={relatedPhoto.image_base64} alt="" className="w-full h-full object-cover" />
+                          </div>
+                        )}
+                        <div className="space-y-1">
+                          <div className="flex items-center gap-3 flex-wrap">
+                            <strong className="text-white text-base">{comment.author_name}</strong>
+                            <span className="text-xs text-white/40">
+                              {new Date(comment.created_at).toLocaleString("pt-BR")}
+                            </span>
+                            <span className={`px-2.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${
+                              comment.status === 'approved' ? 'bg-green-500/20 text-green-400 border border-green-500/50' :
+                              comment.status === 'rejected' ? 'bg-red-500/20 text-red-400 border border-red-500/50' :
+                              'bg-yellow-500/20 text-yellow-400 border border-yellow-500/50'
+                            }`}>
+                              {comment.status === 'approved' ? 'Aprovado' : comment.status === 'rejected' ? 'Rejeitado' : 'Pendente'}
+                            </span>
+                          </div>
+                          {relatedPhoto && (
+                            <p className="text-xs text-semin-yellow">
+                              Na foto: "{relatedPhoto.caption}"
+                            </p>
+                          )}
+                          <p className="text-white/80 text-sm italic font-body pt-2 leading-relaxed">
+                            "{comment.comment_text}"
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Action buttons */}
+                      <div className="flex gap-2 shrink-0 flex-wrap pt-4 md:pt-0">
+                        {comment.status !== 'approved' && (
+                          <Button
+                            onClick={() => handleUpdateCommentStatus(comment.id, "approved")}
+                            className="bg-green-600 hover:bg-green-700 text-white font-semibold text-xs py-1.5 h-8 px-3 rounded-lg"
+                          >
+                            Aprovar
+                          </Button>
+                        )}
+                        {comment.status !== 'rejected' && (
+                          <Button
+                            onClick={() => handleUpdateCommentStatus(comment.id, "rejected")}
+                            variant="outline"
+                            className="border-red-500/30 text-red-400 hover:bg-red-500/10 text-xs py-1.5 h-8 px-3 rounded-lg"
+                          >
+                            Rejeitar
+                          </Button>
+                        )}
+                        <Button
+                          onClick={() => handleDeleteComment(comment.id)}
+                          variant="ghost"
+                          className="text-white/40 hover:text-red-400 hover:bg-red-500/10 text-xs py-1.5 h-8 px-3 rounded-lg"
+                        >
+                          Deletar
+                        </Button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
         )}
       </div>
     </div>
