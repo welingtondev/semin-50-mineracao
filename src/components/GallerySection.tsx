@@ -261,6 +261,10 @@ const GallerySection = () => {
   }, []);
 
   const fetchComments = async (photoId: string | number) => {
+    if (photoId.toString().startsWith("placeholder-")) {
+      setComments([]);
+      return;
+    }
     setLoadingComments(true);
     const { data, error } = await supabase
       .from("gallery_comments")
@@ -315,6 +319,16 @@ const GallerySection = () => {
   }, []);
 
   const handleLike = async (photo: PhotoItem) => {
+    if (photo.id.toString().startsWith("placeholder-")) {
+      toast.info("Curtida simulada em foto de demonstração! 😊");
+      const newLikes = (photo.likes_count || 0) + 1;
+      setPhotos(prev => prev.map(p => p.id === photo.id ? { ...p, likes_count: newLikes } : p));
+      if (selectedPhoto && selectedPhoto.id === photo.id) {
+        setSelectedPhoto({ ...selectedPhoto, likes_count: newLikes });
+      }
+      return;
+    }
+
     if (likedPhotos.includes(photo.id.toString())) {
       toast.error("Você já curtiu esta foto!");
       return;
@@ -345,6 +359,12 @@ const GallerySection = () => {
   const handleAddComment = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedPhoto) return;
+
+    if (selectedPhoto.id.toString().startsWith("placeholder-")) {
+      toast.error("Não é possível comentar em fotos de demonstração. Por favor, envie uma foto real para interagir!");
+      return;
+    }
+
     if (!newCommentName.trim() || !newCommentText.trim()) {
       toast.error("Preencha seu nome e o comentário.");
       return;
