@@ -26,9 +26,29 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
     value: ""
   });
 
+  const formatBRL = (value: string) => {
+    // Remove all non-digits
+    const cleanValue = value.replace(/\D/g, "");
+    if (!cleanValue) return "";
+    
+    // Shift digits to cents
+    const cents = parseInt(cleanValue, 10);
+    const floatValue = cents / 100;
+    
+    // Format to BRL currency string
+    return new Intl.NumberFormat("pt-BR", {
+      style: "currency",
+      currency: "BRL"
+    }).format(floatValue);
+  };
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    if (name === "value") {
+      setFormData(prev => ({ ...prev, [name]: formatBRL(value) }));
+    } else {
+      setFormData(prev => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -38,12 +58,21 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
       return;
     }
 
+    // Convert BRL formatted string (e.g. "R$ 1.500,34") to clean float
+    const rawValue = formData.value.replace(/[^\d]/g, "");
+    const parsedValue = rawValue ? parseFloat(rawValue) / 100 : 0;
+
+    if (parsedValue <= 0) {
+      alert("Por favor, insira um valor válido para a contribuição.");
+      return;
+    }
+
     setLoading(true);
     try {
       const { data, error } = await supabase.functions.invoke("asaas-checkout", {
         body: {
           ...formData,
-          value: parseFloat(formData.value),
+          value: parsedValue,
           billingType
         }
       });
@@ -167,14 +196,15 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <label className="text-xs uppercase tracking-widest font-bold text-white/40 ml-1">Valor da Doação (R$)</label>
+                    <label className="text-xs uppercase tracking-widest font-bold text-white/40 ml-1">Valor da Doação</label>
                     <Input 
                       name="value" 
-                      type="number"
-                      step="0.01"
+                      type="text"
+                      inputMode="decimal"
                       value={formData.value} 
                       onChange={handleInputChange} 
                       required 
+                      placeholder="R$ 0,00"
                       className="bg-white/5 border-white/10 text-semin-yellow h-14 rounded-xl focus:border-semin-yellow/50 text-2xl font-black text-center"
                     />
                   </div>
@@ -264,7 +294,7 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
                     </div>
                     <h4 className="text-2xl font-black text-white">QR Code Gerado!</h4>
                     <p className="text-white/60 text-sm max-w-xs mx-auto">
-                      Escaneie o código abaixo no seu app de banco para finalizar a contribuição de <span className="text-semin-yellow font-bold">R$ {formData.value}</span>.
+                      Escaneie o código abaixo no seu app de banco para finalizar a contribuição de <span className="text-semin-yellow font-bold">{formData.value}</span>.
                     </p>
                     
                     <div className="bg-white p-4 rounded-3xl w-48 h-48 mx-auto shadow-[0_0_30px_rgba(255,255,255,0.1)]">
