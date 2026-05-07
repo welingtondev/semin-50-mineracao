@@ -21,25 +21,13 @@ export default defineConfig(({ mode }) => ({
     rollupOptions: {
       output: {
         manualChunks(id) {
-          // Core React — very stable, cache forever
-          if (id.includes('react-dom') || id.includes('react-router-dom')) {
-            return 'vendor-react';
-          }
-          // Framer Motion — heavy (~60KB), isolate so pages without it don't pay
-          if (id.includes('framer-motion')) {
-            return 'vendor-motion';
-          }
-          // UI libraries (carousel, icons)
-          if (id.includes('lucide-react') || id.includes('embla-carousel')) {
-            return 'vendor-ui';
-          }
-          // Supabase client
-          if (id.includes('@supabase/supabase-js')) {
-            return 'vendor-supabase';
-          }
-          // Radix UI primitives — group to avoid many small chunks
-          if (id.includes('@radix-ui')) {
-            return 'vendor-radix';
+          if (id.includes('node_modules')) {
+            // Keep framer-motion separate as it is a heavy animation library
+            if (id.includes('framer-motion')) {
+              return 'vendor-motion';
+            }
+            // Consolidate other libraries to minimize parallel HTTP requests on mobile
+            return 'vendor-core';
           }
         }
       }

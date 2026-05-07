@@ -8,11 +8,20 @@ const RegistrationModal = lazy(() => import("./RegistrationModal").then(m => ({ 
 const SponsorModal = lazy(() => import("./SponsorModal").then(m => ({ default: m.SponsorModal })));
 
 const Counter = ({ end, label, suffix = "" }: { end: number; label: string; suffix?: string }) => {
-  const [count, setCount] = useState(0);
+  const [count, setCount] = useState(() => {
+    if (typeof window !== "undefined" && window.innerWidth < 768) {
+      return end;
+    }
+    return 0;
+  });
   const ref = useRef<HTMLDivElement>(null);
   const started = useRef(false);
 
   useEffect(() => {
+    if (window.innerWidth < 768) {
+      return;
+    }
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting && !started.current) {

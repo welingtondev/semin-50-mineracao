@@ -60,6 +60,15 @@ const ScrollTriggeredSuspense = ({ children, fallbackBg = "transparent", minHeig
 };
 
 const Index = () => {
+  const [loadPopups, setLoadPopups] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoadPopups(true);
+    }, 4000);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <div className="min-h-screen">
       <Navbar />
@@ -110,10 +119,12 @@ const Index = () => {
       <Footer />
 
       {/* Global popups — load them globally after a delay so they don't block main thread */}
-      <ScrollTriggeredSuspense>
-        <NewsletterPopup />
-        <WhatsAppPopup />
-      </ScrollTriggeredSuspense>
+      {loadPopups && (
+        <Suspense fallback={null}>
+          <NewsletterPopup />
+          <WhatsAppPopup />
+        </Suspense>
+      )}
     </div>
   );
 };
