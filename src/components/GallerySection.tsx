@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Camera, Mountain, Heart, ShieldCheck, Maximize2, Loader2, MessageSquare } from "lucide-react";
+import { Camera, Mountain, Heart, ShieldCheck, Maximize2, Loader2, MessageSquare, ChevronLeft, ChevronRight } from "lucide-react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
@@ -356,6 +356,24 @@ const GallerySection = () => {
     }
   };
 
+  const handleNextPhoto = () => {
+    if (!selectedPhoto) return;
+    const currentIndex = photos.findIndex(p => p.id === selectedPhoto.id);
+    if (currentIndex !== -1) {
+      const nextIndex = (currentIndex + 1) % photos.length;
+      setSelectedPhoto(photos[nextIndex]);
+    }
+  };
+
+  const handlePrevPhoto = () => {
+    if (!selectedPhoto) return;
+    const currentIndex = photos.findIndex(p => p.id === selectedPhoto.id);
+    if (currentIndex !== -1) {
+      const prevIndex = (currentIndex - 1 + photos.length) % photos.length;
+      setSelectedPhoto(photos[prevIndex]);
+    }
+  };
+
   const handleAddComment = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedPhoto) return;
@@ -371,19 +389,32 @@ const GallerySection = () => {
     }
 
     setIsSubmittingComment(true);
-    const { error } = await supabase
+    const { data, error } = await supabase
       .from("gallery_comments")
       .insert({
         photo_id: selectedPhoto.id,
         author_name: newCommentName.trim(),
         comment_text: newCommentText.trim(),
-        status: "pending"
-      });
+        status: "approved"
+      })
+      .select();
 
     if (error) {
       toast.error("Erro ao enviar comentário.");
     } else {
-      toast.success("Comentário enviado! Aguardando moderação. ✨");
+      toast.success("Comentário publicado! ✨");
+      if (data && data[0]) {
+        setComments(prev => [...prev, data[0]]);
+      } else {
+        setComments(prev => [...prev, {
+          id: Date.now().toString(),
+          photo_id: selectedPhoto.id,
+          author_name: newCommentName.trim(),
+          comment_text: newCommentText.trim(),
+          status: "approved",
+          created_at: new Date().toISOString()
+        }]);
+      }
       setNewCommentName("");
       setNewCommentText("");
     }
@@ -628,6 +659,33 @@ const GallerySection = () => {
                 className="max-w-full max-h-full object-contain rounded-lg shadow-2xl"
               />
             )}
+            
+            {/* Left/Prev Arrow */}
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                handlePrevPhoto();
+              }}
+              className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/60 hover:bg-semin-yellow text-white hover:text-semin-dark flex items-center justify-center border border-white/10 hover:border-semin-yellow transition-all duration-300 shadow-lg group/btn active:scale-95 z-20"
+              aria-label="Foto anterior"
+            >
+              <ChevronLeft className="w-5 h-5 group-hover/btn:-translate-x-0.5 transition-transform" />
+            </button>
+
+            {/* Right/Next Arrow */}
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleNextPhoto();
+              }}
+              className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/60 hover:bg-semin-yellow text-white hover:text-semin-dark flex items-center justify-center border border-white/10 hover:border-semin-yellow transition-all duration-300 shadow-lg group/btn active:scale-95 z-20"
+              aria-label="Próxima foto"
+            >
+              <ChevronRight className="w-5 h-5 group-hover/btn:translate-x-0.5 transition-transform" />
+            </button>
+
             <div className="absolute bottom-4 left-4 bg-black/60 px-4 py-2 rounded-full border border-white/5 backdrop-blur-md hidden sm:block">
               <span className="text-white/60 text-xs font-body font-medium">Memórias em Cadeia</span>
             </div>
