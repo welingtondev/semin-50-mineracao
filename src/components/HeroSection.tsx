@@ -88,32 +88,23 @@ const HeroSection = () => {
           backgroundSize: '360px 240px'
         }} />
 
-        <svg 
-          viewBox="0 0 200 200" 
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] md:w-[800px] h-[350px] md:h-[800px] animate-[spin_120s_linear_infinite] block opacity-[0.05] sm:opacity-[0.07] pointer-events-none"
-          style={{ contain: "layout paint", willChange: "transform" }}
-        >
-          {/* Outline shape of a gold nugget */}
-          <path 
-            fill="none" 
-            stroke="currentColor" 
-            strokeWidth="1.5" 
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="text-semin-yellow" 
-            d="M 95 25 C 130 15, 155 30, 165 55 C 180 80, 185 110, 160 145 C 145 170, 105 185, 75 170 C 45 155, 25 130, 20 95 C 15 65, 40 35, 70 25 C 80 20, 85 28, 95 25 Z" 
-          />
-          {/* Very faint inner lines to hint at the lumpy volume of the nugget */}
-          <path
-            fill="none" 
-            stroke="currentColor" 
-            strokeWidth="0.5" 
-            strokeLinecap="round"
-            className="text-semin-yellow" 
-            d="M 95 25 Q 100 80 160 145 M 75 170 Q 90 120 165 55 M 20 95 Q 60 100 105 185" 
-            opacity="0.3"
-          />
-        </svg>
+        {/* Concentric Golden Orbits / Rings (Astrolabe / Gyroscope Effect) — Ultra Elegant */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] sm:w-[550px] md:w-[850px] h-[350px] sm:h-[550px] md:h-[850px] pointer-events-none select-none opacity-[0.08] sm:opacity-[0.12]">
+          {/* Outer Solid Ring */}
+          <div className="absolute inset-0 rounded-full border border-semin-yellow animate-[spin_180s_linear_infinite]" />
+          
+          {/* Middle Dotted Ring (Spinning Counter-Clockwise) */}
+          <div className="absolute inset-[8%] rounded-full border border-dashed border-semin-orange/80 animate-[spin_120s_linear_infinite] [animation-direction:reverse]" />
+          
+          {/* Inner Ring with Double Stroke */}
+          <div className="absolute inset-[18%] rounded-full border border-semin-yellow/60 border-double border-[3px] animate-[spin_90s_linear_infinite]" />
+          
+          {/* Tech Accent Ring (Dashed, Counter-Clockwise) */}
+          <div className="absolute inset-[28%] rounded-full border border-dashed border-white/25 animate-[spin_60s_linear_infinite] [animation-direction:reverse]" />
+
+          {/* Core Golden Aura Ring */}
+          <div className="absolute inset-[38%] rounded-full border border-semin-yellow/40 shadow-[0_0_50px_rgba(210,155,33,0.15)]" />
+        </div>
 
         <Mountain className="absolute top-[18%] left-[8%] h-6 w-6 md:h-8 md:w-8 text-semin-yellow/10 hidden sm:block" />
         <Pickaxe className="absolute top-[12%] right-[12%] h-5 w-5 md:h-7 md:w-7 text-semin-yellow/8 hidden sm:block" />
