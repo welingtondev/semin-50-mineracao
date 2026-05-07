@@ -5,6 +5,7 @@ import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import Autoplay from "embla-carousel-autoplay";
 import mineTunnelBg from "@/assets/mine_tunnel_bg.webp";
