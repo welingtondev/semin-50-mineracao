@@ -26,6 +26,10 @@ export default defineConfig(({ mode }) => ({
             if (id.includes('framer-motion')) {
               return 'vendor-motion';
             }
+            // Keep Supabase separate so it only loads when required by lazy-loaded components
+            if (id.includes('@supabase')) {
+              return 'vendor-supabase';
+            }
             // Consolidate other libraries to minimize parallel HTTP requests on mobile
             return 'vendor-core';
           }

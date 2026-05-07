@@ -41,7 +41,7 @@ const ScrollTriggeredSuspense = ({ children, fallbackBg = "transparent", minHeig
           observer.disconnect(); // Only need to trigger once
         }
       },
-      { rootMargin: "600px" } // Load when within 600px of viewport
+      { rootMargin: "300px" } // Load when within 300px of viewport
     );
 
     if (ref.current) observer.observe(ref.current);
