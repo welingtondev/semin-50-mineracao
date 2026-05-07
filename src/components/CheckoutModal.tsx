@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { supabase } from "@/lib/supabase";
 
 // URL do seu Script do Google Sheets para controle de doações e contribuições do Jubileu
-const DONATION_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyYtQd0_pCH5Vj3LOHr5gL66S2vS0LpH9M16-9pA-z_8-J6D-1/exec";
+const DONATION_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz0T_fZYdL5JPn2buE7y6Lyu8MF0tRlRilhzTW-uFxO-lyUKFk9T8SKCrirwRZDaBuT/exec";
 
 interface CheckoutModalProps {
   isOpen: boolean;
