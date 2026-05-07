@@ -8,6 +8,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/lib/supabase";
 
+// URL do seu Script do Google Sheets para controle de doações e contribuições do Jubileu
+const DONATION_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyYtQd0_pCH5Vj3LOHr5gL66S2vS0LpH9M16-9pA-z_8-J6D-1/exec";
+
 interface CheckoutModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -86,6 +89,31 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
         // Armazena os dados do PIX ou apenas a URL da fatura para outros métodos
         setPixData(billingType === "PIX" ? data.pixData : { invoiceUrl: data.invoiceUrl });
         setStep(3);
+
+        // Envia os dados para a planilha do Google Sheets de doadores
+        if (DONATION_SCRIPT_URL) {
+          try {
+            const urlParams = new URLSearchParams();
+            urlParams.append("nome", formData.name);
+            urlParams.append("email", formData.email);
+            urlParams.append("cpf", formData.cpf);
+            urlParams.append("telefone", formData.phone);
+            urlParams.append("valor", parsedValue.toFixed(2));
+            urlParams.append("metodo", billingType);
+            urlParams.append("data_hora", new Date().toLocaleString("pt-BR"));
+
+            await fetch(DONATION_SCRIPT_URL, {
+              method: "POST",
+              mode: "no-cors",
+              headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+              },
+              body: urlParams,
+            });
+          } catch (sheetError) {
+            console.error("Erro ao registrar doador no Google Sheets:", sheetError);
+          }
+        }
       } else {
         alert(data.error || "Erro ao processar doação");
       }
