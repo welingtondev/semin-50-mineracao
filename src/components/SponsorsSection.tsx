@@ -125,8 +125,8 @@ const SponsorsSection = () => {
             <Gem className="h-4 w-4 md:h-6 md:w-6 text-semin-yellow" />
             <div className="w-12 md:w-24 h-px bg-gradient-to-l from-transparent to-semin-yellow/50" />
           </div>
-          <p className="font-body text-sm md:text-lg text-white/60 max-w-2xl mx-auto leading-relaxed">
-            Associe a sua marca ao maior evento acadêmico e corporativo de Engenharia de Minas do Norte e Nordeste.
+          <p className="font-body text-sm md:text-lg text-white/60 max-w-3xl mx-auto leading-relaxed">
+            Associe a sua marca ao maior evento acadêmico de Engenharia de Minas do Norte e Nordeste, ganhando destaque absoluto na celebração histórica do Jubileu de Ouro (50 anos) do curso.
           </p>
         </div>
 
