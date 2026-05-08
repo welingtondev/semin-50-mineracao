@@ -29,6 +29,18 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
     value: ""
   });
 
+  React.useEffect(() => {
+    if (!isOpen) {
+      const timer = setTimeout(() => {
+        setStep(1);
+        setBillingType("PIX");
+        setPixData(null);
+        setFormData({ name: "", email: "", cpf: "", phone: "", value: "" });
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen]);
+
   const formatBRL = (value: string) => {
     // Remove all non-digits
     const cleanValue = value.replace(/\D/g, "");
@@ -359,6 +371,7 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
                 )}
 
                 <button 
+                  type="button"
                   onClick={onClose}
                   className="text-black/35 hover:text-black/60 text-xs uppercase tracking-widest font-bold transition-colors"
                 >
