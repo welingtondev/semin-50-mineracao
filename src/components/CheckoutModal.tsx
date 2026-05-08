@@ -345,7 +345,7 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
                     </div>
 
                     <div className="flex flex-col gap-3">
-                      <Button onClick={copyPix} className="w-full h-12 rounded-xl bg-semin-dark hover:bg-black text-white font-bold gap-2 border-0 shadow-lg shadow-black/10">
+                      <Button type="button" onClick={copyPix} className="w-full h-12 rounded-xl bg-semin-dark hover:bg-black text-white font-bold gap-2 border-0 shadow-lg shadow-black/10">
                         <Copy className="h-4 w-4 text-white" />
                         Copiar Código PIX
                       </Button>
@@ -361,6 +361,7 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
                       Para finalizar sua doação, abra a fatura segura do Asaas no botão abaixo.
                     </p>
                     <Button 
+                      type="button"
                       onClick={() => window.open(pixData?.invoiceUrl || "https://asaas.com", "_blank")}
                       className="w-full h-14 rounded-2xl bg-semin-orange hover:bg-semin-orange/95 text-white font-black shadow-lg shadow-semin-orange/20"
                     >
