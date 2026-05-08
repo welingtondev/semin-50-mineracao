@@ -66,12 +66,16 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
     }
   };
 
+  const isSubmitting = React.useRef(false);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (step === 1) {
       setStep(2);
       return;
     }
+
+    if (isSubmitting.current) return; // Prevent double-clicks bypassing state
 
     // Convert BRL formatted string (e.g. "R$ 1.500,34") to clean float
     const rawValue = formData.value.replace(/[^\d]/g, "");
@@ -82,6 +86,7 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
       return;
     }
 
+    isSubmitting.current = true;
     setLoading(true);
     try {
       const { data, error } = await supabase.functions.invoke("asaas-checkout", {
@@ -135,6 +140,7 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
       console.error("Checkout error:", error);
       alert("Erro ao conectar com o servidor.");
     } finally {
+      isSubmitting.current = false;
       setLoading(false);
     }
   };
