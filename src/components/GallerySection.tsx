@@ -1039,10 +1039,10 @@ const GallerySection = () => {
           </div>
 
           {/* Right Panel: Information & Live Discussion */}
-          <div className="md:col-span-5 flex flex-col h-[57vh] md:h-full justify-between bg-white/[0.01]">
+          <div className="md:col-span-5 flex flex-col h-[57vh] md:h-full min-h-0 justify-between bg-white/[0.01] overflow-hidden">
             
             {/* Header Content & Comments List Scrollable */}
-            <div className="p-5 md:p-6 overflow-y-auto flex-1 flex flex-col space-y-6 custom-scrollbar">
+            <div className="p-5 md:p-6 overflow-y-auto flex-1 flex flex-col space-y-6 custom-scrollbar min-h-0">
               
               {/* Image Info */}
               <div>
