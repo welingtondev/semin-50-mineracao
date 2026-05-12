@@ -864,7 +864,7 @@ const QuizPage = () => {
               )}
 
               <p className="text-slate-500 text-xs mb-8" style={{ fontFamily: "'Outfit', sans-serif" }}>
-                O maior desafio de conhecimentos em mineração
+                Desafie sua mente e teste seus conhecimentos em mineração
               </p>
 
               <div className="mt-8">
