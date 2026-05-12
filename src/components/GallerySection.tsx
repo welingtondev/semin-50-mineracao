@@ -559,21 +559,19 @@ const GallerySection = () => {
 
     if (existingEmoji === emoji) {
       // Toggle off: remove reaction
-      const query = supabase
-        .from("comment_reactions")
-        .delete()
-        .eq("comment_id", commentId)
-        .eq("emoji", emoji);
-
+      const deleteQueries = [
+        supabase.from("comment_reactions").delete().eq("comment_id", commentId).eq("emoji", emoji).eq("visitor_id", visitorId)
+      ];
       if (currentUserId) {
-        query.eq("user_id", currentUserId);
-      } else {
-        query.eq("visitor_id", visitorId);
+        deleteQueries.push(
+          supabase.from("comment_reactions").delete().eq("comment_id", commentId).eq("emoji", emoji).eq("user_id", currentUserId)
+        );
       }
+      
+      const results = await Promise.all(deleteQueries);
+      const hasError = results.some(r => r.error);
 
-      const { error } = await query;
-
-      if (!error) {
+      if (!hasError) {
         setReactions(prev => {
           const commentIdReacts = { ...prev[commentId] };
           if (commentIdReacts[emoji] > 1) {
@@ -592,34 +590,34 @@ const GallerySection = () => {
         toast.error("Erro ao remover reação.");
       }
     } else {
-      // If there was another emoji, delete it first to substitute it
-      if (existingEmoji) {
-        const query = supabase
-          .from("comment_reactions")
-          .delete()
-          .eq("comment_id", commentId)
-          .eq("emoji", existingEmoji);
-
+      // If there were any previous emojis, delete them first to substitute cleanly
+      if (myCommentReactions.length > 0) {
+        const deleteQueries = [
+          supabase.from("comment_reactions").delete().eq("comment_id", commentId).eq("visitor_id", visitorId)
+        ];
         if (currentUserId) {
-          query.eq("user_id", currentUserId);
-        } else {
-          query.eq("visitor_id", visitorId);
+          deleteQueries.push(
+            supabase.from("comment_reactions").delete().eq("comment_id", commentId).eq("user_id", currentUserId)
+          );
         }
-
-        const { error: deleteError } = await query;
-        if (deleteError) {
+        
+        const results = await Promise.all(deleteQueries);
+        const hasError = results.some(r => r.error);
+        if (hasError) {
           toast.error("Erro ao substituir reação.");
           return;
         }
 
-        // Update local state reactions count for the removed emoji
+        // Update local state reactions count for all removed emojis
         setReactions(prev => {
           const commentIdReacts = { ...prev[commentId] };
-          if (commentIdReacts[existingEmoji] > 1) {
-            commentIdReacts[existingEmoji] -= 1;
-          } else {
-            delete commentIdReacts[existingEmoji];
-          }
+          myCommentReactions.forEach(removedEmoji => {
+            if (commentIdReacts[removedEmoji] > 1) {
+              commentIdReacts[removedEmoji] -= 1;
+            } else {
+              delete commentIdReacts[removedEmoji];
+            }
+          });
           return { ...prev, [commentId]: commentIdReacts };
         });
       }
