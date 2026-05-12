@@ -10,26 +10,46 @@ const CrowdfundingSection = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // --- CONFIGURAÇÃO DO TERMÔMETRO ---
-  const [currentDonations, setCurrentDonations] = useState(0);
-  const [currentSponsorships, setCurrentSponsorships] = useState(0);
+  // Valor padrão/reserva histórico caso não haja internet ou o banco seja resetado
+  const DEFAULT_DONATIONS = 15200;
+  const DEFAULT_SPONSORSHIPS = 25000;
+
+  const [currentDonations, setCurrentDonations] = useState(() => {
+    const cached = localStorage.getItem("semin_fundraising_donations");
+    return cached ? Number(cached) : DEFAULT_DONATIONS;
+  });
+  
+  const [currentSponsorships, setCurrentSponsorships] = useState(() => {
+    const cached = localStorage.getItem("semin_fundraising_sponsorships");
+    return cached ? Number(cached) : DEFAULT_SPONSORSHIPS;
+  });
+
   const GOAL_AMOUNT = 102700;        // Meta total: R$ 102.700,00
 
   useEffect(() => {
     const fetchFundraisingData = async () => {
-      const { data } = await supabase
-        .from("gallery_photos")
-        .select("*")
-        .eq("author_name", "SYSTEM_FUNDRAISING")
-        .limit(1);
+      try {
+        const { data } = await supabase
+          .from("gallery_photos")
+          .select("*")
+          .eq("author_name", "SYSTEM_FUNDRAISING")
+          .limit(1);
 
-      if (data && data.length > 0) {
-        try {
+        if (data && data.length > 0) {
           const parsed = JSON.parse(data[0].description || "{}");
-          setCurrentDonations(parsed.donations || 0);
-          setCurrentSponsorships(parsed.sponsorships || 0);
-        } catch (e) {
-          console.error("Erro ao parsear config de arrecadação");
+          const donationsVal = Number(parsed.donations) || 0;
+          const sponsorshipsVal = Number(parsed.sponsorships) || 0;
+
+          // Só atualiza se vierem valores válidos para evitar resets acidentais do banco
+          if (donationsVal > 0 || sponsorshipsVal > 0) {
+            setCurrentDonations(donationsVal);
+            setCurrentSponsorships(sponsorshipsVal);
+            localStorage.setItem("semin_fundraising_donations", donationsVal.toString());
+            localStorage.setItem("semin_fundraising_sponsorships", sponsorshipsVal.toString());
+          }
         }
+      } catch (e) {
+        console.warn("Erro ao buscar ou parsear arrecadação, utilizando cache/fallback.", e);
       }
     };
 
