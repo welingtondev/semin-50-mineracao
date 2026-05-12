@@ -134,7 +134,7 @@ export function LoginModal({ children, defaultTab = "login", onSuccess, open: co
       const fd = new FormData(e.currentTarget);
       const email = (fd.get("email") as string).toLowerCase().trim();
       const { error: err } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: window.location.origin + "/quiz",
+        redirectTo: window.location.origin + "/desafio-semin",
       });
       if (err) {
         showError(err.message);

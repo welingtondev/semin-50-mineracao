@@ -275,7 +275,7 @@ export function RegistrationModal({ children }: { children: React.ReactNode }) {
                       <UserCheck className="w-4 h-4 text-semin-yellow" /> Cadastro de Conta Obrigatório
                     </span>
                     <p className="text-white/40 text-xs leading-relaxed mt-1">
-                      Para confirmar sua inscrição, crie sua conta de acesso. Você poderá utilizá-la para jogar o Desafio Semin (Quiz) e interagir na comunidade!
+                      Para confirmar sua inscrição, crie sua conta de acesso. Você poderá utilizá-la para jogar o Desafio Semin e interagir na comunidade!
                     </p>
                   </div>
 

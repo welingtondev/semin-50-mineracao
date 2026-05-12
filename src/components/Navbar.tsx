@@ -94,7 +94,7 @@ const Navbar = () => {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="bg-[#0f172a] border border-white/10 text-white rounded-xl shadow-xl w-48 p-1">
-                  <Link to="/quiz">
+                  <Link to="/desafio-semin">
                     <DropdownMenuItem className="flex items-center gap-2 hover:bg-white/5 p-2 rounded-lg cursor-pointer">
                       <Trophy className="w-4 h-4 text-amber-500" />
                       <span>Desafio Semin</span>
@@ -124,7 +124,7 @@ const Navbar = () => {
               </LoginModal>
             )}
             
-            <Link to="/quiz">
+            <Link to="/desafio-semin">
               <Button variant="outline" className="border-semin-yellow text-semin-yellow hover:bg-semin-yellow hover:text-semin-dark font-semibold transition-all duration-300">
                 Desafio Semin
               </Button>
@@ -176,7 +176,7 @@ const Navbar = () => {
               <div className="flex flex-col gap-3 mt-4">
                 {profile ? (
                   <div className="flex flex-col gap-2 w-full">
-                    <Link to="/quiz" onClick={() => setOpen(false)} className="w-full">
+                    <Link to="/desafio-semin" onClick={() => setOpen(false)} className="w-full">
                       <Button variant="ghost" className="w-full bg-white/5 text-white/80 hover:text-semin-yellow font-semibold py-6 text-base gap-2">
                         <div className="w-5 h-5 rounded-full bg-amber-500/20 flex items-center justify-center text-amber-400 text-[10px] font-bold">
                           {profile.nickname.charAt(0).toUpperCase()}
@@ -205,7 +205,7 @@ const Navbar = () => {
                   </LoginModal>
                 )}
 
-                <Link to="/quiz" onClick={() => setOpen(false)} className="w-full">
+                <Link to="/desafio-semin" onClick={() => setOpen(false)} className="w-full">
                   <Button variant="outline" className="w-full border-semin-yellow text-semin-yellow hover:bg-semin-yellow hover:text-semin-dark font-semibold py-6 text-base">
                     Desafio Semin
                   </Button>

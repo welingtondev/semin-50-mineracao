@@ -1054,8 +1054,8 @@ const QuizPage = () => {
                     </button>
                     <button
                       onClick={() => {
-                        const text = `🏆 Meu recorde no QUIZ SEMIN UFBA é de ${profile.max_score} pontos!\nConsegue me superar? Jogue agora:`;
-                        const url = window.location.origin + "/quiz";
+                        const text = `🏆 Meu recorde no DESAFIO SEMIN (UFBA) é de ${profile.max_score} pontos!\nConsegue me superar? Jogue agora:`;
+                        const url = window.location.origin + "/desafio-semin";
                         window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text + " " + url)}`, "_blank");
                       }}
                       className="flex-1 py-4 rounded-xl text-xs md:text-sm font-bold text-white transition-all flex items-center justify-center gap-2 hover:-translate-y-0.5 active:scale-[0.98]"
@@ -1546,8 +1546,8 @@ const QuizPage = () => {
                     </button>
                     <button
                       onClick={() => {
-                        const text = `🏆 Acabei de marcar ${result.score} pontos no QUIZ SEMIN UFBA!\n${result.total_acertos} acertos, combo máximo de ${result.combo_max}!\nConsegue me superar? Jogue agora:`;
-                        const url = window.location.origin + "/quiz";
+                        const text = `🏆 Acabei de marcar ${result.score} pontos no DESAFIO SEMIN (UFBA)!\n${result.total_acertos} acertos, combo máximo de ${result.combo_max}!\nConsegue me superar? Jogue agora:`;
+                        const url = window.location.origin + "/desafio-semin";
                         window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text + " " + url)}`, "_blank");
                       }}
                       className="w-full py-4 rounded-xl font-bold text-white transition-all flex items-center justify-center gap-2 hover:opacity-90"

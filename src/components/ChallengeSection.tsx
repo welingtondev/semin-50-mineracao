@@ -41,7 +41,7 @@ const ChallengeSection = () => {
             DESAFIO <span className="text-semin-yellow">SEMIN UFBA</span>
           </h2>
           <p className="text-white/50 text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
-            Um quiz interativo em homenagem ao Jubileu de Ouro. Teste seus conhecimentos técnicos e descubra fatos marcantes da história da Engenharia de Minas da UFBA enquanto disputa o topo do ranking.
+            Um desafio de perguntas interativo em homenagem ao Jubileu de Ouro. Teste seus conhecimentos técnicos e descubra fatos marcantes da história da Engenharia de Minas da UFBA enquanto disputa o topo do ranking.
           </p>
         </div>
 
@@ -108,7 +108,7 @@ const ChallengeSection = () => {
 
         {/* CTA */}
         <div className={`text-center transition-all duration-1000 delay-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
-          <Link to="/quiz">
+          <Link to="/desafio-semin">
             <button className="px-10 py-4 rounded-xl text-lg font-bold shadow-lg transition-all hover:opacity-90 hover:-translate-y-0.5 active:scale-[0.98]"
               style={{
                 background: "linear-gradient(135deg, #d29b21, #b3821a)",

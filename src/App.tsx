@@ -25,7 +25,7 @@ const App = () => (
           <Suspense fallback={<div style={{minHeight:'100vh',background:'#161b22'}} />}>
             <Routes>
               <Route path="/" element={<Index />} />
-              <Route path="/quiz" element={<QuizPage />} />
+              <Route path="/desafio-semin" element={<QuizPage />} />
               <Route path="/admin" element={<AdminGallery />} />
               <Route path="/obrigado" element={<ThankYouPage />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
