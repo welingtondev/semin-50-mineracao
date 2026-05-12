@@ -1081,7 +1081,7 @@ const GallerySection = () => {
               </div>
 
               {/* Dynamic Live Comments Section */}
-              <div className="space-y-4 flex-1 flex flex-col min-h-0">
+              <div className="space-y-4 flex flex-col">
                 <div className="flex items-center justify-between border-b border-white/5 pb-2">
                   <h4 className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
                     <MessageSquare className="w-4 h-4 text-semin-yellow" />
@@ -1101,7 +1101,7 @@ const GallerySection = () => {
                     Nenhum comentário ainda. Escreva o seu abaixo! ✨
                   </p>
                 ) : (
-                  <div className="space-y-3 flex-1 overflow-y-auto pr-2 custom-scrollbar pb-2">
+                  <div className="space-y-3 pr-2 pb-2">
                     {comments.filter(c => !c.parent_id).map((comment) => {
                       const commentReactions = reactions[comment.id] || {};
                       const myCommentReactions = myReactions[comment.id] || [];
