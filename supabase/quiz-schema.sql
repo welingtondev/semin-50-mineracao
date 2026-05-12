@@ -464,23 +464,23 @@ SELECT * FROM (VALUES
 WHERE NOT EXISTS (SELECT 1 FROM questions LIMIT 1);
 
 -- ===== 6. SEED ADICIONAL DE PERGUNTAS HISTÓRICAS DA UFBA =====
--- (Insere as perguntas sobre a história do curso se elas ainda não estiverem no banco)
+-- (Insere as perguntas sobre a história do curso se elas ainda não estiverem no banco, de forma idempotente)
 
-INSERT INTO questions (pergunta, alternativas, resposta_correta, dificuldade, tag, ativo)
-SELECT * FROM (VALUES
+INSERT INTO public.questions (pergunta, alternativas, resposta_correta, dificuldade, tag, ativo)
+SELECT *
+FROM (VALUES
   ('Em que ano foi fundado o curso de Engenharia de Minas da UFBA, que hoje comemora seu Jubileu de Ouro?', '["1976", "1980", "1968", "1991"]'::JSONB, 0, 'facil', 'ufba_historia', true),
   ('Como é chamado o jubileu comemorativo de 50 anos do curso de Engenharia de Minas da UFBA?', '["Jubileu de Prata", "Jubileu de Ouro", "Jubileu de Diamante", "Jubileu de Rubi"]'::JSONB, 1, 'facil', 'ufba_historia', true),
   ('Qual é a sigla do Diretório Acadêmico representativo dos estudantes de Engenharia de Minas da UFBA?', '["DAENG", "DAEMIN", "CAMINAS", "DAEMA"]'::JSONB, 1, 'facil', 'ufba_historia', true),
-  ('Onde está localizada a Escola de Engenharia da UFBA, campus que sedia o curso de Engenharia de Minas?', '["Ondina", "Federação", "Canela", "Barra"]'::JSONB, 1, 'medio', 'ufba_historia', true),
   ('Qual o nome do tradicional evento anual que celebra a integração acadêmica e profissional da Engenharia de Minas da UFBA?', '["MINERAS", "SEMIN", "GEOMIN", "SEMANAMINAS"]'::JSONB, 1, 'medio', 'ufba_historia', true),
   ('A Bahia se destaca na produção de minerais industriais. Qual município baiano abriga as maiores reservas de magnesita e talco do país?', '["Jacobina", "Brumado", "Caetité", "Jaguarari"]'::JSONB, 1, 'medio', 'ufba_historia', true),
-  ('Qual tradicional mina subterrânea de ouro da Bahia, em operação em Jacobina, serve como importante campo de estudo prático para os alunos da UFBA?', '["Mina de Caraíba", "Mina de Jacobina", "Mina de Santa Luz", "Mina de Fazenda Brasileiro"]'::JSONB, 1, 'medio', 'ufba_historia', true),
   ('O curso de Engenharia de Minas da UFBA foi criado em 1976 sob influência de qual grande plano nacional para atender à demanda de expansão do setor mineral?', '["Plano de Metas de JK", "Plano Nacional de Desenvolvimento (II PND)", "Programa Grande Carajás", "Plano Trienal de Goulart"]'::JSONB, 1, 'dificil', 'ufba_historia', true),
-  ('Qual importante associação estudantil de caráter nacional, que reúne estudantes de Engenharia de Minas de todo o Brasil, conta com ativa participação histórica da UFBA?', '["ABEM (Associação Brasileira de Engenheiros de Minas)", "FENEM (Federação Nacional de Estudantes de Engenharia de Minas)", "ANEM (Associação Nacional de Engenharia de Minas)", "CONEM"]'::JSONB, 1, 'dificil', 'ufba_historia', true),
   ('A Bahia possui a única mina subterrânea de extração de cromita em operação no Brasil. Em qual município baiano ela se localiza?', '["Andorinha", "Campo Formoso", "Jaguarari", "Pindobaçu"]'::JSONB, 0, 'dificil', 'ufba_historia', true),
-  ('Em qual estado do Brasil está localizada a UFBA, instituição de ensino que abriga o curso homenageado no SEMIN?', '["Minas Gerais", "Bahia", "Pará", "Goiás"]'::JSONB, 1, 'facil', 'ufba_historia', true),
   ('Qual metal nobre tem sua extração no norte da Bahia (região de Curaçá/Jaguarari) realizada pela empresa Mineração Caraíba, polo de empregabilidade da UFBA?', '["Cobre", "Níquel", "Ferro", "Bauxita"]'::JSONB, 0, 'medio', 'ufba_historia', true)
 ) AS data(pergunta, alternativas, resposta_correta, dificuldade, tag, ativo)
 WHERE NOT EXISTS (
-  SELECT 1 FROM questions WHERE tag = 'ufba_historia'
+  SELECT 1
+  FROM public.questions q
+  WHERE q.pergunta = data.pergunta
+    AND q.tag = data.tag
 );
