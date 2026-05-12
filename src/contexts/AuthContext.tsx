@@ -250,6 +250,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
       if (nickResult.data) return "Esse nickname já está em uso.";
 
+      // Check email uniqueness (with timeout)
+      console.log("[AUTH] Checking email:", cleanEmail);
+      let emailResult;
+      try {
+        emailResult = await withTimeout(
+          supabase.from("profiles").select("id").eq("email", cleanEmail).maybeSingle(),
+          10000,
+          "email check"
+        );
+      } catch (timeoutErr: any) {
+        console.error("[AUTH] Email check failed:", timeoutErr.message);
+        return "Erro ao verificar e-mail. Tente novamente.";
+      }
+      console.log("[AUTH] Email check done:", { exists: !!emailResult.data, error: emailResult.error?.message });
+
+      if (emailResult.error) {
+        return "Erro ao verificar e-mail. Tente novamente.";
+      }
+      if (emailResult.data) return "Esse e-mail já está cadastrado por outro participante.";
+
       // Signal manual auth
       manualAuthInProgress.current = true;
 

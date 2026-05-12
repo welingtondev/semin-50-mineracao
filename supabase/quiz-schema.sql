@@ -9,7 +9,7 @@
 -- Perfis de usuário (extensão da tabela auth.users do Supabase)
 CREATE TABLE IF NOT EXISTS profiles (
   id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
-  email TEXT,
+  email TEXT UNIQUE,
   nickname TEXT UNIQUE NOT NULL,
   phone TEXT,
   max_score INTEGER DEFAULT 0,
@@ -20,6 +20,16 @@ CREATE TABLE IF NOT EXISTS profiles (
 
 -- Permite atualizar banco antigo sem quebrar
 ALTER TABLE profiles ADD COLUMN IF NOT EXISTS email TEXT;
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 
+    FROM information_schema.constraint_column_usage 
+    WHERE table_name = 'profiles' AND constraint_name = 'unique_profile_email'
+  ) THEN
+    ALTER TABLE profiles ADD CONSTRAINT unique_profile_email UNIQUE (email);
+  END IF;
+END $$;
 ALTER TABLE profiles ADD COLUMN IF NOT EXISTS max_score_month TEXT DEFAULT TO_CHAR(NOW(), 'YYYY-MM');
 
 -- Perguntas do quiz
