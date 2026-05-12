@@ -1,7 +1,12 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { supabase } from "@/lib/supabase";
+import { useAuth } from "@/contexts/AuthContext";
+import type { UserProfile } from "@/contexts/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
+import { Button } from "@/components/ui/button";
+import { LoginModal } from "@/components/LoginModal";
+import { Loader2 } from "lucide-react";
 
 // ── Types ──
 interface Question {
@@ -29,13 +34,7 @@ interface RankingEntry {
   max_score: number;
 }
 
-interface UserProfile {
-  id: string;
-  nickname: string;
-  phone?: string;
-  max_score: number;
-  consent_lgpd: boolean;
-}
+// UserProfile type is now imported from AuthContext
 
 // ══════════════════════════════════════════════════════════
 // ██  CONFIGURAÇÃO DO PATROCINADOR (Mude aqui todo mês!)  ██
@@ -277,23 +276,45 @@ function playSound(type: "click" | "success" | "error" | "finish" | "tick" | "ur
 // ── Screen type ──
 type Screen = "auth" | "profile" | "rules" | "quiz" | "result";
 
-const QuizPage = () => {
-  // Auth
-  const [screen, setScreen] = useState<Screen>("auth");
-  const [authTab, setAuthTab] = useState<"login" | "register" | "forgot">("login");
-  const [authError, setAuthError] = useState("");
-  const [authLoading, setAuthLoading] = useState(false);
-  const [isRecovering, setIsRecovering] = useState(false);
+// Helper function for difficulty text
+function getDifficultyLabel(diff: "facil" | "medio" | "dificil") {
+  switch (diff) {
+    case "facil": return "Fácil";
+    case "medio": return "Médio";
+    case "dificil": return "Difícil";
+    default: return diff;
+  }
+}
 
-  // Profile
-  const [profile, setProfile] = useState<UserProfile | null>(null);
+// Helper function for difficulty badge styles
+function getDifficultyStyle(diff: "facil" | "medio" | "dificil") {
+  switch (diff) {
+    case "facil": return "border-emerald-500/30 text-emerald-400 bg-emerald-500/5";
+    case "medio": return "border-amber-500/30 text-amber-400 bg-amber-500/5";
+    case "dificil": return "border-rose-500/30 text-rose-400 bg-rose-500/5";
+    default: return "border-white/10 text-white/60 bg-white/5";
+  }
+}
+
+const QuizPage = () => {
+  const { session, profile: authProfile, loading: authLoading, refreshProfile, setProfile: setAuthProfile, logout } = useAuth();
+
+  // Auth UI state (kept local to Quiz — only for screens/tabs)
+  const [screen, setScreen] = useState<Screen>("auth");
+
+  // Profile (alias from context for compatibility)
+  const profile = authProfile;
+  const setProfile = setAuthProfile;
   const [matchCount, setMatchCount] = useState(0);
   const [myRank, setMyRank] = useState<number | null>(null);
-  const [prevRank, setPrevRank] = useState<number | null>(null);
   const [matchHistory, setMatchHistory] = useState<any[]>([]);
   const [globalPlayerCount, setGlobalPlayerCount] = useState(0);
   const [globalMatchCount, setGlobalMatchCount] = useState(0);
   const [profileTop3, setProfileTop3] = useState<any[]>([]);
+
+  // Quiz State Extras
+  const [bgmMuted, setBgmMuted] = useState(false);
+  const [prevRank, setPrevRank] = useState<number | null>(null);
 
   // Quiz
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -303,6 +324,25 @@ const QuizPage = () => {
   const [questionStartTime, setQuestionStartTime] = useState(0);
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [quizLoading, setQuizLoading] = useState(false);
+
+  // Derived values for current question and warning timer
+  const currentQuestion = questions[currentIndex];
+  const timerUrgent = timeLeft <= 30;
+
+  // Logout handler
+  const handleLogout = useCallback(async () => {
+    try {
+      await logout();
+      setScreen("auth");
+    } catch (err) {
+      console.error("Error during logout:", err);
+    }
+  }, [logout]);
+
+  // End quiz early
+  const endQuizEarly = useCallback(() => {
+    submitMatch(false);
+  }, []);
 
   // Live feedback
   const [liveScore, setLiveScore] = useState(0);
@@ -319,265 +359,57 @@ const QuizPage = () => {
   const matchStartRef = useRef(0);
 
   // BGM
-  const [bgmMuted, setBgmMuted] = useState(false);
   const bgmStartedRef = useRef(false);
 
-  // ── Init ──
+  // ── Init: Check session from AuthContext ──
   useEffect(() => {
-    checkSession();
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === "PASSWORD_RECOVERY") {
-        setIsRecovering(true);
-        setScreen("auth");
-      }
-    });
-
-    return () => subscription.unsubscribe();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  async function checkSession() {
-    // Detectar se o usuário veio de um link de recuperação de senha
-    const hash = window.location.hash;
-    if (hash && hash.includes("type=recovery")) {
-      setIsRecovering(true);
-      setScreen("auth");
-      return; // Não navegar para o perfil — deixar na tela de trocar senha
-    }
-
-    const { data: { session } } = await supabase.auth.getSession();
-    if (session) {
-      await loadProfile(session.user.id);
-    } else {
+    // When AuthContext profile loads, navigate to profile screen
+    if (!authLoading && authProfile) {
+      loadProfileData(authProfile.id);
+    } else if (!authLoading && !authProfile) {
       setScreen("auth");
     }
-  }
+  }, [authLoading, authProfile]);
 
-  // ── Auth ──
-  function showAuthError(msg: string) {
-    setAuthError(msg);
-    setTimeout(() => setAuthError(""), 5000);
-  }
+  // ── Profile data loading (quiz-specific stats) ──
+  async function loadProfileData(userId: string) {
+    try {
+      // Executa todas as consultas de forma 100% paralela para velocidade máxima de conexão
+      const [
+        matchCountRes,
+        matchHistoryRes,
+        rankRes,
+        totalPlayersRes,
+        totalMatchesRes,
+        top3Res
+      ] = await Promise.all([
+        supabase.from("matches").select("*", { count: "exact", head: true }).eq("user_id", userId),
+        supabase.from("matches").select("score, created_at").eq("user_id", userId).order("created_at", { ascending: true }).limit(20),
+        supabase.rpc("get_my_ranking"),
+        supabase.from("profiles").select("*", { count: "exact", head: true }),
+        supabase.from("matches").select("*", { count: "exact", head: true }),
+        supabase.rpc("get_global_ranking", { p_limit: 3 })
+      ]);
 
-  async function handleResetRequest(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setAuthLoading(true);
-    const formData = new FormData(e.currentTarget);
-    const email = (formData.get("email") as string).toLowerCase().trim();
-
-    const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: window.location.origin + window.location.pathname
-    });
-
-    if (error) {
-      showAuthError(error.message);
-    } else {
-      alert("Se o e-mail estiver cadastrado, um link de recuperação foi enviado para sua caixa de entrada.");
-      setAuthTab("login");
-    }
-    setAuthLoading(false);
-  }
-
-  async function handleUpdatePassword(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setAuthLoading(true);
-    const formData = new FormData(e.currentTarget);
-    const password = formData.get("password") as string;
-
-    const { error } = await supabase.auth.updateUser({ password });
-    
-    if (error) {
-      showAuthError(error.message);
-    } else {
-      alert("Sua senha foi atualizada com sucesso!");
-      setIsRecovering(false);
-      setAuthTab("login");
-      await checkSession();
-    }
-    setAuthLoading(false);
-  }
-
-  async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    initAudioContext();
-    setAuthLoading(true);
-    const formData = new FormData(e.currentTarget);
-    const emailRaw = formData.get("email") as string;
-    const password = formData.get("password") as string;
-
-    const email = emailRaw.toLowerCase().trim();
-
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-    setAuthLoading(false);
-    if (error) {
-      showAuthError(error.message === "Invalid login credentials" ? "Email ou senha incorretos." : error.message);
-      return;
-    }
-    if (data.session) {
-      await loadProfile(data.session.user.id);
-    }
-  }
-
-  async function handleRegister(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    initAudioContext();
-    setAuthLoading(true);
-    const formData = new FormData(e.currentTarget);
-    const password = formData.get("password") as string;
-    const nicknameRaw = formData.get("nickname") as string;
-    const phone = formData.get("phone") as string;
-    const emailRaw = formData.get("email") as string;
-    const consent = formData.get("consent_lgpd");
-
-    const nickname = nicknameRaw.toLowerCase().trim();
-    const email = emailRaw.toLowerCase().trim();
-
-    if (!consent) {
-      showAuthError("Você deve aceitar os termos da LGPD para se cadastrar.");
-      setAuthLoading(false);
-      return;
-    }
-
-    if (!phone || phone.length < 8) {
-      showAuthError("Por favor, insira um número de telefone válido.");
-      setAuthLoading(false);
-      return;
-    }
-
-    if (nickname.length < 3 || nickname.length > 20 || !/^[a-zA-Z0-9_-]+$/.test(nickname)) {
-      showAuthError("Nickname deve ter 3-20 caracteres (letras, números, _ ou -).");
-      setAuthLoading(false);
-      return;
-    }
-
-    // Check nickname uniqueness
-    const { data: existingNick } = await supabase
-      .from("profiles")
-      .select("id")
-      .eq("nickname", nickname)
-      .maybeSingle();
-
-    if (existingNick) {
-      showAuthError("Esse nickname já está em uso.");
-      setAuthLoading(false);
-      return;
-    }
-
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: { data: { nickname } }
-    });
-
-    if (error) {
-      showAuthError(error.message.includes("already registered") ? "Esse nickname já está cadastrado em outra conta." : error.message);
-      setAuthLoading(false);
-      return;
-    }
-
-    if (data.user) {
-      // Create profile
-      const { error: profileError } = await supabase
-        .from("profiles")
-        .insert({
-          id: data.user.id,
-          email: email,     // <--- email guardado na tabela pública public.profiles
-          nickname,
-          phone,
-          consent_lgpd: true,
-          max_score: 0,
-        });
-
-      if (profileError) {
-        showAuthError("Erro ao criar perfil: " + profileError.message);
-        setAuthLoading(false);
-        return;
+      if (matchCountRes.count !== null) setMatchCount(matchCountRes.count);
+      
+      if (matchHistoryRes.data) {
+        setMatchHistory(matchHistoryRes.data.map((m, i) => ({ partida: i + 1, pontuacao: m.score })));
       }
 
-      // If email confirmation is disabled, user is already logged in
-      if (data.session) {
-        await loadProfile(data.user.id);
-      } else {
-        showAuthError("Conta criada! Aguarde...");
-      }
-    }
-    setAuthLoading(false);
-  }
-
-  async function handleLogout() {
-    await supabase.auth.signOut();
-    setProfile(null);
-    setScreen("auth");
-  }
-
-  // ── Profile ──
-  async function loadProfile(userId: string) {
-    const { data: profileData } = await supabase
-      .from("profiles")
-      .select("*")
-      .eq("id", userId)
-      .single();
-
-    if (profileData) {
-      setProfile(profileData);
-
-      // Get match count
-      const { count } = await supabase
-        .from("matches")
-        .select("*", { count: "exact", head: true })
-        .eq("user_id", userId);
-
-      setMatchCount(count || 0);
-
-      // Get match history
-      const { data: historyData } = await supabase
-        .from("matches")
-        .select("score, created_at")
-        .eq("user_id", userId)
-        .order("created_at", { ascending: true })
-        .limit(20);
-
-      if (historyData) {
-        setMatchHistory(historyData.map((m, i) => ({ partida: i + 1, pontuacao: m.score })));
+      if (rankRes.data && rankRes.data.rank_position) {
+        setMyRank(rankRes.data.rank_position);
       }
 
-      // Get rank
-      const { data: rankObj } = await supabase.rpc("get_my_ranking");
-      if (rankObj && rankObj.rank_position) {
-        setMyRank(rankObj.rank_position);
-      }
+      if (totalPlayersRes.count !== null) setGlobalPlayerCount(totalPlayersRes.count);
+      if (totalMatchesRes.count !== null) setGlobalMatchCount(totalMatchesRes.count);
 
-      // Get global stats
-      const { count: totalPlayers } = await supabase.from("profiles").select("*", { count: "exact", head: true });
-      setGlobalPlayerCount(totalPlayers || 0);
-      const { count: totalMatches } = await supabase.from("matches").select("*", { count: "exact", head: true });
-      setGlobalMatchCount(totalMatches || 0);
-
-      // Fetch top 3 ranking for profile screen
-      const { data: top3Data } = await supabase.rpc("get_global_ranking", { p_limit: 3 });
-      if (top3Data) setProfileTop3(top3Data);
-
+      if (top3Res.data) setProfileTop3(top3Res.data);
+    } catch (e) {
+      console.error("Erro ao carregar dados do perfil:", e);
+    } finally {
       setScreen("profile");
-    } else {
-      handleLogout();
     }
-  }
-
-  async function handleDeleteAccount() {
-    if (!confirm("⚠️ LGPD - Direito ao Esquecimento\n\nIsso apagará permanentemente sua conta, recordes e histórico.\n\nDeseja continuar?")) return;
-
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) return;
-
-    // Delete profile (cascades to matches)
-    await supabase.from("profiles").delete().eq("id", session.user.id);
-
-    // Sign out
-    await supabase.auth.signOut();
-    setProfile(null);
-    setScreen("auth");
-    alert("Conta removida com sucesso. Até logo!");
   }
 
   // ── Quiz ──
@@ -622,6 +454,7 @@ const QuizPage = () => {
     setComboCount(0);
     setFloatingPts(null);
     setQuizLoading(false);
+    setPrevRank(myRank); // Save pre-match rank
     setScreen("quiz");
 
     // Start BGM
@@ -728,7 +561,7 @@ const QuizPage = () => {
     if (answersToSubmit.length === 0) {
       alert("Nenhuma resposta submetida.");
       setScreen("profile");
-      if (profile) loadProfile(profile.id);
+      if (profile) loadProfileData(profile.id);
       return;
     }
 
@@ -742,15 +575,12 @@ const QuizPage = () => {
 
     if (error) {
       alert("Erro ao processar partida: " + error.message);
-      if (profile) loadProfile(profile.id);
+      if (profile) loadProfileData(profile.id);
       return;
     }
 
     playSound("finish");
     setResult(data as MatchResult);
-
-    // Save previous rank for comparison
-    setPrevRank(myRank);
 
     // Fetch ranking (top 5)
     const { data: rankData } = await supabase.rpc("get_global_ranking", { p_limit: 5 });
@@ -764,15 +594,14 @@ const QuizPage = () => {
     }
   }
 
-  function endQuizEarly() {
-    submitMatch(false);
-  }
-
-  function goToProfile() {
-    if (profile) loadProfile(profile.id);
-  }
-
   // ── Share Logic ──
+  // ── Month name helper ──
+  function getMonthLabel() {
+    const months = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+    const now = new Date();
+    return `${months[now.getMonth()]} ${now.getFullYear()}`;
+  }
+
   async function shareToInstagram() {
     if (!profile) return;
     playSound("share");
@@ -782,78 +611,99 @@ const QuizPage = () => {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    // ═══ ESTILO PREMIUM / EDITORIAL ═══
+    // ── Try to load Canva template as background ──
+    let hasTemplate = false;
+    try {
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+      await new Promise<void>((resolve, reject) => {
+        img.onload = () => { ctx.drawImage(img, 0, 0, 1080, 1920); hasTemplate = true; resolve(); };
+        img.onerror = () => reject();
+        img.src = "/share-template.png";
+      });
+    } catch {
+      // Fallback: fundo programático escuro
+      const bgGrad = ctx.createLinearGradient(0, 0, 0, 1920);
+      bgGrad.addColorStop(0, "#08090d");
+      bgGrad.addColorStop(0.4, "#0d1117");
+      bgGrad.addColorStop(1, "#0a0c12");
+      ctx.fillStyle = bgGrad;
+      ctx.fillRect(0, 0, 1080, 1920);
 
-    // Fundo escuro elegante
-    const bgGrad = ctx.createLinearGradient(0, 0, 0, 1920);
-    bgGrad.addColorStop(0, "#08090d");
-    bgGrad.addColorStop(0.4, "#0d1117");
-    bgGrad.addColorStop(1, "#0a0c12");
-    ctx.fillStyle = bgGrad;
-    ctx.fillRect(0, 0, 1080, 1920);
+      // Glow sutil dourado
+      const ambientGlow = ctx.createRadialGradient(540, 750, 0, 540, 750, 600);
+      ambientGlow.addColorStop(0, "rgba(245, 158, 11, 0.06)");
+      ambientGlow.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = ambientGlow;
+      ctx.fillRect(0, 0, 1080, 1920);
 
-    // Glow sutil dourado no centro (apenas ambiência)
-    const ambientGlow = ctx.createRadialGradient(540, 750, 0, 540, 750, 600);
-    ambientGlow.addColorStop(0, "rgba(245, 158, 11, 0.06)");
-    ambientGlow.addColorStop(1, "rgba(0,0,0,0)");
-    ctx.fillStyle = ambientGlow;
-    ctx.fillRect(0, 0, 1080, 1920);
+      // Linhas decorativas
+      const lineGrad = ctx.createLinearGradient(140, 0, 940, 0);
+      lineGrad.addColorStop(0, "rgba(245, 158, 11, 0)");
+      lineGrad.addColorStop(0.3, "rgba(245, 158, 11, 0.4)");
+      lineGrad.addColorStop(0.7, "rgba(239, 68, 68, 0.4)");
+      lineGrad.addColorStop(1, "rgba(239, 68, 68, 0)");
+      ctx.strokeStyle = lineGrad;
+      ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(140, 180); ctx.lineTo(940, 180); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(140, 1740); ctx.lineTo(940, 1740); ctx.stroke();
 
-    // Linha fina superior decorativa
-    const lineGrad = ctx.createLinearGradient(140, 0, 940, 0);
-    lineGrad.addColorStop(0, "rgba(245, 158, 11, 0)");
-    lineGrad.addColorStop(0.3, "rgba(245, 158, 11, 0.4)");
-    lineGrad.addColorStop(0.7, "rgba(239, 68, 68, 0.4)");
-    lineGrad.addColorStop(1, "rgba(239, 68, 68, 0)");
-    ctx.strokeStyle = lineGrad;
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.moveTo(140, 180);
-    ctx.lineTo(940, 180);
-    ctx.stroke();
+      // Logo SEMIN + Marca (só no fallback — no template do Canva já está na imagem)
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
 
-    // Mesma linha no rodapé
-    ctx.beginPath();
-    ctx.moveTo(140, 1740);
-    ctx.lineTo(940, 1740);
-    ctx.stroke();
+      // Carregar e desenhar a logo SEMIN
+      try {
+        const logo = new Image();
+        logo.crossOrigin = "anonymous";
+        await new Promise<void>((resolve) => {
+          logo.onload = () => {
+            // Desenhar logo centralizada (180x180) no topo
+            const logoSize = 180;
+            ctx.drawImage(logo, 540 - logoSize / 2, 120, logoSize, logoSize);
+            resolve();
+          };
+          logo.onerror = () => resolve(); // Continua sem logo se falhar
+          logo.src = "/semin_logo.webp";
+        });
+      } catch { /* continua sem logo */ }
 
+      // Texto "DESAFIO" abaixo da logo
+      ctx.fillStyle = "rgba(255,255,255,0.35)";
+      ctx.font = "600 28px 'Outfit', system-ui, sans-serif";
+      ctx.letterSpacing = "12px";
+      ctx.fillText("DESAFIO", 540, 350);
+
+      // Nome da marca com gradiente
+      ctx.letterSpacing = "4px";
+      const brandGrad = ctx.createLinearGradient(200, 0, 880, 0);
+      brandGrad.addColorStop(0, SPONSOR_CONFIG.accentFrom);
+      brandGrad.addColorStop(1, SPONSOR_CONFIG.accentTo);
+      ctx.fillStyle = brandGrad;
+      ctx.font = "900 72px 'Outfit', system-ui, sans-serif";
+      ctx.fillText("SEMIN UFBA", 540, 430);
+
+      if (SPONSOR_CONFIG.tagline) {
+        ctx.fillStyle = "rgba(255,255,255,0.25)";
+        ctx.font = "500 24px 'Outfit', system-ui, sans-serif";
+        ctx.letterSpacing = "6px";
+        ctx.fillText(SPONSOR_CONFIG.tagline.toUpperCase(), 540, 500);
+      }
+    }
+
+    // ══════════════════════════════════════════════════
+    // ██  DADOS DINÂMICOS (sobrepostos ao template)  ██
+    // ══════════════════════════════════════════════════
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
 
-    // ── MARCA ──
-    ctx.fillStyle = "rgba(255,255,255,0.35)";
-    ctx.font = "600 28px 'Outfit', system-ui, sans-serif";
-    ctx.letterSpacing = "12px";
-    ctx.fillText("DESAFIO", 540, 260);
-
-    // Nome da marca com gradiente
-    ctx.letterSpacing = "4px";
-    const brandGrad = ctx.createLinearGradient(200, 0, 880, 0);
-    brandGrad.addColorStop(0, SPONSOR_CONFIG.accentFrom);
-    brandGrad.addColorStop(1, SPONSOR_CONFIG.accentTo);
-    ctx.fillStyle = brandGrad;
-    ctx.font = "900 72px 'Outfit', system-ui, sans-serif";
-    ctx.fillText("SEMIN UFBA", 540, 340);
-
-    // Tagline do patrocinador (se houver)
-    if (SPONSOR_CONFIG.tagline) {
-      ctx.fillStyle = "rgba(255,255,255,0.25)";
-      ctx.font = "500 24px 'Outfit', system-ui, sans-serif";
-      ctx.letterSpacing = "6px";
-      ctx.fillText(SPONSOR_CONFIG.tagline.toUpperCase(), 540, 410);
-    }
-
-    // ── SCORE PRINCIPAL ──
-    ctx.letterSpacing = "0px";
-
-    // Label "PONTUAÇÃO"
+    // ── PONTUAÇÃO ──
     ctx.fillStyle = "rgba(255,255,255,0.3)";
     ctx.font = "600 30px 'Outfit', system-ui, sans-serif";
     ctx.letterSpacing = "10px";
     ctx.fillText("PONTUAÇÃO", 540, 560);
 
-    // Score com glow sutil
+    // Score grande com glow
     ctx.shadowColor = `${SPONSOR_CONFIG.accentFrom}60`;
     ctx.shadowBlur = 40;
     const scoreGrad = ctx.createLinearGradient(200, 0, 880, 0);
@@ -875,32 +725,30 @@ const QuizPage = () => {
     // ── RANKING ──
     const displayRank = result && ranking.find(r => r.user_id === profile.id)?.rank_position || myRank;
     if (displayRank) {
-      // Linha separadora fina
       ctx.strokeStyle = "rgba(255,255,255,0.06)";
       ctx.lineWidth = 1;
-      ctx.beginPath();
-      ctx.moveTo(340, 940);
-      ctx.lineTo(740, 940);
-      ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(340, 940); ctx.lineTo(740, 940); ctx.stroke();
 
       ctx.fillStyle = "rgba(255,255,255,0.3)";
       ctx.font = "600 24px 'Outfit', system-ui, sans-serif";
       ctx.letterSpacing = "8px";
       ctx.fillText("RANKING MENSAL", 540, 1010);
 
-      // Posição com acento de cor
+      // Posição
       ctx.fillStyle = SPONSOR_CONFIG.highlight;
       ctx.font = "900 100px 'Outfit', system-ui, sans-serif";
       ctx.letterSpacing = "0px";
       ctx.fillText(`#${displayRank}`, 540, 1130);
 
-      // Separadora inferior
       ctx.strokeStyle = "rgba(255,255,255,0.06)";
-      ctx.beginPath();
-      ctx.moveTo(340, 1230);
-      ctx.lineTo(740, 1230);
-      ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(340, 1230); ctx.lineTo(740, 1230); ctx.stroke();
     }
+
+    // ── MÊS DA COMPETIÇÃO ──
+    ctx.fillStyle = SPONSOR_CONFIG.highlight;
+    ctx.font = "700 32px 'Outfit', system-ui, sans-serif";
+    ctx.letterSpacing = "6px";
+    ctx.fillText(getMonthLabel().toUpperCase(), 540, 1320);
 
     // ── JOGADOR ──
     ctx.fillStyle = "rgba(255,255,255,0.25)";
@@ -913,18 +761,20 @@ const QuizPage = () => {
     ctx.letterSpacing = "0px";
     ctx.fillText(`@${profile.nickname}`, 540, 1460);
 
-    // ── RODAPÉ ──
-    ctx.fillStyle = "rgba(255,255,255,0.15)";
-    ctx.font = "500 24px 'Outfit', system-ui, sans-serif";
-    ctx.letterSpacing = "4px";
-    ctx.fillText("JOGUE TAMBÉM", 540, 1800);
+    // ── RODAPÉ (só se não tiver template — no Canva já está na imagem) ──
+    if (!hasTemplate) {
+      ctx.fillStyle = "rgba(255,255,255,0.15)";
+      ctx.font = "500 24px 'Outfit', system-ui, sans-serif";
+      ctx.letterSpacing = "4px";
+      ctx.fillText("JOGUE TAMBÉM", 540, 1800);
 
-    ctx.fillStyle = "rgba(255,255,255,0.4)";
-    ctx.font = "600 28px 'Outfit', system-ui, sans-serif";
-    ctx.letterSpacing = "0px";
-    ctx.fillText("seminufba.com.br", 540, 1850);
+      ctx.fillStyle = "rgba(255,255,255,0.4)";
+      ctx.font = "600 28px 'Outfit', system-ui, sans-serif";
+      ctx.letterSpacing = "0px";
+      ctx.fillText("seminufba.com.br", 540, 1850);
+    }
 
-    // Export
+    // ── Export ──
     canvas.toBlob(async (blob) => {
       if (!blob) return;
       const file = new File([blob], "semin-score.png", { type: "image/png" });
@@ -932,7 +782,7 @@ const QuizPage = () => {
         try {
           await navigator.share({
             title: `Meu Score no ${SPONSOR_CONFIG.challengeName}`,
-            text: `Fiz ${profile.max_score} pontos no ${SPONSOR_CONFIG.challengeName}!`,
+            text: `Fiz ${profile.max_score} pontos no ${SPONSOR_CONFIG.challengeName} — ${getMonthLabel()}!`,
             files: [file],
           });
         } catch (e) {
@@ -943,6 +793,7 @@ const QuizPage = () => {
       }
     });
   }
+
 
   function downloadBlob(blob: Blob, filename: string) {
     const url = URL.createObjectURL(blob);
@@ -959,29 +810,6 @@ const QuizPage = () => {
   const minutes = Math.floor(timeLeft / 60);
   const seconds = timeLeft % 60;
   const timerText = `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
-  const timerUrgent = timeLeft <= 30;
-
-  // ── Current question ──
-  const currentQuestion = questions[currentIndex];
-
-  // ── Difficulty styling ──
-  function getDifficultyStyle(d: string) {
-    switch (d) {
-      case "facil": return "text-emerald-400 bg-emerald-500/20 border-emerald-500/40 shadow-[0_0_15px_rgba(16,185,129,0.3)]";
-      case "medio": return "text-amber-400 bg-amber-500/20 border-amber-500/40 shadow-[0_0_15px_rgba(245,158,11,0.3)]";
-      case "dificil": return "text-rose-400 bg-rose-500/20 border-rose-500/40 shadow-[0_0_15px_rgba(244,63,94,0.3)]";
-      default: return "text-slate-400 bg-slate-500/20 border-slate-500/40";
-    }
-  }
-
-  function getDifficultyLabel(d: string) {
-    switch (d) {
-      case "facil": return "Fácil · 10pts";
-      case "medio": return "Médio · 20pts";
-      case "dificil": return "Difícil · 40pts";
-      default: return d;
-    }
-  }
 
   // ── Render ──
   return (
@@ -1039,145 +867,28 @@ const QuizPage = () => {
                 O maior desafio de conhecimentos em mineração
               </p>
 
-              {/* Formulários Condicionais de Auth */}
-              {!isRecovering ? (
-                <>
-                  {/* Tabs */}
-                  {authTab !== "forgot" && (
-                    <div className="flex border-b border-slate-700 mb-6">
-                      <button
-                        onClick={() => setAuthTab("login")}
-                        className={`flex-1 py-3 border-b-2 font-bold transition-all ${
-                          authTab === "login" ? "text-white" : "border-transparent text-slate-400 hover:text-slate-200"
-                        }`}
-                        style={authTab === "login" ? { borderColor: SPONSOR_CONFIG.accentFrom, color: SPONSOR_CONFIG.highlight } : {}}
-                      >
-                        Entrar
-                      </button>
-                      <button
-                        onClick={() => setAuthTab("register")}
-                        className={`flex-1 py-3 border-b-2 font-bold transition-all ${
-                          authTab === "register" ? "text-white" : "border-transparent text-slate-400 hover:text-slate-200"
-                        }`}
-                        style={authTab === "register" ? { borderColor: SPONSOR_CONFIG.accentFrom, color: SPONSOR_CONFIG.highlight } : {}}
-                      >
-                        Cadastrar
-                      </button>
-                    </div>
-                  )}
-
-                  {/* Login Form */}
-                  {authTab === "login" && (
-                    <form onSubmit={handleLogin} className="space-y-4 text-left">
-                      <div>
-                        <label className="block text-xs uppercase tracking-widest text-slate-400 font-bold mb-1">E-mail</label>
-                        <input type="email" name="email" required placeholder="seu@email.com"
-                          className="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-amber-400 transition-all font-body" />
-                      </div>
-                      <div>
-                        <div className="flex justify-between items-center mb-1">
-                          <label className="block text-xs uppercase tracking-widest text-slate-400 font-bold">Senha</label>
-                          <button type="button" onClick={() => setAuthTab("forgot")} className="text-xs font-bold text-amber-400 hover:text-white transition-colors">Esqueci a senha</button>
-                        </div>
-                        <input type="password" name="password" required
-                          className="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-amber-400 transition-all" />
-                      </div>
-                      <button type="submit" disabled={authLoading}
-                        className="w-full py-4 rounded-xl text-lg font-bold shadow-lg transition-all hover:opacity-90 disabled:opacity-50 text-slate-900"
-                        style={{ background: `linear-gradient(135deg, ${SPONSOR_CONFIG.accentFrom}, ${SPONSOR_CONFIG.accentTo})` }}>
-                        {authLoading ? "Entrando..." : "ENTRAR"}
-                      </button>
-                    </form>
-                  )}
-
-                  {/* Forgot Password Form */}
-                  {authTab === "forgot" && (
-                    <form onSubmit={handleResetRequest} className="space-y-4 text-left">
-                      <div className="mb-4">
-                        <h3 className="text-xl font-bold text-amber-400">Recuperação de Senha</h3>
-                        <p className="text-sm text-slate-300">Enviaremos um link mágico para seu email cadastrado.</p>
-                      </div>
-                      <div>
-                        <label className="block text-xs uppercase tracking-widest text-slate-400 font-bold mb-1">E-mail de Cadastro</label>
-                        <input type="email" name="email" required placeholder="Digite seu e-mail"
-                          className="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-amber-400 transition-all font-body" />
-                      </div>
-                      <button type="submit" disabled={authLoading}
-                        className="w-full py-4 rounded-xl text-lg font-bold shadow-lg transition-all hover:opacity-90 disabled:opacity-50 text-white border border-amber-400 bg-amber-400/10">
-                        {authLoading ? "Enviando..." : "ENVIAR LINK"}
-                      </button>
-                      <button type="button" onClick={() => setAuthTab("login")} className="w-full text-center text-sm font-bold text-slate-400 hover:text-white mt-2 transition-colors">
-                        Cancelar e Voltar para Login
-                      </button>
-                    </form>
-                  )}
-
-                  {/* Register Form */}
-                  {authTab === "register" && (
-                    <form onSubmit={handleRegister} className="space-y-4 text-left">
-                      <div>
-                        <label className="block text-xs uppercase tracking-widest text-slate-400 font-bold mb-1">E-mail Obrigatório</label>
-                        <input type="email" name="email" required placeholder="seu@email.com"
-                          className="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-amber-400 transition-all" />
-                      </div>
-                      <div>
-                        <label className="block text-xs uppercase tracking-widest text-slate-400 font-bold mb-1">Nickname (Exibido no Ranking)</label>
-                        <input type="text" name="nickname" required minLength={3} maxLength={20} pattern="[a-zA-Z0-9_-]+" placeholder="Seu apelido..."
-                          className="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-amber-400 transition-all" />
-                      </div>
-
-                      <div>
-                        <label className="block text-xs uppercase tracking-widest text-slate-400 font-bold mb-1">Telefone / WhatsApp</label>
-                        <input type="tel" name="phone" required placeholder="(00) 00000-0000"
-                          className="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-amber-400 transition-all" />
-                      </div>
-                      <div>
-                        <label className="block text-xs uppercase tracking-widest text-slate-400 font-bold mb-1">Senha (Mín. 6 chars)</label>
-                        <input type="password" name="password" required minLength={6}
-                          className="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-amber-400 transition-all" />
-                      </div>
-                      <div className="flex items-start gap-2 mt-4">
-                        <input type="checkbox" name="consent_lgpd" id="consent_lgpd" required className="mt-1 accent-amber-400" />
-                        <label htmlFor="consent_lgpd" className="text-xs text-slate-400">
-                          Eu concordo com os Termos de Uso e consinto com a LGPD. Aceito usar meu email e nickname no jogo para fins de registro e ranking.
-                        </label>
-                      </div>
-                      <button type="submit" disabled={authLoading}
-                        className="w-full py-4 rounded-xl text-lg font-bold shadow-lg transition-all hover:opacity-90 disabled:opacity-50 text-slate-900 mt-4"
-                        style={{ background: `linear-gradient(135deg, ${SPONSOR_CONFIG.accentFrom}, ${SPONSOR_CONFIG.accentTo})` }}>
-                        {authLoading ? "Criando conta..." : "CRIAR CONTA"}
-                      </button>
-                    </form>
-                  )}
-                </>
-              ) : (
-                /* Atualizar Senha (isRecovering = true) */
-                <form onSubmit={handleUpdatePassword} className="space-y-4 text-left">
-                  <div className="mb-4">
-                    <h3 className="text-2xl font-black text-amber-400">Criar Nova Senha</h3>
-                    <p className="text-sm text-slate-300">Digite sua nova senha abaixo. Não vá esquecer dessa de novo em! 😂</p>
+              <div className="mt-8">
+                {authLoading ? (
+                  <div className="flex flex-col items-center justify-center py-6 space-y-4">
+                    <Loader2 className="w-8 h-8 animate-spin text-amber-500" />
+                    <p className="text-slate-400 text-sm font-medium animate-pulse">Verificando sessão...</p>
                   </div>
-                  <div>
-                    <label className="block text-xs uppercase tracking-widest text-slate-400 font-bold mb-1">Crie a Nova Senha</label>
-                    <input type="password" name="password" minLength={6} required placeholder="****"
-                      className="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-amber-400 transition-all font-body" />
-                  </div>
-                  <button type="submit" disabled={authLoading}
-                    className="w-full py-4 rounded-xl text-lg font-bold shadow-lg transition-all hover:opacity-90 disabled:opacity-50 text-slate-900"
-                        style={{ background: `linear-gradient(135deg, ${SPONSOR_CONFIG.accentFrom}, ${SPONSOR_CONFIG.accentTo})` }}>
-                    {authLoading ? "Salvando..." : "MUDAR E ACESSAR JOGO"}
-                  </button>
-                </form>
-              )}
-
-              {/* Error */}
-              {authError && (
-                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-                  className="mt-4 text-red-400 text-sm font-semibold p-3 rounded-xl"
-                  style={{ background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.2)" }}>
-                  {authError}
-                </motion.div>
-              )}
+                ) : (
+                  <>
+                    <LoginModal defaultTab="login">
+                      <Button 
+                        className="w-full py-8 rounded-xl text-xl font-bold shadow-lg transition-all hover:scale-105 active:scale-95 border-2 border-transparent"
+                        style={{ background: `linear-gradient(135deg, ${SPONSOR_CONFIG.accentFrom}, ${SPONSOR_CONFIG.accentTo})`, color: SPONSOR_CONFIG.ctaTextColor }}
+                      >
+                        FAZER LOGIN PARA JOGAR
+                      </Button>
+                    </LoginModal>
+                    <p className="text-slate-400 text-sm mt-4">
+                      O Desafio Semin usa o mesmo login do resto da plataforma.
+                    </p>
+                  </>
+                )}
+              </div>
 
               {/* Back to site */}
               <a href="/"
@@ -1227,7 +938,7 @@ const QuizPage = () => {
               <div className="grid grid-cols-3 gap-3 mb-6">
                 <div className="rounded-2xl p-4 text-center flex flex-col justify-center"
                      style={{ background: "rgba(15,23,42,0.5)", border: "1px solid rgba(255,255,255,0.04)" }}>
-                  <div className="text-[10px] text-slate-400 uppercase tracking-widest font-bold mb-1">Maior Pont.</div>
+                  <div className="text-[10px] text-slate-400 uppercase tracking-widest font-bold mb-1">Recorde</div>
                   <div className="text-xl md:text-2xl font-black text-white tabular-nums">{profile.max_score.toLocaleString("pt-BR")}</div>
                 </div>
                 <div className="rounded-2xl p-4 text-center flex flex-col justify-center"
@@ -1277,7 +988,7 @@ const QuizPage = () => {
               {/* Top 3 Ranking */}
               {profileTop3.length > 0 && (
                 <div className="mb-6 p-5 rounded-2xl" style={{ background: "rgba(15,23,42,0.5)", border: "1px solid rgba(255,255,255,0.05)" }}>
-                  <h3 className="text-amber-400 font-bold uppercase tracking-widest text-xs mb-4 text-center">👑 Top 3 — Ranking</h3>
+                  <h3 className="text-amber-400 font-bold uppercase tracking-widest text-xs mb-4 text-center">👑 Top 3 — {getMonthLabel()}</h3>
                   <div className="flex flex-col gap-2">
                     {profileTop3.map((p) => {
                       const isMe = p.user_id === profile?.id;
@@ -1369,7 +1080,7 @@ const QuizPage = () => {
                     <span className="text-xl">🎯</span>
                     <h3 className="font-bold text-emerald-400 text-sm md:text-base">Pontuação por Dificuldade</h3>
                   </div>
-                  <p className="text-xs md:text-sm text-slate-300 leading-relaxed">Cada acerto vale pontos de acordo com a dificuldade: <strong className="text-emerald-300">Fácil = +10</strong>, <strong className="text-amber-300">Médio = +20</strong>, <strong className="text-rose-300">Difícil = +40</strong>. Sua pontuação é acumulada no ranking mensal.</p>
+                  <p className="text-xs md:text-sm text-slate-300 leading-relaxed">Cada acerto vale pontos de acordo com a dificuldade: <strong className="text-emerald-300">Fácil = +10</strong>, <strong className="text-amber-300">Médio = +20</strong>, <strong className="text-rose-300">Difícil = +40</strong>.</p>
                 </div>
 
                 <div className="p-4 md:p-5 rounded-2xl" style={{ background: "rgba(15,23,42,0.6)", border: "1px solid rgba(255,255,255,0.05)" }}>
@@ -1386,6 +1097,14 @@ const QuizPage = () => {
                     <h3 className="font-bold text-orange-400 text-sm md:text-base">Múltiplos Bônus</h3>
                   </div>
                   <p className="text-xs md:text-sm text-slate-300 leading-relaxed">Responda em <strong className="text-white">menos de 3 segundos</strong> para ganhar até <strong className="text-sky-300">+50% de Bônus de Velocidade</strong>. Além disso, a partir de <strong className="text-white">3 acertos seguidos</strong>, você ativa o <strong className="text-orange-300">Bônus de Combo (até +50%)</strong>! Ambos os bônus acumulam.</p>
+                </div>
+
+                <div className="p-4 md:p-5 rounded-2xl" style={{ background: "rgba(15,23,42,0.6)", border: "1px solid rgba(210,155,33,0.15)" }}>
+                  <div className="flex items-center gap-3 mb-2">
+                    <span className="text-xl">🏆</span>
+                    <h3 className="font-bold text-amber-400 text-sm md:text-base">Ranking Mensal = Melhor Partida</h3>
+                  </div>
+                  <p className="text-xs md:text-sm text-slate-300 leading-relaxed">Apenas a <strong className="text-amber-300">sua maior pontuação em uma única partida</strong> vale para o ranking do mês. A cada novo mês, o ranking é <strong className="text-white">zerado</strong> e uma nova competição começa! Supere seu recorde para subir de posição.</p>
                 </div>
               </div>
 
@@ -1677,6 +1396,8 @@ const QuizPage = () => {
                         <span className="text-emerald-400 font-bold text-lg drop-shadow-md">🏅 Novo recorde pessoal!</span>
                       ) : result.total_acertos === 0 ? (
                         <span className="text-slate-400">Não desanime! Volte a jogar e conquiste seus primeiros pontos. 💪</span>
+                      ) : !result.is_new_record ? (
+                        <span className="text-slate-400">Quase lá! Jogue novamente e tente superar seu recorde de <strong className="text-amber-400">{profile?.max_score?.toLocaleString("pt-BR")}</strong> pontos. 🎯</span>
                       ) : result.total_acertos > result.total_erros ? (
                         <span className="text-amber-400 font-semibold">Belo desempenho! Você acertou mais do que errou. Continue assim! 💥</span>
                       ) : (
@@ -1684,13 +1405,16 @@ const QuizPage = () => {
                       )}
                     </p>
 
-                    {/* Maior Pontuação (não acumulada) */}
+                    {/* Maior Pontuação (melhor partida única) */}
                     <div className="mb-8 p-1 rounded-3xl" style={{ background: "linear-gradient(135deg, rgba(210,155,33,0.4), rgba(230,126,34,0.1))" }}>
                       <div className="p-6 rounded-[1.4rem]" style={{ background: "rgba(15,23,42,0.9)", backdropFilter: "blur(12px)" }}>
-                        <div className="text-[10px] text-amber-500 uppercase font-black tracking-widest mb-1">Sua Maior Pontuação</div>
+                        <div className="text-[10px] text-amber-500 uppercase font-black tracking-widest mb-1">Recorde do Mês</div>
                         <div className="text-5xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-300 to-orange-500 drop-shadow-sm tabular-nums">
                           {profile?.max_score?.toLocaleString("pt-BR") || 0}
                         </div>
+                        {result && !result.is_new_record && (
+                          <div className="mt-2 text-xs text-slate-400">Supere este recorde para subir no ranking!</div>
+                        )}
                       </div>
                     </div>
 
@@ -1698,7 +1422,7 @@ const QuizPage = () => {
                     <div className="grid grid-cols-4 gap-3 mb-8">
                       <div className="rounded-2xl p-4 relative overflow-hidden" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.05)" }}>
                         <div className="absolute inset-0 bg-gradient-to-br from-amber-400/5 to-transparent"></div>
-                        <div className="text-[10px] tracking-widest text-slate-500 uppercase font-black mb-1 relative">Partida</div>
+                        <div className="text-[10px] tracking-widest text-slate-500 uppercase font-black mb-1 relative">Esta Partida</div>
                         <div className="text-2xl font-black text-amber-400 relative">+{result.score}</div>
                       </div>
                       <div className="rounded-2xl p-4" style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.05)" }}>
@@ -1731,7 +1455,7 @@ const QuizPage = () => {
                 {/* Ranking Top 5 */}
                 {ranking.length > 0 && (
                   <div className="mb-8 p-5 md:p-6 rounded-2xl" style={{ background: "rgba(15,23,42,0.5)", border: "1px solid rgba(255,255,255,0.05)" }}>
-                    <h3 className="text-amber-400 font-bold uppercase tracking-widest text-xs md:text-sm mb-4">🏆 Top 5 — Ranking Mensal</h3>
+                    <h3 className="text-amber-400 font-bold uppercase tracking-widest text-xs md:text-sm mb-4">🏆 Top 5 — {getMonthLabel()}</h3>
                     <div className="flex flex-col gap-2">
                       {ranking.slice(0, 5).map((p) => {
                         const isMe = p.user_id === profile?.id;
@@ -1758,7 +1482,7 @@ const QuizPage = () => {
 
                 {/* Action buttons */}
                 <div className="flex gap-4">
-                  <button onClick={() => { if (profile) loadProfile(profile.id); }}
+                  <button onClick={() => { if (profile) loadProfileData(profile.id); }}
                     className="flex-1 py-4 rounded-xl font-bold text-white transition-all hover:bg-slate-700 active:scale-[0.98]"
                     style={{ border: "2px solid rgba(51,65,85,1)" }}>
                     ← INÍCIO

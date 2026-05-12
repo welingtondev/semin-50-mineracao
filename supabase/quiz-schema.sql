@@ -13,12 +13,14 @@ CREATE TABLE IF NOT EXISTS profiles (
   nickname TEXT UNIQUE NOT NULL,
   phone TEXT,
   max_score INTEGER DEFAULT 0,
+  max_score_month TEXT DEFAULT TO_CHAR(NOW(), 'YYYY-MM'),
   consent_lgpd BOOLEAN NOT NULL DEFAULT FALSE,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
 -- Permite atualizar banco antigo sem quebrar
 ALTER TABLE profiles ADD COLUMN IF NOT EXISTS email TEXT;
+ALTER TABLE profiles ADD COLUMN IF NOT EXISTS max_score_month TEXT DEFAULT TO_CHAR(NOW(), 'YYYY-MM');
 
 -- Perguntas do quiz
 CREATE TABLE IF NOT EXISTS questions (
@@ -256,9 +258,31 @@ BEGIN
   VALUES (v_user_id, v_score, v_total_acertos, v_total_erros, v_combo_max, p_duration_ms)
   RETURNING id INTO v_match_id;
 
-  -- Accumulate total score instead of just max score to encourage replayability
-  SELECT max_score INTO v_current_max FROM profiles WHERE id = v_user_id;
-  UPDATE profiles SET max_score = COALESCE(v_current_max, 0) + v_score WHERE id = v_user_id;
+  -- ── Monthly best-score system ──
+  -- Only keep the highest score from a single match within the current month
+  DECLARE
+    v_current_month TEXT;
+    v_saved_month TEXT;
+  BEGIN
+    v_current_month := TO_CHAR(NOW(), 'YYYY-MM');
+    
+    SELECT max_score, COALESCE(max_score_month, '1970-01') 
+    INTO v_current_max, v_saved_month
+    FROM profiles WHERE id = v_user_id;
+
+    IF v_saved_month != v_current_month THEN
+      -- New month → reset score and save this one as the new record
+      UPDATE profiles 
+      SET max_score = v_score, max_score_month = v_current_month 
+      WHERE id = v_user_id;
+      v_current_max := 0;
+    ELSIF v_score > COALESCE(v_current_max, 0) THEN
+      -- Same month, but beat the record → update
+      UPDATE profiles 
+      SET max_score = v_score, max_score_month = v_current_month 
+      WHERE id = v_user_id;
+    END IF;
+  END;
 
   RETURN jsonb_build_object(
     'match_id', v_match_id,
@@ -271,7 +295,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
--- Ranking global (top N)
+-- Ranking global (top N do mês atual — melhor partida única)
 CREATE OR REPLACE FUNCTION get_global_ranking(p_limit INTEGER DEFAULT 10)
 RETURNS TABLE(
   rank_position BIGINT,
@@ -288,6 +312,7 @@ BEGIN
     p.max_score
   FROM profiles p
   WHERE p.max_score > 0
+    AND p.max_score_month = TO_CHAR(NOW(), 'YYYY-MM')
   ORDER BY p.max_score DESC, p.created_at ASC
   LIMIT p_limit;
 END;
@@ -317,12 +342,14 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
--- Posição do usuário atual no ranking
+-- Posição do usuário atual no ranking (mês atual)
 CREATE OR REPLACE FUNCTION get_my_ranking()
 RETURNS JSONB AS $$
 DECLARE
   v_user_id UUID;
   v_my_score INTEGER;
+  v_my_month TEXT;
+  v_current_month TEXT;
   v_global_pos BIGINT;
 BEGIN
   v_user_id := auth.uid();
@@ -330,11 +357,21 @@ BEGIN
     RAISE EXCEPTION 'Não autenticado';
   END IF;
 
-  SELECT max_score INTO v_my_score FROM profiles WHERE id = v_user_id;
+  v_current_month := TO_CHAR(NOW(), 'YYYY-MM');
+
+  SELECT max_score, COALESCE(max_score_month, '1970-01') 
+  INTO v_my_score, v_my_month
+  FROM profiles WHERE id = v_user_id;
+
+  -- If stored score is from a previous month, treat as 0
+  IF v_my_month != v_current_month THEN
+    v_my_score := 0;
+  END IF;
 
   SELECT COUNT(*) + 1 INTO v_global_pos
   FROM profiles
-  WHERE max_score > COALESCE(v_my_score, 0);
+  WHERE max_score > COALESCE(v_my_score, 0)
+    AND max_score_month = v_current_month;
 
   RETURN jsonb_build_object(
     'rank_position', v_global_pos,

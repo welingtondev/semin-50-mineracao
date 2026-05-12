@@ -1,26 +1,33 @@
 import { useState, useEffect, lazy, Suspense } from "react";
-import { Menu } from "lucide-react";
+import { Menu, User, LogOut, Trophy, LayoutDashboard } from "lucide-react";
 import { Link } from "react-router-dom";
 import seminLogo from "@/assets/semin_logo.webp";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { useAuth } from "@/contexts/AuthContext";
+import { LoginModal } from "./LoginModal";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu";
 
 // Lazy-load — only needed when user clicks "Inscreva-se"
 const RegistrationModal = lazy(() => import("./RegistrationModal").then(m => ({ default: m.RegistrationModal })));
 
 const links = [
-  { label: "Sobre", href: "#sobre" },
-  { label: "Jubileu 50 Anos", href: "#jubileu" },
-//  { label: "Palestrantes", href: "#palestrantes" },
-  { label: "Programação", href: "#programacao" },
-  { label: "Galeria", href: "#galeria" },
-  { label: "O Legado", href: "#legado" },
-//  { label: "Patrocínio", href: "#patrocinio" },
-  { label: "Apoie o Evento", href: "#apoie" },
-  { label: "Inscrições", href: "#inscricoes" },
+  { label: "Sobre", href: "/#sobre" },
+  { label: "Jubileu 50 Anos", href: "/#jubileu" },
+  { label: "Programação", href: "/#programacao" },
+  { label: "Galeria", href: "/#galeria" },
+  { label: "O Legado", href: "/#legado" },
+  { label: "Apoie o Evento", href: "/#apoie" },
 ];
 
 const Navbar = () => {
+  const { profile, session, logout } = useAuth();
   const [scrolled, setScrolled] = useState(false);
   const [visible, setVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
@@ -76,11 +83,59 @@ const Navbar = () => {
             </a>
           ))}
           <div className="flex items-center gap-3">
+            {profile ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="text-white/80 hover:text-semin-yellow hover:bg-white/5 font-semibold transition-all duration-300 gap-2 px-3">
+                    <div className="w-5 h-5 rounded-full bg-amber-500/20 flex items-center justify-center text-amber-400 text-[10px] font-bold">
+                      {profile.nickname.charAt(0).toUpperCase()}
+                    </div>
+                    @{profile.nickname}
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="bg-[#0f172a] border border-white/10 text-white rounded-xl shadow-xl w-48 p-1">
+                  <Link to="/quiz">
+                    <DropdownMenuItem className="flex items-center gap-2 hover:bg-white/5 p-2 rounded-lg cursor-pointer">
+                      <Trophy className="w-4 h-4 text-amber-500" />
+                      <span>Desafio Semin</span>
+                    </DropdownMenuItem>
+                  </Link>
+                  {session?.user?.email === "contato@seminufba.com.br" && (
+                    <Link to="/admin">
+                      <DropdownMenuItem className="flex items-center gap-2 hover:bg-white/5 p-2 rounded-lg cursor-pointer">
+                        <LayoutDashboard className="w-4 h-4 text-amber-500" />
+                        <span>Painel Admin</span>
+                      </DropdownMenuItem>
+                    </Link>
+                  )}
+                  <DropdownMenuSeparator className="bg-white/10" />
+                  <DropdownMenuItem onClick={() => logout()} className="flex items-center gap-2 text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 p-2 rounded-lg cursor-pointer">
+                    <LogOut className="w-4 h-4" />
+                    <span>Sair</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <LoginModal defaultTab="login">
+                <Button variant="ghost" className="text-white/80 hover:text-semin-yellow hover:bg-white/5 font-semibold transition-all duration-300 gap-2 px-3">
+                  <User className="w-4 h-4" />
+                  Entrar
+                </Button>
+              </LoginModal>
+            )}
+            
             <Link to="/quiz">
               <Button variant="outline" className="border-semin-yellow text-semin-yellow hover:bg-semin-yellow hover:text-semin-dark font-semibold transition-all duration-300">
                 Desafio Semin
               </Button>
             </Link>
+            {session?.user?.email === "contato@seminufba.com.br" && (
+              <Link to="/admin">
+                <Button className="bg-gradient-to-r from-amber-500 to-amber-600 text-semin-dark hover:from-amber-600 hover:to-amber-500 font-bold shadow-lg shadow-amber-500/20 transition-all duration-300 hover:shadow-amber-500/40">
+                  Painel Admin
+                </Button>
+              </Link>
+            )}
             <Suspense fallback={null}>
               <RegistrationModal>
                 <div className="cursor-pointer">
@@ -119,11 +174,49 @@ const Navbar = () => {
                 ))}
               </div>
               <div className="flex flex-col gap-3 mt-4">
+                {profile ? (
+                  <div className="flex flex-col gap-2 w-full">
+                    <Link to="/quiz" onClick={() => setOpen(false)} className="w-full">
+                      <Button variant="ghost" className="w-full bg-white/5 text-white/80 hover:text-semin-yellow font-semibold py-6 text-base gap-2">
+                        <div className="w-5 h-5 rounded-full bg-amber-500/20 flex items-center justify-center text-amber-400 text-[10px] font-bold">
+                          {profile.nickname.charAt(0).toUpperCase()}
+                        </div>
+                        Perfil: @{profile.nickname}
+                      </Button>
+                    </Link>
+                    <Button 
+                      variant="ghost" 
+                      onClick={() => {
+                        logout();
+                        setOpen(false);
+                      }} 
+                      className="w-full bg-rose-500/10 text-rose-400 hover:text-rose-300 hover:bg-rose-500/20 font-semibold py-6 text-base gap-2"
+                    >
+                      <LogOut className="w-5 h-5" />
+                      Sair da Conta
+                    </Button>
+                  </div>
+                ) : (
+                  <LoginModal defaultTab="login">
+                    <Button variant="ghost" className="w-full bg-white/5 text-white/80 hover:text-semin-yellow font-semibold py-6 text-base gap-2">
+                      <User className="w-5 h-5" />
+                      Entrar / Cadastrar
+                    </Button>
+                  </LoginModal>
+                )}
+
                 <Link to="/quiz" onClick={() => setOpen(false)} className="w-full">
                   <Button variant="outline" className="w-full border-semin-yellow text-semin-yellow hover:bg-semin-yellow hover:text-semin-dark font-semibold py-6 text-base">
                     Desafio Semin
                   </Button>
                 </Link>
+                {session?.user?.email === "contato@seminufba.com.br" && (
+                  <Link to="/admin" onClick={() => setOpen(false)} className="w-full">
+                    <Button className="w-full bg-gradient-to-r from-amber-500 to-amber-600 text-semin-dark hover:from-amber-600 hover:to-amber-500 font-bold py-6 text-base">
+                      Painel Admin
+                    </Button>
+                  </Link>
+                )}
                 <Suspense fallback={null}>
                   <RegistrationModal>
                     <div onClick={() => setOpen(false)} className="cursor-pointer">

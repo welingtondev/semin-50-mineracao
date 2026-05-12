@@ -117,8 +117,7 @@
 @layer base {
   @font-face {
     font-family: 'Costa Rica';
-    src: url('/fonts/costarica.woff') format('woff'),
-         url('/fonts/CostaRica.otf') format('opentype');
+    src: url('/fonts/CostaRica.otf') format('opentype');
     font-weight: normal;
     font-style: normal;
     font-display: swap;
@@ -251,7 +250,7 @@
     word-break: break-word;
   }
   h2, .text-4xl, .text-5xl {
-    font-size: clamp(1.75rem, 9vw, 3rem) !important;
+    font-size: clamp(2.3rem, 11vw, 3.8rem) !important;
     line-height: 1.15 !important;
     word-break: break-word;
   }

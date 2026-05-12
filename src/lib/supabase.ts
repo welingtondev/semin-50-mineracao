@@ -7,4 +7,23 @@ if (!supabaseUrl || !supabaseAnonKey) {
   console.error('⚠️ VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY são obrigatórios no .env.local');
 }
 
-export const supabase = createClient(supabaseUrl || '', supabaseAnonKey || '');
+const customStorage = {
+  getItem: (key: string) => {
+    try { return window.localStorage.getItem(key); } catch (e) { return null; }
+  },
+  setItem: (key: string, value: string) => {
+    try { window.localStorage.setItem(key, value); } catch (e) {}
+  },
+  removeItem: (key: string) => {
+    try { window.localStorage.removeItem(key); } catch (e) {}
+  }
+};
+
+export const supabase = createClient(supabaseUrl || '', supabaseAnonKey || '', {
+  auth: {
+    storage: customStorage,
+    autoRefreshToken: true,
+    persistSession: true,
+    detectSessionInUrl: true,
+  }
+});

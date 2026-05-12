@@ -7,6 +7,8 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { Loader2, CheckCircle, XCircle, Trash2, ShieldCheck, Image as ImageIcon, Lock, UploadCloud, Maximize2, LogOut } from "lucide-react";
 import { PhotoUploadModal } from "@/components/PhotoUploadModal";
+import { useAuth } from "@/contexts/AuthContext";
+import { Link } from "react-router-dom";
 
 type PendingPhoto = {
   id: string;
@@ -21,9 +23,13 @@ type PendingPhoto = {
 };
 
 export default function AdminGallery() {
-  const [isAuthenticated, setIsAuthenticated] = useState(
+  const { session, logout } = useAuth();
+  const isUserAdmin = session?.user?.email === "contato@seminufba.com.br";
+  const [isAuthenticatedState, setIsAuthenticatedState] = useState(
     sessionStorage.getItem("semin_admin_auth") === "true"
   );
+  
+  const isAuthenticated = isAuthenticatedState || isUserAdmin;
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   
@@ -41,7 +47,7 @@ export default function AdminGallery() {
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     if (username === "seminadmin" && password === "seminufba2026@") {
-      setIsAuthenticated(true);
+      setIsAuthenticatedState(true);
       sessionStorage.setItem("semin_admin_auth", "true");
       toast.success("Login efetuado com sucesso!");
     } else {
@@ -168,9 +174,12 @@ export default function AdminGallery() {
     };
   }, [isAuthenticated]);
 
-  const handleLogout = () => {
-    setIsAuthenticated(false);
+  const handleLogout = async () => {
+    setIsAuthenticatedState(false);
     sessionStorage.removeItem("semin_admin_auth");
+    if (isUserAdmin) {
+      await logout();
+    }
     toast.success("Você saiu do painel.");
   };
 
@@ -274,6 +283,10 @@ export default function AdminGallery() {
           <Button type="submit" className="w-full bg-semin-yellow text-semin-dark font-bold hover:bg-semin-yellow/90">
             Entrar no Painel
           </Button>
+
+          <Link to="/" className="block text-center text-white/50 hover:text-semin-yellow text-sm font-medium transition-colors pt-2">
+            ← Voltar para o site principal
+          </Link>
         </form>
       </div>
     );
@@ -292,7 +305,12 @@ export default function AdminGallery() {
               Gerencie a Galeria do Tempo e as configurações do Termômetro de Arrecadação.
             </p>
           </div>
-          <div className="flex gap-3">
+          <div className="flex gap-3 items-center flex-wrap">
+            <Link to="/">
+              <Button variant="ghost" className="text-white/60 hover:text-white hover:bg-white/5 font-semibold transition-all">
+                ← Voltar ao Site
+              </Button>
+            </Link>
             <Button onClick={fetchData} className="bg-semin-yellow text-semin-dark hover:bg-amber-400 font-bold">
               Atualizar Dados
             </Button>

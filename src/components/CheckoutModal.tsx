@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   X, Heart, CreditCard, QrCode, ShieldCheck, 
-  ArrowRight, Loader2, CheckCircle2, Copy, ExternalLink 
+  ArrowRight, Loader2, CheckCircle2, Copy, ExternalLink, AlertTriangle 
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -21,6 +21,7 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
   const [loading, setLoading] = useState(false);
   const [billingType, setBillingType] = useState<"PIX" | "CREDIT_CARD" | "BOLETO">("PIX");
   const [pixData, setPixData] = useState<any>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -35,6 +36,7 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
         setStep(1);
         setBillingType("PIX");
         setPixData(null);
+        setErrorMessage(null);
         setFormData({ name: "", email: "", cpf: "", phone: "", value: "" });
       }, 300);
       return () => clearTimeout(timer);
@@ -59,6 +61,7 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+    setErrorMessage(null);
     if (name === "value") {
       setFormData(prev => ({ ...prev, [name]: formatBRL(value) }));
     } else {
@@ -70,6 +73,8 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrorMessage(null);
+
     if (step === 1) {
       setStep(2);
       return;
@@ -82,24 +87,69 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
     const parsedValue = rawValue ? parseFloat(rawValue) / 100 : 0;
 
     if (parsedValue < 5) {
-      alert("O valor mínimo para contribuição é de R$ 5,00.");
+      setErrorMessage("O valor mínimo para contribuição é de R$ 5,00.");
       return;
     }
 
     isSubmitting.current = true;
     setLoading(true);
     try {
-      const { data, error } = await supabase.functions.invoke("asaas-checkout", {
-        body: {
-          ...formData,
-          value: parsedValue,
-          billingType
+      // Timeout de 25s para não travar a interface caso a Edge Function não responda
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 25000);
+
+      let data: any;
+      let error: any;
+
+      try {
+        const result = await supabase.functions.invoke("asaas-checkout", {
+          body: {
+            ...formData,
+            value: parsedValue,
+            billingType
+          }
+        });
+        data = result.data;
+        error = result.error;
+      } catch (invokeError: any) {
+        clearTimeout(timeoutId);
+        // Se o fetch interno falhou (rede, CORS, etc.)
+        if (invokeError?.name === "AbortError") {
+          throw new Error("O servidor demorou demais para responder. Tente novamente em alguns instantes.");
         }
-      });
+        console.error("Invoke error:", invokeError);
+        throw new Error("Não foi possível conectar ao servidor de pagamentos. Verifique sua internet e tente novamente.");
+      }
+      clearTimeout(timeoutId);
 
       if (error) {
         console.error("Supabase edge function error:", error);
-        throw new Error("Erro ao se conectar com o serviço de doação.");
+        const errMsg = typeof error === "string" ? error : (error?.message || error?.msg || "");
+        // Tenta extrair mensagem do corpo da resposta se for FunctionsHttpError
+        let detailedMessage = errMsg;
+        if (error?.context?.body) {
+          try {
+            const body = typeof error.context.body === "string" ? JSON.parse(error.context.body) : error.context.body;
+            detailedMessage = body?.error || detailedMessage;
+          } catch (_) { /* ignora */ }
+        }
+
+        if (detailedMessage.includes("ASAAS_API_KEY não configurada")) {
+          throw new Error("Serviço de pagamento em manutenção. Por favor, tente novamente mais tarde ou entre em contato conosco.");
+        }
+        if (detailedMessage.includes("Failed to fetch") || detailedMessage.includes("NetworkError") || detailedMessage.includes("FetchError")) {
+          throw new Error("Erro de conexão com o servidor de pagamentos. Verifique sua internet e tente novamente.");
+        }
+        if (detailedMessage.includes("non-2xx")) {
+          // Edge function returned error status — try to parse body
+          throw new Error("O serviço de pagamento retornou um erro. Tente novamente ou entre em contato.");
+        }
+        throw new Error(detailedMessage || "Erro ao processar sua contribuição. Por favor, tente novamente.");
+      }
+
+      if (data?.error) {
+        console.error("Asaas API error:", data.error);
+        throw new Error(data.error);
       }
 
       if (data && data.success) {
@@ -121,6 +171,9 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
             urlParams.append("status", "Pendente");
             urlParams.append("data_hora", new Date().toLocaleString("pt-BR"));
 
+            const sheetController = new AbortController();
+            const sheetTimeout = setTimeout(() => sheetController.abort(), 5000);
+
             await fetch(DONATION_SCRIPT_URL, {
               method: "POST",
               mode: "no-cors",
@@ -128,17 +181,20 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
                 "Content-Type": "application/x-www-form-urlencoded",
               },
               body: urlParams,
+              signal: sheetController.signal,
             });
-          } catch (sheetError) {
-            console.error("Erro ao registrar doador no Google Sheets:", sheetError);
+            clearTimeout(sheetTimeout);
+          } catch (sheetError: any) {
+            console.warn("Erro ao registrar doador no Google Sheets (não crítico):", sheetError?.message || "Timeout ou erro de rede");
           }
         }
       } else {
-        alert(data.error || "Erro ao processar doação");
+        throw new Error(data?.error || "Resposta inesperada do servidor de pagamentos.");
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Checkout error:", error);
-      alert("Erro ao conectar com o servidor.");
+      const msg = error?.message || "Erro ao conectar com o servidor. Tente novamente.";
+      setErrorMessage(msg);
     } finally {
       isSubmitting.current = false;
       setLoading(false);
@@ -259,6 +315,13 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
                   </div>
                 </div>
 
+                {errorMessage && (
+                  <div className="p-4 bg-red-50 border border-red-200 rounded-2xl flex items-start gap-3 animate-in fade-in">
+                    <AlertTriangle className="h-5 w-5 text-red-500 mt-0.5 shrink-0" />
+                    <p className="text-sm text-red-700 leading-relaxed font-body font-medium">{errorMessage}</p>
+                  </div>
+                )}
+
                 <Button 
                   type="submit"
                   className="w-full h-14 rounded-2xl bg-gradient-to-r from-semin-orange to-amber-500 text-white font-black text-lg group shadow-lg shadow-semin-orange/25 hover:shadow-xl hover:shadow-semin-orange/35 hover:scale-[1.01] transition-all duration-300"
@@ -311,10 +374,17 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
                   </div>
                 )}
 
+                {errorMessage && (
+                  <div className="p-4 bg-red-50 border border-red-200 rounded-2xl flex items-start gap-3 animate-in fade-in">
+                    <AlertTriangle className="h-5 w-5 text-red-500 mt-0.5 shrink-0" />
+                    <p className="text-sm text-red-700 leading-relaxed font-body font-medium">{errorMessage}</p>
+                  </div>
+                )}
+
                 <div className="flex gap-4">
                   <Button 
                     variant="outline" 
-                    onClick={() => setStep(1)}
+                    onClick={() => { setStep(1); setErrorMessage(null); }}
                     className="flex-1 h-14 rounded-2xl bg-white border-black/15 text-black/60 hover:bg-black/5 hover:text-black/80 transition-all duration-300"
                   >
                     Voltar

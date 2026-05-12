@@ -1,73 +1,81 @@
-# Welcome to your Lovable project
+# SEMIN UFBA — 50 Anos de Engenharia de Minas
 
-## Project info
+Site oficial da Semana de Engenharia de Minas da UFBA (SEMIN), edição comemorativa dos 50 anos do curso.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+## 🏗️ Stack / Infraestrutura
 
-## How can I edit this code?
+| Camada | Tecnologia |
+|--------|-----------|
+| **Frontend** | React + Vite + TypeScript + Tailwind CSS |
+| **Hospedagem** | **Hostinger** (hospedagem compartilada) |
+| **Banco de dados** | **Supabase** (PostgreSQL + Auth + RPC) |
+| **Pagamentos** | **Asaas** (PIX, Cartão, Boleto) |
+| **Webhooks Asaas** | Proxy PHP na Hostinger → Google Apps Script |
+| **Quiz** | Supabase RPC (server-side scoring) |
 
-There are several ways of editing your application.
+> **Nota:** O diretório `minerax-backend/` contém uma API Express legada usada apenas para desenvolvimento local. Em produção, toda a lógica server-side roda via **Supabase RPC** e **funções PHP** na Hostinger.
 
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
+## 🚀 Desenvolvimento local
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+# 1. Clonar o repositório
+git clone <URL_DO_REPO>
+cd semin-50-mineracao
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+# 2. Instalar dependências
+npm install
 
-# Step 3: Install the necessary dependencies.
-npm i
+# 3. Configurar variáveis de ambiente
+# Copie .env.local.example para .env.local e preencha com suas chaves Supabase
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# 4. Iniciar servidor de desenvolvimento
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+## 📦 Build para produção
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+```sh
+npm run build
+```
 
-**Use GitHub Codespaces**
+O output vai para a pasta `dist/`. Suba o conteúdo desta pasta para o `public_html/` da Hostinger.
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## 📁 Estrutura do projeto
 
-## What technologies are used for this project?
+```
+├── public/               # Assets estáticos + webhook PHP
+│   └── webhook-asaas.php # Proxy de webhook Asaas → Google Sheets
+├── src/
+│   ├── components/       # Componentes React
+│   ├── pages/            # Páginas (Index, Quiz, ThankYou)
+│   ├── lib/              # Configuração Supabase
+│   └── hooks/            # Custom hooks
+├── supabase/
+│   └── quiz-schema.sql   # Schema + funções RPC do Quiz
+├── minerax-backend/      # API Express (dev/legacy, não usado em prod)
+└── vercel.json           # Config de rewrites/cache (compatível com Hostinger .htaccess)
+```
 
-This project is built with:
+## 🎮 Quiz SEMIN
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+O quiz roda 100% via **Supabase RPC**:
+- `get_quiz_questions()` — busca perguntas randomizadas
+- `submit_match()` — validação e scoring server-side
+- `get_global_ranking()` — ranking por melhor partida única
+- `get_my_ranking()` — posição do jogador
 
-## How can I deploy this project?
+**Sistema de pontuação:** Apenas a **maior pontuação em uma única partida** vale para o ranking. Para subir, o jogador precisa superar seu próprio recorde.
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+## 💳 Pagamentos (Asaas)
 
-## Can I connect a custom domain to my Lovable project?
+- Checkout via Asaas API (criação de cliente + cobrança)
+- Webhooks do Asaas passam por `webhook-asaas.php` na Hostinger (proxy PHP que responde 200 e encaminha para Google Apps Script)
 
-Yes, you can!
+## 🔧 Tecnologias
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+- **React 18** + **Vite**
+- **TypeScript**
+- **Tailwind CSS** + **shadcn/ui**
+- **Framer Motion** (animações)
+- **Supabase** (Auth, Database, RPC)
+- **Recharts** (gráficos do quiz)
