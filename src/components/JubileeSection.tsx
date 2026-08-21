@@ -19,12 +19,12 @@ const JubileeSection = () => {
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-semin-yellow/30 bg-semin-yellow/10 backdrop-blur-md mb-6 shadow-[0_0_15px_rgba(210,155,33,0.2)]">
             <Sparkles className="h-4 w-4 text-semin-yellow" />
             <span className="font-body text-xs md:text-sm uppercase tracking-[0.2em] font-bold bg-gradient-to-r from-semin-yellow to-semin-orange bg-clip-text text-transparent">
-              13 de Novembro
+              13 & 14 de Novembro
             </span>
           </div>
           
           <h2 className="text-4xl sm:text-5xl md:text-7xl font-black text-white mb-6 md:mb-8 tracking-tight leading-tight">
-            Jubileu de <span className="text-semin-yellow">Ouro</span>
+            Jubileu de <span className="bg-gradient-to-r from-semin-orange to-amber-500 bg-clip-text text-transparent font-extrabold">Ouro</span>
           </h2>
           
           <div className="flex items-center justify-center gap-3 mb-8">
@@ -96,9 +96,9 @@ const JubileeSection = () => {
                 <div className="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-gradient-to-br from-semin-yellow/20 to-semin-orange/20 flex items-center justify-center mb-6 border border-semin-yellow/30 group-hover:scale-110 transition-transform duration-500">
                   <PartyPopper className="h-7 w-7 md:h-8 md:w-8 text-semin-yellow" />
                 </div>
-                <h3 className="text-xl md:text-2xl font-bold text-white mb-4">Festa do Eng. de Minas</h3>
+                <h3 className="text-xl md:text-2xl font-bold text-white mb-4">Encontro & Festa do Eng. de Minas</h3>
                 <p className="font-body text-sm md:text-base text-white/60 leading-relaxed">
-                  A clássica festa encerrará as celebrações! O evento noturno será o ponto de relaxamento e de um robusto e alegre networking orgânico entre todas as gerações. Veteranos da primeira década e futuros engenheiros celebrarão a sintonia inquebrável da comunidade politécnica.
+                  No sábado (14/Nov), encerraremos com chave de ouro no Grande Encontro dos Engenheiros de Minas e a tradicional Festa do Cinquentenário! Um momento inesquecível de celebração, reencontros e networking entre veteranos, professores e futuros engenheiros.
                 </p>
               </CardContent>
             </Card>

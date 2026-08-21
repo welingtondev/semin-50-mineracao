@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 160" width="520" height="160">
+  <g transform="translate(15, 10)">
+    <!-- Main Hexagon Outline / Structure -->
+    <path d="M75 15 L125 44 L125 102 L75 131 L25 102 L25 44 Z" fill="none" />
+    <!-- Top Top Cube Face -->
+    <path d="M75 12 L120 38 L75 64 L30 38 Z" fill="#ED1C24" />
+    <!-- Left Cube Face -->
+    <path d="M25 44 L70 70 L70 122 L25 96 Z" fill="#D01018" />
+    <!-- Right Cube Face -->
+    <path d="M80 70 L125 44 L125 96 L80 122 Z" fill="#A80810" />
+    <!-- Top Branch -->
+    <path d="M75 12 L90 0 L105 12 L75 32 Z" fill="#ED1C24" />
+    <!-- Bottom Right Branch -->
+    <path d="M125 96 L140 106 L125 121 L110 106 Z" fill="#A80810" />
+    <!-- Bottom Left Branch -->
+    <path d="M75 132 L75 150 L60 140 L70 120 Z" fill="#D01018" />
+  </g>
+  <!-- Text GEOSOL -->
+  <text x="165" y="108" font-family="'Outfit', 'Arial Black', sans-serif" font-size="78" font-weight="900" fill="#0054A6" letter-spacing="1">GEOSOL</text>
+</svg>

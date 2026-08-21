@@ -15,6 +15,9 @@ serve(async (req) => {
     const { name, email, cpf, phone, value, billingType } = await req.json();
     const donationValue = parseFloat(value);
     
+    // Captura o IP real do usuário para enviar ao Asaas (ajuda muito no antifraude para cartão de crédito)
+    const clientIp = req.headers.get("x-forwarded-for")?.split(",")[0].trim() || req.headers.get("x-real-ip") || "";
+
     // Limpeza de campos (Asaas exige apenas números para CPF/CNPJ e Telefone)
     const sanitizedCpfCnpj = cpf.replace(/\D/g, "");
     const sanitizedPhone = phone.replace(/\D/g, "");
@@ -83,6 +86,7 @@ serve(async (req) => {
         billingType: billingType,
         value: donationValue,
         dueDate: dueDate,
+        remoteIp: clientIp || undefined,
         description: "Apoio Oficial: Jubileu de Ouro (50 Anos) da Engenharia de Minas UFBA. Sua contribuição viabiliza este evento histórico!",
       }),
     });

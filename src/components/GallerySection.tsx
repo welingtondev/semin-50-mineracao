@@ -65,7 +65,6 @@ const RockShatterIntro = ({ onComplete, isMobile }: { onComplete: () => void, is
       }
     };
     
-    // Pequeno delay para garantir que o layout renderizou
     setTimeout(updateRect, 100);
     
     window.addEventListener('scroll', updateRect, { passive: true });
@@ -78,22 +77,22 @@ const RockShatterIntro = ({ onComplete, isMobile }: { onComplete: () => void, is
 
   useEffect(() => {
     if (isArming && !isDetonated) {
-      // O cordel detonante corre por 1.4s antes da explosão
-      const timer = setTimeout(() => setIsDetonated(true), 1400);
+      // O cordel detonante corre super rápido por 0.5s antes da explosão
+      const timer = setTimeout(() => setIsDetonated(true), 500);
       return () => clearTimeout(timer);
     }
   }, [isArming, isDetonated]);
 
   useEffect(() => {
     if (isDetonated) {
-      // Tempo da transição fluida do vidro flutuando
-      const timer = setTimeout(onComplete, 3500);
+      // Revela a galeria de forma dinâmica e rápida em 1.2s
+      const timer = setTimeout(onComplete, 1200);
       return () => clearTimeout(timer);
     }
   }, [isDetonated, onComplete]);
 
-  // Gera menos fragmentos no mobile para não travar
-  const shards = Array.from({ length: isMobile ? 6 : 20 });
+  // Reduzido para ser extremamente leve e performático
+  const shards = Array.from({ length: isMobile ? 3 : 8 });
 
   return (
     <motion.div
@@ -109,7 +108,7 @@ const RockShatterIntro = ({ onComplete, isMobile }: { onComplete: () => void, is
       }}
       initial={{ opacity: 1 }}
       animate={{ opacity: isDetonated ? 0 : 1 }}
-      transition={{ duration: 1.5, delay: 2.0 }} // Fade out do fundo
+      transition={{ duration: 0.6, delay: 0.4 }} // Fade out rápido do fundo
     >
       {/* 1. Parede de Rocha com Efeito Lanterna */}
       <AnimatePresence>
@@ -117,7 +116,7 @@ const RockShatterIntro = ({ onComplete, isMobile }: { onComplete: () => void, is
           <motion.div
             className="absolute inset-0 bg-[#030405]"
             initial={{ opacity: 1 }}
-            exit={{ opacity: 0, transition: { duration: 1.5, ease: "easeInOut" } }}
+            exit={{ opacity: 0, transition: { duration: 0.6, ease: "easeOut" } }}
           >
             {/* Textura simulada e partículas iluminadas pela "lanterna" do mouse */}
             <div 
@@ -134,11 +133,11 @@ const RockShatterIntro = ({ onComplete, isMobile }: { onComplete: () => void, is
             {/* Malha de Perfuração, Título e Fio Estopim */}
             <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none p-6">
               
-              {/* Título e Instruções - agora usando flex stack para não sobrepor */}
+              {/* Título e Instruções */}
               <div className="flex flex-col items-center text-center max-w-4xl mb-12 sm:mb-16">
                 <h2 className="font-display text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-black text-white mb-4 tracking-tighter leading-none">
                   Memórias em{" "}
-                  <span className="bg-gradient-to-r from-semin-yellow via-amber-400 to-semin-orange bg-clip-text text-transparent drop-shadow-[0_0_35px_rgba(245,158,11,0.55)] block md:inline-block">
+                  <span className="bg-gradient-to-r from-semin-orange to-amber-500 bg-clip-text text-transparent font-extrabold block md:inline-block">
                     Cadeia
                   </span>
                 </h2>
@@ -151,7 +150,7 @@ const RockShatterIntro = ({ onComplete, isMobile }: { onComplete: () => void, is
                 </div>
               </div>
 
-              {/* Wrapper do Grid e Cordel para manter alinhamento perfeito */}
+              {/* Wrapper do Grid e Cordel */}
               <div className="relative flex items-center justify-center">
                 {/* Grid de Pontos */}
                 <div className="grid grid-cols-4 gap-8 opacity-70 relative z-10">
@@ -160,12 +159,12 @@ const RockShatterIntro = ({ onComplete, isMobile }: { onComplete: () => void, is
                       key={i} 
                       className="w-2 h-2 rounded-full bg-amber-400 shadow-[0_0_12px_#ffaa00]"
                       animate={{ opacity: [0.2, 1, 0.2] }}
-                      transition={{ duration: 1.2 + Math.random(), repeat: Infinity, ease: "easeInOut" }}
+                      transition={{ duration: 1.0 + Math.random() * 0.5, repeat: Infinity, ease: "easeInOut" }}
                     />
                   ))}
                 </div>
 
-                {/* Animação do Cordel Detonante ligando os pontos (Reação em Cadeia) */}
+                {/* Animação do Cordel Detonante (Super rápida) */}
                 {isArming && (
                   <div className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none">
                     <svg width="140" height="140" viewBox="0 0 140 140" className="overflow-visible opacity-90">
@@ -179,7 +178,7 @@ const RockShatterIntro = ({ onComplete, isMobile }: { onComplete: () => void, is
                         style={{ filter: "drop-shadow(0 0 8px #ffaa00)" }}
                         initial={{ pathLength: 0 }}
                         animate={{ pathLength: 1 }}
-                        transition={{ duration: 1.3, ease: "linear" }}
+                        transition={{ duration: 0.4, ease: "linear" }}
                       />
                       <motion.circle
                         r="6"
@@ -189,7 +188,7 @@ const RockShatterIntro = ({ onComplete, isMobile }: { onComplete: () => void, is
                           cx: [10, 50, 50, 90, 90, 130],
                           cy: [10, 10, 50, 50, 90, 90]
                         }}
-                        transition={{ duration: 1.3, ease: "linear" }}
+                        transition={{ duration: 0.4, ease: "linear" }}
                       />
                     </svg>
                   </div>
@@ -201,44 +200,42 @@ const RockShatterIntro = ({ onComplete, isMobile }: { onComplete: () => void, is
         )}
       </AnimatePresence>
 
-      {/* 2. O Estopim de Luz e Derretimento (Transição) */}
+      {/* 2. O Estopim de Luz (Transição rápida e fluida) */}
       {isDetonated && (
-        <motion.div className="absolute inset-0 flex items-center justify-center">
-          {/* Luz dourada vazando das fendas (O Estopim de Luz) */}
+        <motion.div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          {/* Luz dourada vazando das fendas */}
           <motion.div
             className="absolute inset-0 mix-blend-color-dodge"
-            style={{ background: 'radial-gradient(circle at center, rgba(255,180,0,0.6) 0%, transparent 60%)' }}
+            style={{ background: 'radial-gradient(circle at center, rgba(255,180,0,0.7) 0%, transparent 60%)' }}
             initial={{ opacity: 0, scale: 0.5 }}
-            animate={{ opacity: [0, 1, 0], scale: [0.5, 2, 4] }}
-            transition={{ duration: 2.5, ease: [0.76, 0, 0.24, 1] }}
+            animate={{ opacity: [0, 1, 0], scale: [0.5, 2, 3] }}
+            transition={{ duration: 1.0, ease: "easeOut" }}
           />
 
-          {/* 3. Estilhaços de Vidro (Flutuando suavemente para as bordas) */}
+          {/* 3. Estilhaços de Vidro (Sem backdrop-blur para máxima performance) */}
           {shards.map((_, i) => {
             const angle = (i / shards.length) * Math.PI * 2;
-            const distance = 500 + Math.random() * 600; // Flutua suavemente para as bordas
+            const distance = 400 + Math.random() * 400;
             const x = Math.cos(angle) * distance;
             const y = Math.sin(angle) * distance;
-            const rotate = (Math.random() - 0.5) * 90; // Rotação bem suave
+            const rotate = (Math.random() - 0.5) * 60;
             
             return (
               <motion.div
                 key={i}
-                className={`absolute w-32 h-32 sm:w-56 sm:h-56 border-[0.5px] border-white/20 shadow-[0_0_20px_rgba(255,200,0,0.1)] ${isMobile ? 'bg-white/10' : 'bg-white/5'}`}
+                className="absolute w-24 h-24 sm:w-40 sm:h-40 border-[0.5px] border-white/20 bg-white/10 shadow-[0_0_15px_rgba(255,180,0,0.15)]"
                 style={{
-                  backdropFilter: isMobile ? "none" : "blur(8px)",
-                  WebkitBackdropFilter: isMobile ? "none" : "blur(8px)",
                   clipPath: `polygon(${Math.random()*30}% ${Math.random()*30}%, ${70+Math.random()*30}% ${Math.random()*30}%, ${70+Math.random()*30}% ${70+Math.random()*30}%, ${Math.random()*30}% ${70+Math.random()*30}%)`,
                 }}
-                initial={{ x: 0, y: 0, scale: 0.5, rotate: 0, opacity: 0 }}
+                initial={{ x: 0, y: 0, scale: 0.6, rotate: 0, opacity: 0 }}
                 animate={{ 
                   x: [0, x], 
                   y: [0, y], 
-                  scale: [0.5, 1.2, 1.5], 
+                  scale: [0.6, 1.2], 
                   rotate: [0, rotate],
-                  opacity: [0, 0.4, 0]
+                  opacity: [0, 0.5, 0]
                 }}
-                transition={{ duration: 3.5, ease: [0.76, 0, 0.24, 1] }} // power4.inOut
+                transition={{ duration: 1.0, ease: "easeOut" }}
               />
             );
           })}
@@ -254,6 +251,39 @@ const GallerySection = () => {
   const [introPlayed, setIntroPlayed] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const { ref, isVisible } = useScrollAnimation(0.2);
+
+  // Check if intro has been played before for the current user session
+  useEffect(() => {
+    try {
+      const savedUser = localStorage.getItem("memorias_intro_user");
+      const savedTime = localStorage.getItem("memorias_intro_timestamp");
+      const currentUser = session?.user?.id || "anonymous";
+
+      if (savedUser === currentUser && savedTime) {
+        const timestamp = parseInt(savedTime, 10);
+        const now = Date.now();
+        const thirtyDaysMs = 30 * 24 * 60 * 60 * 1000;
+        if (!isNaN(timestamp) && (now - timestamp < thirtyDaysMs)) {
+          setIntroPlayed(true);
+          setIntroStarted(true);
+        }
+      }
+    } catch (e) {
+      console.error("Error checking intro state:", e);
+    }
+  }, [session?.user?.id]);
+
+  const handleIntroComplete = () => {
+    setIntroPlayed(true);
+    try {
+      const currentUser = session?.user?.id || "anonymous";
+      localStorage.setItem("memorias_intro_user", currentUser);
+      localStorage.setItem("memorias_intro_timestamp", Date.now().toString());
+    } catch (e) {
+      console.error("Error saving intro state:", e);
+    }
+  };
+
   const [photos, setPhotos] = useState<PhotoItem[]>(defaultPlaceholder);
 
   // Community Interactions States
@@ -791,22 +821,19 @@ const GallerySection = () => {
       {/* Intro cinematic */}
       <AnimatePresence>
         {introStarted && !introPlayed && (
-          <RockShatterIntro onComplete={() => setIntroPlayed(true)} isMobile={isMobile} />
+          <RockShatterIntro onComplete={handleIntroComplete} isMobile={isMobile} />
         )}
       </AnimatePresence>
 
       <div ref={ref} className="container mx-auto px-4 relative z-10 pt-4">
           <motion.div 
             className="text-center mb-8 md:mb-14"
-            style={{ willChange: "transform, opacity, filter" }}
-            initial={{ opacity: 0, scale: 0.9, y: 15, filter: isMobile ? "blur(4px)" : "blur(12px)" }}
+            initial={{ opacity: 0, y: 15 }}
             animate={introPlayed ? { 
               opacity: 1, 
-              scale: 1, 
-              y: 0,
-              filter: "blur(0px)"
+              y: 0
             } : {}}
-            transition={{ duration: 1.5, ease: "easeOut" }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
           >
           <span className="inline-flex items-center gap-2 font-body text-[10px] md:text-xs uppercase tracking-[0.35em] text-amber-400/80 font-semibold mb-3 md:mb-4">
             <Heart className="h-3 w-3 md:h-3.5 md:w-3.5" />
@@ -816,7 +843,7 @@ const GallerySection = () => {
             className="font-display text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-black mb-4 tracking-tighter leading-none"
           >
             <span className="text-white/95">Memórias em </span>
-            <span className="bg-gradient-to-r from-semin-yellow via-amber-400 to-semin-orange bg-clip-text text-transparent drop-shadow-[0_0_35px_rgba(245,158,11,0.55)] block md:inline-block">Cadeia</span>
+            <span className="bg-gradient-to-r from-semin-orange to-amber-500 bg-clip-text text-transparent font-extrabold block md:inline-block">Cadeia</span>
           </motion.h2>
           <div className="flex items-center justify-center gap-3 mb-5">
             <div className="w-10 md:w-16 h-[1px] bg-gradient-to-r from-transparent to-amber-400/40 rounded-full" />
@@ -833,15 +860,12 @@ const GallerySection = () => {
 
         <motion.div 
           className="w-full max-w-6xl mx-auto relative px-4 md:px-12 lg:px-0"
-          style={{ willChange: "transform, opacity, filter" }}
-          initial={{ opacity: 0, scale: 0.85, y: 30, filter: isMobile ? "blur(4px)" : "blur(16px)" }}
+          initial={{ opacity: 0, y: 30 }}
           animate={introPlayed ? { 
             opacity: 1, 
-            scale: 1,
-            y: 0,
-            filter: "blur(0px)"
+            y: 0
           } : {}}
-          transition={{ duration: 1.8, delay: 0.2, ease: "easeOut" }}
+          transition={{ duration: 0.8, delay: 0.15, ease: "easeOut" }}
         >
           <Carousel
             opts={{ align: "start", loop: photos.length > 3 }}
@@ -852,34 +876,16 @@ const GallerySection = () => {
               {photos.map((item, i) => (
                 <CarouselItem key={item.id} className="pl-3 md:pl-4 basis-[85%] sm:basis-[65%] md:basis-[38%] lg:basis-[30%]">
                   <motion.div
-                    className="h-full relative aspect-[4/5] rounded-xl overflow-hidden ring-1 ring-white/20 border border-white/10 bg-white/5 backdrop-blur-md flex flex-col items-center justify-center group"
-                    initial={{ opacity: 0, filter: isMobile ? "blur(4px)" : "blur(20px)", scale: 0.8 }}
-                    animate={introPlayed ? { opacity: 1, filter: "blur(0px)", scale: 1 } : {}}
-                    transition={{ duration: 0.8, ease: "easeOut", delay: introPlayed ? i * 0.2 : 0 }}
+                    className="h-full relative aspect-[4/5] rounded-xl overflow-hidden ring-1 ring-white/20 border border-white/10 bg-[#12141c] flex flex-col items-center justify-center group"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={introPlayed ? { opacity: 1, y: 0 } : {}}
+                    transition={{ duration: 0.5, ease: "easeOut", delay: introPlayed ? Math.min(i * 0.1, 0.6) : 0 }}
                   >
-                    {/* Pulsar de Choque (Onda de Impacto) quando a foto aparece */}
-                    {introPlayed && (
-                      <motion.div
-                        className="absolute inset-0 bg-amber-500/40 rounded-xl z-50 pointer-events-none mix-blend-screen"
-                        initial={{ opacity: 1, scale: 1 }}
-                        animate={{ opacity: 0, scale: 1.5 }}
-                        transition={{ duration: 1.0, delay: i * 0.2, ease: "easeOut" }}
-                      />
-                    )}
-                    
-                    {/* Sombra de Vidro Pulsante Contínua */}
-                    <motion.div
-                      className="absolute inset-0 z-0 pointer-events-none rounded-xl"
-                      animate={introPlayed && !isMobile ? {
-                        boxShadow: ["0px 0px 10px rgba(255,180,0,0.05)", "0px 0px 30px rgba(255,180,0,0.3)", "0px 0px 10px rgba(255,180,0,0.05)"]
-                      } : {
-                        boxShadow: "0px 0px 15px rgba(255,180,0,0.15)"
-                      }}
-                      transition={{ duration: 3 + (i % 3), repeat: Infinity, ease: "easeInOut", delay: i * 0.2 }}
-                    />
+                    {/* Sombra estática suave */}
+                    <div className="absolute inset-0 z-0 pointer-events-none rounded-xl shadow-[0_0_15px_rgba(255,180,0,0.1)]" />
 
                     {/* Likes and Comments Count Overlay Pill */}
-                    <div className="absolute top-3 left-3 bg-black/75 border border-white/10 px-2.5 py-1.5 rounded-full flex items-center gap-3 backdrop-blur-md z-30 shadow-lg">
+                    <div className="absolute top-3 left-3 bg-black/80 border border-white/10 px-2.5 py-1.5 rounded-full flex items-center gap-3 z-30 shadow-lg">
                       <div className="flex items-center gap-1">
                         <Heart className="w-3.5 h-3.5 text-red-500 fill-current" />
                         <span className="text-[11px] text-white font-bold">{item.likes_count || 0}</span>
@@ -993,7 +999,7 @@ const GallerySection = () => {
 
       {/* Premium Controlled Dialog for Image Interactivity */}
       <Dialog open={selectedPhoto !== null} onOpenChange={(open) => { if (!open) setSelectedPhoto(null); }}>
-        <DialogContent className="max-w-6xl w-[95vw] h-[92vh] md:h-[80vh] bg-[#0c0e17] border border-white/10 p-0 overflow-hidden shadow-2xl backdrop-blur-xl rounded-2xl z-[100] flex flex-col md:grid md:grid-cols-12 [&>button]:!bg-semin-yellow [&>button]:!text-semin-dark [&>button]:!opacity-100 [&>button]:hover:!bg-amber-400 [&>button]:hover:!scale-110 [&>button]:!transition-all [&>button]:!w-10 [&>button]:!h-10 [&>button]:!right-4 [&>button]:!top-4 [&>button]:!rounded-full [&>button]:!shadow-xl [&>button]:!flex [&>button]:!items-center [&>button]:!justify-center">
+        <DialogContent className="max-w-6xl w-[95vw] h-[92vh] md:h-[80vh] bg-[#0c0e17] border border-white/10 p-0 overflow-hidden shadow-2xl rounded-2xl z-[100] flex flex-col md:grid md:grid-cols-12 [&>button]:!bg-semin-yellow [&>button]:!text-semin-dark [&>button]:!opacity-100 [&>button]:hover:!bg-amber-400 [&>button]:hover:!scale-110 [&>button]:!transition-all [&>button]:!w-10 [&>button]:!h-10 [&>button]:!right-4 [&>button]:!top-4 [&>button]:!rounded-full [&>button]:!shadow-xl [&>button]:!flex [&>button]:!items-center [&>button]:!justify-center">
           
           {/* Left Panel: The Photo (Zoomed) */}
           <div className="md:col-span-7 bg-black/40 relative flex items-center justify-center p-4 h-[35vh] md:h-full border-b md:border-b-0 md:border-r border-white/10 overflow-hidden">
@@ -1002,6 +1008,8 @@ const GallerySection = () => {
                 src={selectedPhoto.image_base64}
                 alt={selectedPhoto.caption || "Foto ampliada"}
                 className="max-w-full max-h-full object-contain rounded-lg shadow-2xl"
+                loading="eager"
+                decoding="async"
               />
             )}
             
@@ -1031,7 +1039,7 @@ const GallerySection = () => {
               <ChevronRight className="w-5 h-5 group-hover/btn:translate-x-0.5 transition-transform" />
             </button>
 
-            <div className="absolute bottom-4 left-4 bg-black/60 px-4 py-2 rounded-full border border-white/5 backdrop-blur-md hidden sm:block">
+            <div className="absolute bottom-4 left-4 bg-black/60 px-4 py-2 rounded-full border border-white/5 hidden sm:block">
               <span className="text-white/60 text-xs font-body font-medium">Memórias em Cadeia</span>
             </div>
           </div>

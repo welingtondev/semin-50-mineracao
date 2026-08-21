@@ -90,7 +90,7 @@ const SponsorsSection = () => {
   };
 
   return (
-    <section id="patrocinio" className="py-24 md:py-36 bg-semin-dark relative overflow-hidden">
+    <section className="py-24 md:py-36 bg-semin-dark relative overflow-hidden">
       {/* Decorative top accent */}
       <div className="absolute top-0 left-0 w-full h-px bg-[linear-gradient(90deg,transparent_0%,hsl(var(--semin-yellow))_50%,transparent_100%)] opacity-20" />
 

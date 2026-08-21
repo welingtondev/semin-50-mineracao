@@ -325,6 +325,12 @@ const QuizPage = () => {
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [quizLoading, setQuizLoading] = useState(false);
 
+  // New game states for Pause & Lifelines
+  const [isPaused, setIsPaused] = useState(false);
+  const [skipsLeft, setSkipsLeft] = useState(2);
+  const [usedFiftyFifty, setUsedFiftyFifty] = useState(false);
+  const [eliminatedOptions, setEliminatedOptions] = useState<number[]>([]);
+
   // Derived values for current question and warning timer
   const currentQuestion = questions[currentIndex];
   const timerUrgent = timeLeft <= 30;
@@ -360,6 +366,7 @@ const QuizPage = () => {
 
   // BGM
   const bgmStartedRef = useRef(false);
+  const pauseStartTimeRef = useRef<number>(0);
 
   // ── Init: Check session from AuthContext ──
   useEffect(() => {
@@ -370,6 +377,14 @@ const QuizPage = () => {
       setScreen("auth");
     }
   }, [authLoading, authProfile]);
+
+  // Cleanup timer and BGM on unmount
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+      stopBGM();
+    };
+  }, []);
 
   // ── Profile data loading (quiz-specific stats) ──
   async function loadProfileData(userId: string) {
@@ -455,6 +470,13 @@ const QuizPage = () => {
     setFloatingPts(null);
     setQuizLoading(false);
     setPrevRank(myRank); // Save pre-match rank
+    
+    // Reset Pause and Lifeline states
+    setIsPaused(false);
+    setSkipsLeft(2);
+    setUsedFiftyFifty(false);
+    setEliminatedOptions([]);
+    
     setScreen("quiz");
 
     // Start BGM
@@ -485,7 +507,7 @@ const QuizPage = () => {
   }, []);
 
   function selectOption(idx: number) {
-    if (selectedOption !== null) return; // already selected
+    if (selectedOption !== null || isPaused || eliminatedOptions.includes(idx)) return; // already selected, paused, or eliminated
     playSound("click");
     setSelectedOption(idx);
     const timeTaken = Date.now() - questionStartTime;
@@ -547,6 +569,7 @@ const QuizPage = () => {
         setCurrentIndex(prev => prev + 1);
         setSelectedOption(null);
         setQuestionStartTime(Date.now());
+        setEliminatedOptions([]); // Clear eliminated options for the next question
       }
     }, 1200);
   }
@@ -593,6 +616,97 @@ const QuizPage = () => {
       });
     }
   }
+
+  // ── Pause & Lifelines Gameplay Functions ──
+  const pauseQuiz = useCallback(() => {
+    if (screen !== "quiz" || isPaused) return;
+    playSound("click");
+    setIsPaused(true);
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
+    pauseStartTimeRef.current = Date.now();
+    stopBGM();
+  }, [screen, isPaused]);
+
+  const resumeQuiz = useCallback(() => {
+    if (screen !== "quiz" || !isPaused) return;
+    playSound("click");
+    setIsPaused(false);
+    
+    // Compensate questionStartTime and matchStartRef for the duration of the pause
+    const pauseDuration = Date.now() - pauseStartTimeRef.current;
+    setQuestionStartTime(prev => prev + pauseDuration);
+    matchStartRef.current = matchStartRef.current + pauseDuration;
+
+    // Restart BGM
+    if (!bgmMuted) {
+      startBGM(timeLeft <= 30);
+      bgmStartedRef.current = true;
+    }
+
+    // Restart timer interval from current timeLeft
+    if (timerRef.current) clearInterval(timerRef.current);
+    let t = timeLeft;
+    let wasUrgent = t <= 30;
+    timerRef.current = setInterval(() => {
+      t--;
+      setTimeLeft(t);
+      if (t > 0 && t <= 10) playSound("urgent-tick");
+      else if (t > 10) playSound("tick");
+
+      if (t <= 30 && !wasUrgent) {
+        wasUrgent = true;
+        if (bgmStartedRef.current && !bgmMuted) startBGM(true);
+      }
+
+      if (t <= 0) {
+        if (timerRef.current) clearInterval(timerRef.current);
+        submitMatch(true);
+      }
+    }, 1000);
+  }, [screen, isPaused, timeLeft, bgmMuted, submitMatch]);
+
+  const useSkip = useCallback(() => {
+    if (screen !== "quiz" || isPaused || skipsLeft <= 0 || selectedOption !== null) return;
+    playSound("click");
+    setSkipsLeft(prev => prev - 1);
+    setEliminatedOptions([]); // Reset eliminated options for the next question
+
+    // Move to next question or submit match if it is the last
+    if (currentIndex + 1 >= questions.length) {
+      submitMatch(false);
+    } else {
+      setCurrentIndex(prev => prev + 1);
+      setSelectedOption(null);
+      setQuestionStartTime(Date.now());
+    }
+  }, [screen, isPaused, skipsLeft, currentIndex, questions, selectedOption, submitMatch]);
+
+  const useFiftyFifty = useCallback(() => {
+    if (screen !== "quiz" || isPaused || usedFiftyFifty || selectedOption !== null) return;
+    playSound("click");
+    
+    const q = questions[currentIndex];
+    const correctIdx = q.resposta_correta;
+    if (correctIdx === undefined || !q.shuffledAlternativas) return;
+    
+    // Find all incorrect indices in the shuffled list
+    const incorrectItems = q.shuffledAlternativas
+      .map((alt) => ({ originalIdx: alt.originalIndex }))
+      .filter(item => item.originalIdx !== correctIdx);
+      
+    if (incorrectItems.length < 2) return; // not enough items to eliminate
+    
+    // Randomly select 2 incorrect options to eliminate using simple sorting
+    const shuffledToEliminate = [...incorrectItems].sort(() => Math.random() - 0.5);
+    const toEliminate = shuffledToEliminate.slice(0, 2).map(item => item.originalIdx);
+    
+    setEliminatedOptions(toEliminate);
+    setUsedFiftyFifty(true);
+    playSound("success");
+  }, [screen, isPaused, usedFiftyFifty, currentIndex, questions, selectedOption]);
 
   // ── Share Logic ──
   // ── Month name helper ──
@@ -1260,98 +1374,199 @@ const QuizPage = () => {
                 <div className="absolute top-0 left-0 h-1 transition-all duration-300"
                      style={{ width: `${(currentIndex / questions.length) * 100}%`, background: `linear-gradient(90deg, ${SPONSOR_CONFIG.accentFrom}, ${SPONSOR_CONFIG.accentTo})` }} />
 
-                {/* Difficulty badge */}
-                <div className="mb-4">
-                  <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border ${getDifficultyStyle(currentQuestion.dificuldade)}`}>
-                    {getDifficultyLabel(currentQuestion.dificuldade)}
-                  </span>
-                </div>
+                {isPaused ? (
+                  <div className="py-8 text-center flex flex-col items-center justify-center animate-in fade-in zoom-in duration-300">
+                    <div className="mb-6 inline-flex items-center justify-center p-5 rounded-full bg-amber-500/10 border border-amber-500/30 shadow-[0_0_20px_rgba(210,155,33,0.1)]">
+                      <svg className="w-12 h-12 text-amber-400 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    </div>
+                    
+                    <h3 className="text-3xl font-black mb-2 text-white font-display tracking-tight">
+                      JOGO PAUSADO
+                    </h3>
+                    <p className="text-slate-400 text-sm mb-6 max-w-sm mx-auto leading-relaxed">
+                      O cronômetro está congelado. Faça uma pausa e retome quando estiver pronto!
+                    </p>
 
-                {/* Question text */}
-                <AnimatePresence mode="wait">
-                  <motion.h2
-                    key={currentIndex}
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -20 }}
-                    className="text-2xl md:text-3xl font-extrabold mb-8 leading-relaxed tracking-tight text-white drop-shadow-sm"
-                    style={{ fontFamily: "'Outfit', system-ui, sans-serif" }}
-                  >
-                    {currentQuestion.pergunta}
-                  </motion.h2>
-                </AnimatePresence>
+                    {/* Stats summary during pause */}
+                    <div className="grid grid-cols-2 gap-4 w-full max-w-sm mb-8">
+                      <div className="bg-slate-900/40 border border-white/5 rounded-2xl p-4">
+                        <div className="text-[10px] text-slate-500 uppercase font-black tracking-widest mb-1">Pontos</div>
+                        <div className="text-2xl font-black text-white">{liveScore}</div>
+                      </div>
+                      <div className="bg-slate-900/40 border border-white/5 rounded-2xl p-4">
+                        <div className="text-[10px] text-slate-500 uppercase font-black tracking-widest mb-1">Progresso</div>
+                        <div className="text-2xl font-black text-white">{currentIndex}/20</div>
+                      </div>
+                    </div>
 
-                {/* Options */}
-                <div className="grid grid-cols-1 gap-4">
-                  {currentQuestion.shuffledAlternativas?.map((opt, displayIdx) => {
-                    const originalIdx = opt.originalIndex;
-                    const isSelected = selectedOption === originalIdx;
-                    const isCorrectAnswer = currentQuestion.resposta_correta === originalIdx;
-                    const hasSelected = selectedOption !== null;
-                        
-                    // Estilos de botões Premium Glassmorphism
-                    let btnStyle = {
-                      background: "rgba(30, 41, 59, 0.5)",
-                      borderColor: "rgba(255, 255, 255, 0.08)",
-                      color: "white",
-                      boxShadow: "0 4px 15px rgba(0,0,0,0.2)"
-                    };
-
-                    if (hasSelected) {
-                      if (isCorrectAnswer) {
-                        btnStyle = {
-                          background: "linear-gradient(135deg, rgba(34,197,94,0.2) 0%, rgba(20,83,45,0.4) 100%)",
-                          borderColor: "rgba(34, 197, 94, 0.6)",
-                          color: "#4ade80",
-                          boxShadow: "0 0 25px rgba(34, 197, 94, 0.25)"
-                        };
-                      } else if (isSelected && !isCorrectAnswer) {
-                        btnStyle = {
-                          background: "linear-gradient(135deg, rgba(239,68,68,0.2) 0%, rgba(127,29,29,0.4) 100%)",
-                          borderColor: "rgba(239, 68, 68, 0.6)",
-                          color: "#f87171",
-                          boxShadow: "0 0 25px rgba(239, 68, 68, 0.25)"
-                        };
-                      } else {
-                        btnStyle = {
-                          background: "rgba(15, 23, 42, 0.4)",
-                          borderColor: "rgba(255, 255, 255, 0.02)",
-                          color: "rgba(255, 255, 255, 0.2)",
-                          boxShadow: "none"
-                        };
-                      }
-                    } else if (isSelected) {
-                      btnStyle = {
-                        background: "rgba(210,155,33,0.15)",
-                        borderColor: "rgba(210,155,33,0.8)",
-                        color: "white",
-                        boxShadow: "0 0 20px rgba(210,155,33,0.2)"
-                      };
-                    }
-
-                    return (
-                      <motion.button
-                        key={`${currentIndex}-${originalIdx}`}
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: displayIdx * 0.05 }}
-                        onClick={() => selectOption(originalIdx)}
-                        disabled={hasSelected}
-                        className={`w-full text-left p-4 md:p-5 rounded-2xl font-semibold transition-all duration-300 shadow-sm relative overflow-hidden group ${
-                          !hasSelected && "hover:border-amber-400/80 hover:bg-slate-800 hover:shadow-[0_0_20px_rgba(210,155,33,0.15)] cursor-pointer hover:-translate-y-1"
-                        } ${isSelected ? "scale-[0.98] shadow-inner" : ""}`}
-                        style={{ ...btnStyle, borderWidth: "2px" }}
+                    <div className="flex flex-col sm:flex-row gap-4 w-full max-w-md">
+                      <button
+                        onClick={resumeQuiz}
+                        className="flex-1 py-4 rounded-xl text-base font-bold shadow-lg transition-all hover:opacity-90 active:scale-[0.98] text-slate-900 cursor-pointer"
+                        style={{
+                          background: `linear-gradient(135deg, ${SPONSOR_CONFIG.accentFrom}, ${SPONSOR_CONFIG.accentTo})`,
+                          boxShadow: "0 0 20px rgba(210, 155, 33, 0.2)",
+                        }}
                       >
-                        <div className="flex items-center gap-4">
-                          <span className="flex items-center justify-center w-10 h-10 rounded-xl border border-current text-sm font-black bg-white/5 opacity-90 shadow-sm">
-                            {["A", "B", "C", "D", "E"][displayIdx]}
-                          </span>
-                          <span className="text-base md:text-lg font-medium tracking-tight" style={{ fontFamily: "'Outfit', system-ui, sans-serif" }}>{opt.text}</span>
-                        </div>
-                      </motion.button>
-                    );
-                  })}
-                </div>
+                        ▶️ RETOMAR
+                      </button>
+                      
+                      <button
+                        onClick={endQuizEarly}
+                        className="flex-1 py-4 rounded-xl text-base font-bold transition-all text-slate-300 hover:text-white hover:bg-slate-800/80 active:scale-[0.98] cursor-pointer"
+                        style={{ border: "2px solid rgba(51,65,85,1)" }}
+                      >
+                        🚪 SAIR
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    {/* Header: Difficulty + Lifelines */}
+                    <div className="flex justify-between items-center mb-6">
+                      <div>
+                        <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border ${getDifficultyStyle(currentQuestion.dificuldade)}`}>
+                          {getDifficultyLabel(currentQuestion.dificuldade)}
+                        </span>
+                      </div>
+                      
+                      <div className="flex items-center gap-2">
+                        {/* 50/50 Lifeline */}
+                        <button
+                          onClick={useFiftyFifty}
+                          disabled={usedFiftyFifty || selectedOption !== null}
+                          className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all duration-300 flex items-center gap-1.5 border ${
+                            usedFiftyFifty
+                              ? "bg-slate-800/40 border-slate-700/50 text-slate-500 opacity-50 cursor-not-allowed"
+                              : "bg-amber-500/10 border-amber-500/30 text-amber-400 hover:bg-amber-500/20 active:scale-95 cursor-pointer"
+                          }`}
+                          title={usedFiftyFifty ? "Já utilizado" : "Eliminar 2 incorretas (1x por partida)"}
+                        >
+                          <span>✂️</span>
+                          <span>50/50</span>
+                        </button>
+
+                        {/* Skip Lifeline */}
+                        <button
+                          onClick={useSkip}
+                          disabled={skipsLeft <= 0 || selectedOption !== null}
+                          className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all duration-300 flex items-center gap-1.5 border ${
+                            skipsLeft <= 0
+                              ? "bg-slate-800/40 border-slate-700/50 text-slate-500 opacity-50 cursor-not-allowed"
+                              : "bg-sky-500/10 border-sky-500/30 text-sky-400 hover:bg-sky-500/20 active:scale-95 cursor-pointer"
+                          }`}
+                          title={skipsLeft <= 0 ? "Sem pulos restantes" : `Pular pergunta (${skipsLeft} restantes)`}
+                        >
+                          <span>➡️</span>
+                          <span>Pular ({skipsLeft})</span>
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Question text */}
+                    <AnimatePresence mode="wait">
+                      <motion.h2
+                        key={currentIndex}
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -20 }}
+                        className="text-2xl md:text-3xl font-extrabold mb-8 leading-relaxed tracking-tight text-white drop-shadow-sm"
+                        style={{ fontFamily: "'Outfit', system-ui, sans-serif" }}
+                      >
+                        {currentQuestion.pergunta}
+                      </motion.h2>
+                    </AnimatePresence>
+
+                    {/* Options */}
+                    <div className="grid grid-cols-1 gap-4">
+                      {currentQuestion.shuffledAlternativas?.map((opt, displayIdx) => {
+                        const originalIdx = opt.originalIndex;
+                        const isSelected = selectedOption === originalIdx;
+                        const isCorrectAnswer = currentQuestion.resposta_correta === originalIdx;
+                        const hasSelected = selectedOption !== null;
+                        const isEliminated = eliminatedOptions.includes(originalIdx);
+                            
+                        // Estilos de botões Premium Glassmorphism
+                        let btnStyle = {
+                          background: "rgba(30, 41, 59, 0.5)",
+                          borderColor: "rgba(255, 255, 255, 0.08)",
+                          color: "white",
+                          boxShadow: "0 4px 15px rgba(0,0,0,0.2)"
+                        };
+
+                        if (isEliminated) {
+                          btnStyle = {
+                            background: "rgba(15, 23, 42, 0.15)",
+                            borderColor: "rgba(239, 68, 68, 0.15)",
+                            color: "rgba(255, 255, 255, 0.15)",
+                            boxShadow: "none"
+                          };
+                        } else if (hasSelected) {
+                          if (isCorrectAnswer) {
+                            btnStyle = {
+                              background: "linear-gradient(135deg, rgba(34,197,94,0.2) 0%, rgba(20,83,45,0.4) 100%)",
+                              borderColor: "rgba(34, 197, 94, 0.6)",
+                              color: "#4ade80",
+                              boxShadow: "0 0 25px rgba(34, 197, 94, 0.25)"
+                            };
+                          } else if (isSelected && !isCorrectAnswer) {
+                            btnStyle = {
+                              background: "linear-gradient(135deg, rgba(239,68,68,0.2) 0%, rgba(127,29,29,0.4) 100%)",
+                              borderColor: "rgba(239, 68, 68, 0.6)",
+                              color: "#f87171",
+                              boxShadow: "0 0 25px rgba(239, 68, 68, 0.25)"
+                            };
+                          } else {
+                            btnStyle = {
+                              background: "rgba(15, 23, 42, 0.4)",
+                              borderColor: "rgba(255, 255, 255, 0.02)",
+                              color: "rgba(255, 255, 255, 0.2)",
+                              boxShadow: "none"
+                            };
+                          }
+                        } else if (isSelected) {
+                          btnStyle = {
+                            background: "rgba(210,155,33,0.15)",
+                            borderColor: "rgba(210,155,33,0.8)",
+                            color: "white",
+                            boxShadow: "0 0 20px rgba(210,155,33,0.2)"
+                          };
+                        }
+
+                        return (
+                          <motion.button
+                            key={`${currentIndex}-${originalIdx}`}
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: displayIdx * 0.05 }}
+                            onClick={() => selectOption(originalIdx)}
+                            disabled={hasSelected || isEliminated}
+                            className={`w-full text-left p-4 md:p-5 rounded-2xl font-semibold transition-all duration-300 shadow-sm relative overflow-hidden group ${
+                              !hasSelected && !isEliminated && "hover:border-amber-400/80 hover:bg-slate-800 hover:shadow-[0_0_20px_rgba(210,155,33,0.15)] cursor-pointer hover:-translate-y-1"
+                            } ${isSelected ? "scale-[0.98] shadow-inner" : ""} ${isEliminated ? "line-through decoration-red-500/40 opacity-30" : ""}`}
+                            style={{ ...btnStyle, borderWidth: "2px" }}
+                          >
+                            <div className="flex items-center gap-4">
+                              <span className={`flex items-center justify-center w-10 h-10 rounded-xl border border-current text-sm font-black bg-white/5 opacity-90 shadow-sm ${
+                                isEliminated ? "border-red-500/20 text-red-500/40 bg-red-500/5" : ""
+                              }`}>
+                                {["A", "B", "C", "D", "E"][displayIdx]}
+                              </span>
+                              <span className="text-base md:text-lg font-medium tracking-tight" style={{ fontFamily: "'Outfit', system-ui, sans-serif" }}>{opt.text}</span>
+                              {isEliminated && (
+                                <span className="ml-auto text-xs font-bold text-red-500/40 uppercase tracking-widest">
+                                  Descartada
+                                </span>
+                              )}
+                            </div>
+                          </motion.button>
+                        );
+                      })}
+                    </div>
+                  </>
+                )}
               </div>
 
               {/* Quiz footer: Mute + End early */}

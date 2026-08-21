@@ -1,10 +1,13 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, HardHat, Heart, MapPin, Calendar, ExternalLink } from "lucide-react";
 import { RegistrationModal } from "./RegistrationModal";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import CheckoutModal from "./CheckoutModal";
 
 const ShortRegistrationBanner = () => {
   const { ref, isVisible } = useScrollAnimation();
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
 
   return (
     <section className="relative py-12 md:py-16 bg-semin-yellow overflow-hidden">
@@ -63,23 +66,38 @@ const ShortRegistrationBanner = () => {
               </div>
             </div>
             
-            <div className="flex-shrink-0 w-auto lg:w-auto flex justify-center mx-auto lg:mx-0">
+            <div className="flex-shrink-0 w-full lg:w-auto flex flex-col sm:flex-row lg:flex-col justify-center items-center gap-4">
               <RegistrationModal>
+                <div className="w-full sm:w-[280px] md:w-[320px]">
+                  <Button
+                    size="lg"
+                    className="bg-semin-dark text-white hover:bg-black font-display font-bold text-base md:text-lg h-14 md:h-16 px-6 rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.25)] transition-all duration-300 active:scale-95 hover:scale-[1.02] w-full flex items-center justify-center gap-2.5 relative overflow-hidden group cursor-pointer"
+                  >
+                    <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-[100%] group-hover:translate-x-[100%] transition-transform duration-700"></span>
+                    <HardHat className="h-5 w-5 md:h-6 md:w-6 text-semin-yellow shrink-0" />
+                    <span className="truncate">Garantir Entrada Solidária</span>
+                    <ArrowRight className="h-5 w-5 text-semin-yellow group-hover:translate-x-1 transition-transform shrink-0" />
+                  </Button>
+                </div>
+              </RegistrationModal>
+
+              <div className="w-full sm:w-[280px] md:w-[320px]">
                 <Button
                   size="lg"
-                  className="bg-semin-dark text-white hover:bg-black font-display font-bold text-base md:text-lg px-8 py-5 md:px-10 md:py-8 rounded-full md:rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.3)] transition-all duration-300 active:scale-95 hover:scale-105 hover:shadow-[0_15px_50px_rgba(0,0,0,0.4)] w-auto min-w-[240px] sm:w-auto relative overflow-hidden group"
+                  onClick={() => setIsCheckoutOpen(true)}
+                  variant="outline"
+                  className="bg-transparent border-2 border-semin-dark text-semin-dark hover:bg-semin-dark hover:text-white font-display font-bold text-base md:text-lg h-14 md:h-16 px-6 rounded-2xl shadow-[0_4px_12px_rgba(0,0,0,0.05)] transition-all duration-300 active:scale-95 hover:scale-[1.02] w-full flex items-center justify-center gap-2.5 group cursor-pointer"
                 >
-                  <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-[100%] group-hover:translate-x-[100%] transition-transform duration-700"></span>
-                  <HardHat className="h-6 w-6 mr-3 text-semin-yellow" />
-                  Garantir Entrada Solidária
-                  <ArrowRight className="ml-3 h-5 w-5 text-semin-yellow group-hover:translate-x-1 transition-transform" />
+                  <Heart className="h-5 w-5 text-red-600 group-hover:scale-110 transition-transform shrink-0" fill="currentColor" />
+                  <span>Apoiar Vaquinha PF</span>
                 </Button>
-              </RegistrationModal>
+              </div>
             </div>
 
           </div>
         </div>
       </div>
+      <CheckoutModal isOpen={isCheckoutOpen} onClose={() => setIsCheckoutOpen(false)} />
     </section>
   );
 };

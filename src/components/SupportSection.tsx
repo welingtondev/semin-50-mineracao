@@ -2,7 +2,11 @@ import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { Sparkles, Diamond } from "lucide-react";
 import cristalJrLogo from "@/assets/cristal-jr-logo.webp";
 import daeminLogo from "@/assets/daemin-logo.webp";
-import abemLogo from "@/assets/abem_logo.png";
+import abemLogo from "@/assets/abem_logo.webp";
+import { Users, UserCircle2, ShieldCheck, Target, Heart } from "lucide-react";
+import gabrielImg from "@/assets/committee/gabriel-pereira.png";
+import welingtonImg from "@/assets/committee/welington-santos.png";
+import norberthImg from "@/assets/committee/norberth-reis.png";
 
 const realizacao = [
   { 
@@ -19,6 +23,33 @@ const realizacao = [
     name: "ABEM",
     logo: abemLogo,
     description: "Associação Baiana de Engenheiros de Minas, promovendo a valorização profissional e o desenvolvimento da mineração na Bahia."
+  },
+];
+
+const committeeMembers = [
+  {
+    name: "Gabriel de Sousa",
+    role: "Presidente da comissão",
+    area: "Presidência",
+    image: gabrielImg,
+    icon: ShieldCheck,
+    color: "from-blue-400 to-semin-blue",
+  },
+  {
+    name: "Welington Santos",
+    role: "Coordenador de marketing e estratégia",
+    area: "Marketing e estratégia",
+    image: welingtonImg,
+    icon: Target,
+    color: "from-amber-400 to-semin-orange",
+  },
+  {
+    name: "Norberth Reis",
+    role: "Coordenador financeiro",
+    area: "Financeiro",
+    image: norberthImg,
+    icon: Heart,
+    color: "from-emerald-400 to-teal-600",
   },
 ];
 
@@ -85,6 +116,47 @@ const SupportSection = () => {
                     {s.description}
                   </p>
                 </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Committee Section */}
+        <div className={`mt-24 md:mt-32 text-center mb-12 transition-all duration-1000 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
+          <span className="inline-flex items-center gap-2 font-body text-[10px] md:text-xs uppercase tracking-[0.35em] text-semin-orange font-semibold mb-3 md:mb-4">
+            <Users className="h-3.5 w-3.5" />
+            Comissão Organizadora
+          </span>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black mb-6 tracking-tight leading-tight text-white">
+            Quem transforma esta edição histórica em uma <span className="text-semin-orange">experiência relevante.</span>
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          {committeeMembers.map((member, idx) => (
+            <div 
+              key={member.name}
+              className={`bg-white/[0.02] backdrop-blur-md rounded-3xl p-6 border border-white/10 shadow-lg group hover:border-semin-orange/30 transition-all duration-500 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
+              style={{ transitionDelay: `${400 + idx * 150}ms` }}
+            >
+              <div className="relative mb-8 rounded-2xl overflow-hidden aspect-square bg-white/5">
+                <div className={`absolute inset-0 bg-gradient-to-tr ${member.color} opacity-20 group-hover:opacity-30 transition-opacity duration-500`} />
+                {member.image ? (
+                  <img src={member.image} alt={member.name} className="w-full h-full object-cover object-top filter grayscale-[20%] group-hover:grayscale-0 transition-all duration-500 scale-100 group-hover:scale-105" />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-white/20">
+                    <UserCircle2 className="w-24 h-24" />
+                  </div>
+                )}
+                <div className="absolute top-4 right-4 bg-semin-dark/80 backdrop-blur-sm p-2 rounded-xl shadow-sm border border-white/10">
+                  <member.icon className="w-5 h-5 text-semin-yellow" />
+                </div>
+              </div>
+              
+              <div className="text-center">
+                <span className="text-xs font-bold uppercase tracking-widest text-semin-orange mb-2 block">{member.area}</span>
+                <h3 className="text-xl md:text-2xl font-display font-bold text-white mb-1 group-hover:text-semin-yellow transition-colors">{member.name}</h3>
+                <p className="text-sm text-white/50 font-medium">{member.role}</p>
               </div>
             </div>
           ))}

@@ -1,9 +1,17 @@
 import { Heart, Mountain, Diamond, Gem, Sparkles, Crown, Star } from "lucide-react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { SponsorModal } from "./SponsorModal";
+import { Button } from "@/components/ui/button";
 import ufbaLogo from "@/assets/ufba_logo.webp";
 import sindimibaLogo from "@/assets/sindimiba-logo.webp";
 import jmcLogo from "@/assets/jmc_logo.webp";
 import creaLogo from "@/assets/crea_logo.webp";
+import suporteMineLogo from "@/assets/suporte_mine_logo.webp";
+import grupoIguanaLogo from "@/assets/grupo_iguana.webp";
+import minerallisLogo from "@/assets/minerallis_logo.webp";
+import geosolLogo from "@/assets/geosol_logo.png";
+import drillgeoLogo from "@/assets/drillgeo_logo.png";
+import ibramLogo from "@/assets/ibram_logo.jpg";
 
 type SponsorLogo = {
   name: string;
@@ -15,6 +23,7 @@ const organizadores: SponsorLogo[] = [
   { name: "UFBA", logo: ufbaLogo, className: "h-20 sm:h-24 md:h-32 lg:h-36 max-w-[140px] md:max-w-[220px]" },
   { name: "SINDIMIBA", logo: sindimibaLogo, className: "h-20 sm:h-24 md:h-32 lg:h-36 max-w-[180px] md:max-w-[260px]" },
   { name: "CREA-BA", logo: creaLogo, className: "h-20 sm:h-24 md:h-32 lg:h-36 max-w-[160px] md:max-w-[240px]" },
+  { name: "IBRAM", logo: ibramLogo, className: "h-20 sm:h-24 md:h-32 lg:h-36 max-w-[160px] md:max-w-[240px]" },
 ];
 
 type TierGroup = {
@@ -54,7 +63,7 @@ const sponsorsByTier: TierGroup[] = [
     glowColor: "bg-rose-400/15",
     ringColor: "ring-rose-400/20",
     sponsors: [
-      { name: "Patrocinador Córindon 1" },
+      { name: "Geosol", logo: geosolLogo },
       { name: "Patrocinador Córindon 2" },
       { name: "Patrocinador Córindon 3" },
     ],
@@ -69,9 +78,9 @@ const sponsorsByTier: TierGroup[] = [
     glowColor: "bg-amber-400/15",
     ringColor: "ring-amber-400/20",
     sponsors: [
+      { name: "DrillGeo", logo: drillgeoLogo },
       { name: "JMC", logo: jmcLogo },
-      { name: "Pan American Silver" },
-      { name: "Patrocinador Topázio 3" },
+      { name: "Support Mining Engenharia", logo: suporteMineLogo },
     ],
   },
   {
@@ -84,6 +93,8 @@ const sponsorsByTier: TierGroup[] = [
     glowColor: "bg-slate-400/10",
     ringColor: "ring-slate-400/15",
     sponsors: [
+      { name: "Grupo Iguana", logo: grupoIguanaLogo },
+      { name: "Minerallis", logo: minerallisLogo },
       { name: "Patrocinador Quartzo 1" },
       { name: "Patrocinador Quartzo 2" },
     ],
@@ -101,7 +112,7 @@ const SponsorLogosSection = () => {
   const { ref, isVisible } = useScrollAnimation(0.1);
 
   return (
-    <section id="parceiros" className="py-24 md:py-36 bg-semin-cream relative overflow-hidden">
+    <section className="py-24 md:py-36 bg-semin-cream relative overflow-hidden">
       {/* Background Ornaments adapted for light theme */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-[10%] right-[-5%] w-48 md:w-96 h-48 md:h-96 bg-semin-yellow/15 rounded-full blur-[30px] md:blur-[100px] opacity-70" />
@@ -152,39 +163,73 @@ const SponsorLogosSection = () => {
               </div>
 
               <div className="flex flex-wrap justify-center items-center gap-3 sm:gap-6 md:gap-8 max-w-5xl mx-auto">
-                {group.sponsors.map((sponsor) => (
-                  <div
-                    key={sponsor.name}
-                    className="relative group w-[calc(50%-6px)] sm:w-[calc(50%-12px)] md:w-64 h-24 sm:h-32 md:h-40 flex items-center justify-center p-3 sm:p-6 bg-white rounded-2xl border border-gray-200 shadow-lg hover:shadow-xl hover:border-semin-yellow/40 transition-all duration-500 cursor-pointer hover:-translate-y-1 sm:hover:-translate-y-2"
-                  >
-                    {/* Card top accent line */}
-                    <div className={`absolute top-0 left-[15%] right-[15%] h-[2px] bg-gradient-to-r ${group.accentFrom} ${group.accentTo} opacity-60 rounded-full`} />
+                {(() => {
+                  const filledSponsors = group.sponsors.filter(s => s.logo);
+                  const displaySponsors = filledSponsors.length > 0 ? filledSponsors : [{ name: `Seja Patrocinador ${group.label}` }];
+                  
+                  return displaySponsors.map((sponsor, idx) => {
+                    const cardContent = (
+                      <div className="relative group w-full h-full flex items-center justify-center p-3 sm:p-6 bg-white rounded-2xl border border-gray-200 shadow-lg hover:shadow-xl hover:border-semin-yellow/40 transition-all duration-500 cursor-pointer hover:-translate-y-1 sm:hover:-translate-y-2">
+                        {/* Card top accent line */}
+                        <div className={`absolute top-0 left-[15%] right-[15%] h-[2px] bg-gradient-to-r ${group.accentFrom} ${group.accentTo} opacity-60 rounded-full`} />
 
-                    {sponsor.logo ? (
-                      <img
-                        src={sponsor.logo}
-                        alt={sponsor.name}
-                        width="256"
-                        height="160"
-                        className="max-w-full max-h-full object-contain transition-all duration-500 group-hover:scale-110"
-                        style={{ imageRendering: 'auto' }}
-                        loading="lazy"
-                      />
-                    ) : (
-                      <div className="text-center">
-                        <div className="w-10 h-10 sm:w-14 sm:h-14 md:w-16 md:h-16 mx-auto mb-2 sm:mb-3 rounded-xl sm:rounded-2xl bg-gray-50 border border-gray-100 flex items-center justify-center group-hover:scale-110 transition-all duration-500">
-                          <group.icon className={`h-5 w-5 sm:h-7 sm:w-7 md:h-8 md:w-8 ${group.accentText} opacity-70 group-hover:opacity-100 transition-opacity duration-300`} />
-                        </div>
-                        <span className="font-body text-[9px] sm:text-[10px] md:text-xs text-gray-400 group-hover:text-semin-dark text-center leading-tight transition-colors duration-300 font-semibold px-1 block">
-                          {sponsor.name}
-                        </span>
+                        {sponsor.logo ? (
+                          <img
+                            src={sponsor.logo}
+                            alt={sponsor.name}
+                            width="256"
+                            height="160"
+                            className="max-w-full max-h-full object-contain transition-all duration-500 group-hover:scale-110"
+                            style={{ imageRendering: 'auto' }}
+                            loading="lazy"
+                          />
+                        ) : (
+                          <div className="text-center">
+                            <div className="w-10 h-10 sm:w-14 sm:h-14 md:w-16 md:h-16 mx-auto mb-2 sm:mb-3 rounded-xl sm:rounded-2xl bg-gray-50 border border-gray-100 flex items-center justify-center group-hover:scale-110 transition-all duration-500">
+                              <group.icon className={`h-5 w-5 sm:h-7 sm:w-7 md:h-8 md:w-8 ${group.accentText} opacity-70 group-hover:opacity-100 transition-opacity duration-300`} />
+                            </div>
+                            <span className="font-body text-[9px] sm:text-[10px] md:text-xs text-gray-400 group-hover:text-semin-dark text-center leading-tight transition-colors duration-300 font-semibold px-1 block">
+                              {sponsor.name}
+                            </span>
+                          </div>
+                        )}
                       </div>
-                    )}
-                  </div>
-                ))}
+                    );
+
+                    return (
+                      <div key={sponsor.name + idx} className="w-[calc(50%-6px)] sm:w-[calc(50%-12px)] md:w-64 h-24 sm:h-32 md:h-40">
+                        {sponsor.logo ? (
+                          cardContent
+                        ) : (
+                          <SponsorModal>{cardContent}</SponsorModal>
+                        )}
+                      </div>
+                    );
+                  });
+                })()}
               </div>
             </div>
           ))}
+        </div>
+
+        {/* Banner CTA para novos patrocinadores */}
+        <div className={`mt-20 max-w-4xl mx-auto transition-all duration-700 delay-500 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
+          <div className="relative group overflow-hidden rounded-[2rem] bg-gradient-to-br from-semin-blue to-[#0b1329] border border-semin-yellow/20 p-8 md:p-10 shadow-2xl text-center md:text-left md:flex items-center justify-between gap-6">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-semin-yellow/5 rounded-full blur-[60px] pointer-events-none" />
+            <div className="mb-6 md:mb-0 max-w-xl">
+              <h3 className="font-display text-2xl md:text-3xl font-black text-semin-yellow mb-2">Sua Empresa no Cinquentenário</h3>
+              <p className="font-body text-sm md:text-base text-white/75 leading-relaxed">
+                Associe sua marca à celebração histórica de 50 anos da Engenharia de Minas da UFBA. Receba nosso Mídia Kit com todos os benefícios de patrocínio disponíveis.
+              </p>
+            </div>
+            <div className="shrink-0 flex justify-center w-full md:w-auto">
+              <SponsorModal>
+                <Button className="w-full md:w-auto bg-gradient-to-r from-semin-yellow via-amber-500 to-semin-orange hover:from-semin-orange hover:via-amber-500 hover:to-semin-yellow text-semin-dark font-display font-black text-sm md:text-base px-8 py-5 md:py-6 rounded-xl shadow-lg transition-all duration-300 hover:scale-[1.03] active:scale-95 cursor-pointer">
+                  Quero Patrocinar
+                </Button>
+              </SponsorModal>
+            </div>
+          </div>
         </div>
 
         {/* ── Apoio Institucional ── */}

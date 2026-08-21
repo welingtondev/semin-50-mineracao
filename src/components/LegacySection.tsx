@@ -27,20 +27,47 @@ const episodes: Episode[] = [
   {
     id: 2,
     title: "O Legado - Capítulo 2",
-    name: "Nome do Convidado 2",
-    role: "Especialista em Mineração",
-    company: "Instituição Exemplo",
-    description: "Relato sobre os desafios e conquistas ao longo de décadas de atuação no setor mineral baiano.",
-    youtubeId: "", 
+    name: "Cláudia Rios",
+    role: "Engenheira de Minas",
+    company: "Consultora",
+    description: "Neste episódio da série O Legado, recebemos a querida Engenheira de Minas Cláudia Rios. Formada pela UFBA, Cláudia compartilha sua brilhante trajetória profissional passando pela Vale (CVRD) e Jacobina Mineração, além dos desafios e o imenso orgulho de ter sido uma das poucas mulheres de sua turma, abrindo caminhos e inspirando novas gerações no setor mineral.",
+    youtubeId: "k0VBHMXJAao", 
   },
   {
     id: 3,
     title: "O Legado - Capítulo 3",
-    name: "Nome do Convidado 3",
-    role: "Pesquisador",
-    company: "UFBA",
-    description: "A contribuição acadêmica e a formação de novas gerações de profissionais que mantêm vivo o legado do curso.",
-    youtubeId: "",
+    name: "Jorge Luiz",
+    role: "Engenheiro de Minas",
+    company: "Support Mining",
+    description: "Neste capítulo da série O Legado, recebemos o querido Engenheiro de Minas Jorge Luiz. Formado pela UFBA, Jorge compartilha sua brilhante trajetória profissional passando por grandes companhias como Vale, RDM e Mineração Caraíba, além dos desafios e o imenso orgulho de ter empreendido no setor mineral com a consolidação da Support Mining, destacando a amizade e a rede de confiança construída no curso como o seu maior patrimônio.",
+    youtubeId: "X2-rDmwLN9M",
+  },
+  {
+    id: 4,
+    title: "O Legado - Capítulo 4",
+    name: "Francisco Sampaio",
+    role: "Engenheiro de Minas",
+    company: "DrillGeo",
+    description: "No quarto episódio da série O Legado, recebemos Francisco Sampaio, Engenheiro de Minas graduado na turma de 2010.2 pela Universidade Federal da Bahia (UFBA). Neste bate-papo, Francisco compartilha detalhes marcantes de sua trajetória acadêmica na Escola Politécnica, destacando sua atuação marcante como bolsista durante quase quatro anos no Projeto Campo Escola (Convênio UFBA/ANP) — iniciativa que reestruturou campos de petróleo doados pela Petrobras para fomento estudantil em bacias de Aracaju, Alagoas e Maranhão, proporcionando uma vivência prática essencial e maturidade antes mesmo da formatura. Além disso, ele relembra a participação ativa na Cristal Mineração e Petróleo Jr., marco de aprendizado em gestão de equipe, liderança e visão empresarial. Francisco detalha também sua transição profissional: os primeiros passos na indústria do petróleo e a consolidação de sua carreira na mineração, especificamente no segmento de sondagem. Hoje, atuando como diretor da DrillGeo Geologia e Sondagens, ele reflete sobre como a formação eclética e os valores de ética, compromisso e responsabilidade absorvidos na UFBA permitiram que ele alcançasse o sucesso empreendedor no mercado.",
+    youtubeId: "W0kC3X8Pe-c",
+  },
+  {
+    id: 5,
+    title: "O Legado - Capítulo 5",
+    name: "Roberto Lima",
+    role: "Engenheiro de Minas",
+    company: "Grupo Ero",
+    description: "No quinto episódio da série O Legado, recebemos Roberto Lima, Engenheiro de Minas graduado na turma de 2003.2 pela Universidade Federal da Bahia. Neste bate-papo inspirador, Roberto compartilha como ingressou no curso em 1997 por incentivo do amigo e colega de profissão Leandro Carlos, e relembra sua sólida trajetória no setor. Desde os primeiros passos como estagiário e engenheiro júnior na Mina de Fazenda Brasileiro, passando pela atuação como engenheiro na Vale (Mina de Onça Puma, no Pará), gerente de planejamento na AngloGold Ashanti (Córrego do Sítio, em Minas Gerais), até sua ida à Mineração Caraíba, onde hoje atua como Gerente Geral de Operações das minas de Vermelhos e Surubim (Grupo Ero). Roberto conta também um episódio marcante e resiliente da sua época de estudante: a determinação para realizar uma prova final de Física na universidade mesmo após sofrer uma lesão grave na mão no ônibus. Além disso, ele faz um agradecimento especial aos professores Paulo Lins e China pelo apoio na iniciação científica e pela oportunidade de participar de seu primeiro congresso em Ouro Preto, reforçando a mensagem principal de seu legado: De que jovens de escola pública e comunidades menos favorecidas podem, sim, alcançar seus sonhos e conquistar o topo no mercado.",
+    youtubeId: "S7l_E-UKCBI",
+  },
+  {
+    id: 6,
+    title: "O Legado - Capítulo 6",
+    name: "Roberto Matos",
+    role: "Engenheiro de Minas",
+    company: "Grupo Civil",
+    description: "No sexto episódio da série O Legado, recebemos Roberto Matos (conhecido carinhosamente como \"Galego\"), Engenheiro de Minas graduado na turma de 1988.1 pela Universidade Federal da Bahia (UFBA). Neste bate-papo, Roberto relembra sua época no Colégio Militar de Salvador e a inusitada decisão de escolher a Engenharia de Minas diretamente na fila de inscrição do vestibular. Ele compartilha memórias marcantes da vida universitária nos anos 80, a origem de seu apelido \"Galego\" por conta dos tempos de surfista e as amizades construídas na Escola Politécnica — laços que abriram portas fundamentais em sua trajetória profissional. Com mais de três décadas de experiência, Roberto detalha sua sólida carreira no setor de agregados e rochas ornamentais: desde o início na Pedreira Carangi passando por 16 anos na Mineração Corcovado, até assumir a diretoria de mineração no Grupo Civil em 2009. Além disso, ele traz reflexões valiosas sobre o valor do networking e a importância da humildade na profissão, destacando o aprendizado diário com os operadores, encarregados e trabalhadores que estão na lida diária do campo.",
+    youtubeId: "XBkSbHCHRTU",
   }
 ];
 
@@ -70,7 +97,7 @@ const LegacySection = () => {
             Série Especial
           </span>
           <h2 className="text-4xl sm:text-5xl md:text-7xl font-black mb-6 md:mb-8 text-semin-blue tracking-tight leading-tight">
-            O <span className="text-semin-yellow">Legado</span>
+            O <span className="bg-gradient-to-r from-semin-orange to-amber-500 bg-clip-text text-transparent font-extrabold">Legado</span>
           </h2>
           <div className="flex items-center justify-center gap-4 mb-6">
             <div className="w-12 md:w-20 h-px bg-gradient-to-r from-transparent via-semin-orange/20 to-semin-orange/30" />

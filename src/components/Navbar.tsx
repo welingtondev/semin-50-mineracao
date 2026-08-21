@@ -1,7 +1,7 @@
 import { useState, useEffect, lazy, Suspense } from "react";
 import { Menu, User, LogOut, Trophy, LayoutDashboard } from "lucide-react";
-import { Link } from "react-router-dom";
-import seminLogo from "@/assets/semin_logo.webp";
+import { Link, useLocation } from "react-router-dom";
+import seminLogo from "@/assets/logo-semin-2026-cabecalho.png";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useAuth } from "@/contexts/AuthContext";
@@ -23,6 +23,7 @@ const links = [
   { label: "Programação", href: "/#programacao" },
   { label: "Galeria", href: "/#galeria" },
   { label: "O Legado", href: "/#legado" },
+  { label: "Patrocinadores", href: "/#parceiros" },
   { label: "Apoie o Evento", href: "/#apoie" },
 ];
 
@@ -32,6 +33,15 @@ const Navbar = () => {
   const [visible, setVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [open, setOpen] = useState(false);
+  const location = useLocation();
+  const isHomePage = location.pathname === "/";
+
+  const getHref = (href: string) => {
+    if (isHomePage) {
+      return href.startsWith("/") ? href.substring(1) : href;
+    }
+    return href.startsWith("/") ? href : `/${href}`;
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -76,7 +86,7 @@ const Navbar = () => {
           {links.map((l) => (
             <a
               key={l.href}
-              href={l.href}
+              href={getHref(l.href)}
               className="text-white/60 hover:text-semin-yellow font-body text-sm font-medium transition-all duration-300 relative after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-semin-yellow after:transition-all after:duration-300 hover:after:w-full"
             >
               {l.label}
@@ -164,7 +174,7 @@ const Navbar = () => {
                 {links.map((l, i) => (
                   <a
                     key={l.href}
-                    href={l.href}
+                    href={getHref(l.href)}
                     onClick={() => setOpen(false)}
                     className="text-white/70 hover:text-semin-yellow hover:bg-white/5 font-body text-base font-medium transition-all py-3 px-4 rounded-lg active:bg-white/10 animate-fade-in-up opacity-0"
                     style={{ animationDelay: `${i * 80}ms` }}

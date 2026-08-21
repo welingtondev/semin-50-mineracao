@@ -45,17 +45,17 @@ RETURNS TABLE(
 BEGIN
   RETURN QUERY
   SELECT
-    ROW_NUMBER() OVER (ORDER BY SUM(m.score) DESC, MIN(m.created_at) ASC) as rank_position,
+    ROW_NUMBER() OVER (ORDER BY MAX(m.score) DESC, MIN(m.created_at) ASC) as rank_position,
     p.id as user_id,
     p.nickname,
-    SUM(m.score)::BIGINT as month_score,
+    MAX(m.score)::BIGINT as month_score,
     COUNT(m.id)::BIGINT as match_count
   FROM matches m
   JOIN profiles p ON p.id = m.user_id
   WHERE DATE_TRUNC('month', m.created_at) = DATE_TRUNC('month', NOW())
   GROUP BY p.id, p.nickname
-  HAVING SUM(m.score) > 0
-  ORDER BY SUM(m.score) DESC, MIN(m.created_at) ASC
+  HAVING MAX(m.score) > 0
+  ORDER BY MAX(m.score) DESC, MIN(m.created_at) ASC
   LIMIT p_limit;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
@@ -77,7 +77,7 @@ BEGIN
     RAISE EXCEPTION 'Não autenticado';
   END IF;
 
-  SELECT COALESCE(SUM(score), 0), COUNT(id)
+  SELECT COALESCE(MAX(score), 0), COUNT(id)
   INTO v_my_month_score, v_match_count
   FROM matches
   WHERE user_id = v_user_id
@@ -85,11 +85,11 @@ BEGIN
 
   SELECT COUNT(*) + 1 INTO v_month_pos
   FROM (
-    SELECT m.user_id, SUM(m.score) as total
+    SELECT m.user_id, MAX(m.score) as total
     FROM matches m
     WHERE DATE_TRUNC('month', m.created_at) = DATE_TRUNC('month', NOW())
     GROUP BY m.user_id
-    HAVING SUM(m.score) > v_my_month_score
+    HAVING MAX(m.score) > v_my_month_score
   ) ranked;
 
   RETURN jsonb_build_object(
@@ -125,10 +125,10 @@ BEGIN
   -- Salvar top 3 do mês
   FOR v_winner IN
     SELECT
-      ROW_NUMBER() OVER (ORDER BY SUM(m.score) DESC, MIN(m.created_at) ASC) as pos,
+      ROW_NUMBER() OVER (ORDER BY MAX(m.score) DESC, MIN(m.created_at) ASC) as pos,
       p.id as uid,
       p.nickname as nick,
-      SUM(m.score)::INTEGER as total_score,
+      MAX(m.score)::INTEGER as total_score,
       COUNT(m.id)::INTEGER as total_matches,
       SUM(m.total_acertos)::INTEGER as acertos,
       SUM(m.total_erros)::INTEGER as erros
@@ -136,8 +136,8 @@ BEGIN
     JOIN profiles p ON p.id = m.user_id
     WHERE TO_CHAR(m.created_at, 'YYYY-MM') = p_season_month
     GROUP BY p.id, p.nickname
-    HAVING SUM(m.score) > 0
-    ORDER BY SUM(m.score) DESC, MIN(m.created_at) ASC
+    HAVING MAX(m.score) > 0
+    ORDER BY MAX(m.score) DESC, MIN(m.created_at) ASC
     LIMIT 3
   LOOP
     INSERT INTO monthly_winners (user_id, nickname, season_month, total_score, total_matches, total_acertos, total_erros, rank_position, sponsor_name)
@@ -236,16 +236,16 @@ RETURNS TABLE(
 BEGIN
   RETURN QUERY
   SELECT
-    ROW_NUMBER() OVER (ORDER BY SUM(m.score) DESC, MIN(m.created_at) ASC) as rank_position,
+    ROW_NUMBER() OVER (ORDER BY MAX(m.score) DESC, MIN(m.created_at) ASC) as rank_position,
     p.id as user_id,
     p.nickname,
-    SUM(m.score)::INTEGER as max_score
+    MAX(m.score)::INTEGER as max_score
   FROM matches m
   JOIN profiles p ON p.id = m.user_id
   WHERE DATE_TRUNC('month', m.created_at) = DATE_TRUNC('month', NOW())
   GROUP BY p.id, p.nickname
-  HAVING SUM(m.score) > 0
-  ORDER BY SUM(m.score) DESC, MIN(m.created_at) ASC
+  HAVING MAX(m.score) > 0
+  ORDER BY MAX(m.score) DESC, MIN(m.created_at) ASC
   LIMIT p_limit;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;

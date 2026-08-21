@@ -11,6 +11,11 @@ const AboutSection = () => {
       <div className="absolute bottom-0 left-[-200px] hidden md:block md:w-[500px] md:h-[500px] bg-semin-blue/10 rounded-full md:blur-[100px] opacity-70 pointer-events-none" />
       <div className="absolute inset-0 opacity-[0.02] hidden md:block" style={{backgroundImage:"url(\"data:image/svg+xml,%3Csvg width='40' height='40' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='40' height='40' fill='none' stroke='%23999' stroke-width='0.5'/%3E%3C/svg%3E\")"}} />
 
+      {/* Giant "50" Watermark Background */}
+      <div className="absolute right-[-10%] md:right-[-5%] bottom-[-5%] md:bottom-[-8%] text-[24rem] sm:text-[32rem] md:text-[45rem] font-display font-black text-semin-blue/[0.07] select-none pointer-events-none leading-none z-0">
+        50
+      </div>
+
       <div ref={ref} className="container mx-auto px-4 sm:px-6 relative z-10 max-w-6xl">
         
         {/* ── Section Header ── */}
@@ -24,7 +29,7 @@ const AboutSection = () => {
           
           <h2 className="text-4xl sm:text-5xl md:text-7xl font-black text-semin-blue mb-6 tracking-tight">
             Meio Século Formando os Líderes da <br className="hidden md:block" />
-            <span className="text-semin-yellow">Mineração Baiana</span>
+            <span className="bg-gradient-to-r from-semin-orange to-amber-500 bg-clip-text text-transparent font-extrabold">Mineração Baiana</span>
           </h2>
           
           <p className="font-sans text-base md:text-xl text-semin-blue/70 max-w-3xl mx-auto leading-relaxed font-medium">

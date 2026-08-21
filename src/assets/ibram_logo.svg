@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 550 180" width="550" height="180">
+  <g transform="translate(15, 25)">
+    <!-- Slanted Bar 1: Deep Navy -->
+    <path d="M10 110 L50 45 L82 45 L42 110 Z" fill="#003366" />
+    <!-- Slanted Bar 2: Teal -->
+    <path d="M47 110 L87 25 L119 25 L79 110 Z" fill="#00A896" />
+    <!-- Slanted Bar 3: Cyan -->
+    <path d="M84 110 L124 5 L156 5 L116 110 Z" fill="#48CAE4" />
+    <!-- Slanted Bar 4: Lime Green -->
+    <path d="M121 110 L161 0 L185 0 L145 110 Z" fill="#9BC53D" />
+  </g>
+  <!-- Text IBRAM -->
+  <text x="215" y="98" font-family="'Outfit', 'Arial Black', sans-serif" font-size="78" font-weight="900" fill="#003366" letter-spacing="2">IBRAM</text>
+  <!-- Text MINERAÇÃO DO BRASIL -->
+  <text x="217" y="136" font-family="'Outfit', 'Arial', sans-serif" font-size="21" font-weight="700" fill="#00A896" letter-spacing="4">MINERAÇÃO DO BRASIL</text>
+</svg>

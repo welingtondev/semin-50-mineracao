@@ -36,7 +36,12 @@ export default function AdminGallery() {
   const [photos, setPhotos] = useState<PendingPhoto[]>([]);
   const [adminComments, setAdminComments] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<"gallery" | "fundraising" | "comments">("gallery");
+  const [activeTab, setActiveTab] = useState<"gallery" | "fundraising" | "comments" | "backup">("gallery");
+
+  // Backup State
+  const [backupUrl, setBackupUrl] = useState(localStorage.getItem("semin_backup_url") || "https://script.google.com/macros/library/d/1QBB62qw948GomPX2CIeRUMfzBw3QTT9_sRsw1GYiVodcuGFoiynxvKWp/3");
+  const [isBackingUp, setIsBackingUp] = useState(false);
+  const [backupProgress, setBackupProgress] = useState(0);
 
   // Fundraising State
   const [fundDonations, setFundDonations] = useState(0);
@@ -134,6 +139,56 @@ export default function AdminGallery() {
       }
     }
     setSavingFund(false);
+  };
+
+  const handleBackupToDrive = async () => {
+    if (!backupUrl) {
+      toast.error("Insira a URL do Google Apps Script para o backup.");
+      return;
+    }
+    localStorage.setItem("semin_backup_url", backupUrl);
+    
+    if (photos.length === 0) {
+      toast.error("Nenhuma foto para fazer backup.");
+      return;
+    }
+
+    setIsBackingUp(true);
+    setBackupProgress(0);
+
+    let successCount = 0;
+    let errorCount = 0;
+
+    for (let i = 0; i < photos.length; i++) {
+      const photo = photos[i];
+      try {
+        const payload = new URLSearchParams();
+        payload.append("id", photo.id);
+        payload.append("author_name", photo.author_name);
+        payload.append("year_cohort", photo.year_cohort || "");
+        payload.append("status", photo.status);
+        payload.append("image_base64", photo.image_base64);
+
+        await fetch(backupUrl, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: payload
+        });
+        successCount++;
+      } catch (e) {
+        console.error("Erro ao fazer backup da foto " + photo.id, e);
+        errorCount++;
+      }
+      setBackupProgress(Math.round(((i + 1) / photos.length) * 100));
+    }
+
+    setIsBackingUp(false);
+    if (errorCount === 0) {
+      toast.success(`Backup concluído! ${successCount} fotos enviadas.`);
+    } else {
+      toast.warning(`Backup finalizado com ${errorCount} erros e ${successCount} sucessos.`);
+    }
   };
 
   useEffect(() => {
@@ -346,6 +401,14 @@ export default function AdminGallery() {
           >
             Termômetro de Arrecadação
           </button>
+          <button
+            onClick={() => setActiveTab("backup")}
+            className={`px-6 py-2 rounded-full font-bold text-sm transition-all flex items-center gap-2 ${
+              activeTab === "backup" ? "bg-white/10 text-white" : "text-white/50 hover:text-white"
+            }`}
+          >
+            <UploadCloud className="w-4 h-4" /> Backup Drive
+          </button>
         </div>
 
         {activeTab === "fundraising" && (
@@ -383,6 +446,58 @@ export default function AdminGallery() {
                 >
                   {savingFund ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
                   Salvar Valores
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === "backup" && (
+          <div className="bg-white/5 border border-white/10 rounded-2xl p-8 max-w-2xl">
+            <h2 className="text-2xl font-display font-bold text-semin-yellow mb-2">Backup no Google Drive</h2>
+            <p className="text-white/60 text-sm mb-6">
+              Envie todas as fotos do banco de dados para uma pasta no Google Drive usando um script do Google Apps Script.
+            </p>
+            
+            <div className="space-y-6">
+              <div className="space-y-2">
+                <Label htmlFor="backupUrl" className="text-white/80 font-bold">URL do Webhook (Google Apps Script)</Label>
+                <Input
+                  id="backupUrl"
+                  type="url"
+                  placeholder="https://script.google.com/macros/s/.../exec"
+                  value={backupUrl}
+                  onChange={(e) => setBackupUrl(e.target.value)}
+                  className="bg-black/20 border-white/10 text-white text-sm"
+                />
+              </div>
+
+              {isBackingUp && (
+                <div className="space-y-2">
+                  <div className="flex justify-between text-xs text-white/60">
+                    <span>Progresso...</span>
+                    <span>{backupProgress}%</span>
+                  </div>
+                  <div className="h-2 w-full bg-black/40 rounded-full overflow-hidden">
+                    <div 
+                      className="h-full bg-semin-yellow transition-all duration-300"
+                      style={{ width: `${backupProgress}%` }}
+                    />
+                  </div>
+                </div>
+              )}
+
+              <div className="pt-4">
+                <Button 
+                  onClick={handleBackupToDrive} 
+                  disabled={isBackingUp || !backupUrl}
+                  className="bg-semin-yellow text-semin-dark font-bold hover:bg-amber-400 w-full md:w-auto"
+                >
+                  {isBackingUp ? (
+                    <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Fazendo Backup...</>
+                  ) : (
+                    <><UploadCloud className="w-4 h-4 mr-2" /> Iniciar Backup das Fotos ({photos.length})</>
+                  )}
                 </Button>
               </div>
             </div>

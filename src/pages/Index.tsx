@@ -21,13 +21,20 @@ const SponsorLogosSection = React.lazy(() => import("@/components/SponsorLogosSe
 const RegistrationSection = React.lazy(() => import("@/components/RegistrationSection"));
 const CrowdfundingSection = React.lazy(() => import("@/components/CrowdfundingSection"));
 const SupportSection = React.lazy(() => import("@/components/SupportSection"));
+const EngineerDaySection = React.lazy(() => import("@/components/EngineerDaySection"));
 
 // Component that delays rendering its children until it enters the viewport
-const ScrollTriggeredSuspense = ({ children, fallbackBg = "transparent", minHeight = "40vh" }: { children: React.ReactNode, fallbackBg?: string, minHeight?: string }) => {
+const ScrollTriggeredSuspense = ({ children, fallbackBg = "transparent", minHeight = "40vh", id }: { children: React.ReactNode, fallbackBg?: string, minHeight?: string, id?: string }) => {
   const [shouldLoad, setShouldLoad] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    // If hash matches this id, load immediately
+    if (id && window.location.hash === `#${id}`) {
+      setShouldLoad(true);
+      return;
+    }
+
     // Se o navegador não suportar IntersectionObserver, carrega imediatamente
     if (!window.IntersectionObserver) {
       setShouldLoad(true);
@@ -46,10 +53,21 @@ const ScrollTriggeredSuspense = ({ children, fallbackBg = "transparent", minHeig
 
     if (ref.current) observer.observe(ref.current);
     return () => observer.disconnect();
-  }, []);
+  }, [id]);
+
+  useEffect(() => {
+    if (!id) return;
+    const handleHashChange = () => {
+      if (window.location.hash === `#${id}`) {
+        setShouldLoad(true);
+      }
+    };
+    window.addEventListener("hashchange", handleHashChange);
+    return () => window.removeEventListener("hashchange", handleHashChange);
+  }, [id]);
 
   return (
-    <div ref={ref} style={{ minHeight: shouldLoad ? "auto" : minHeight, background: fallbackBg }}>
+    <div id={id} ref={ref} style={{ minHeight: shouldLoad ? "auto" : minHeight, background: fallbackBg }}>
       {shouldLoad ? (
         <Suspense fallback={<div style={{ minHeight, background: fallbackBg }} />}>
           {children}
@@ -74,51 +92,71 @@ const Index = () => {
       <Navbar />
       <HeroSection />
       
-      {/* First fold — loads immediately after hero since it's likely in or near viewport */}
+      {/* 1. Visão Geral & Proposta do Evento */}
       <ScrollTriggeredSuspense fallbackBg="#F8F9FA">
         <AboutSection />
       </ScrollTriggeredSuspense>
 
+      {/* 2. História, Orgulho & Legado dos 50 Anos (Construção de Valor Emocional) */}
       <ScrollTriggeredSuspense>
-        <ShortRegistrationBanner />
+        <JubileeSection />
+        <LegacySection />
       </ScrollTriggeredSuspense>
 
       <ScrollTriggeredSuspense fallbackBg="#06080c">
         <DocumentarySection />
       </ScrollTriggeredSuspense>
 
+      {/* 3. O que o participante vai viver (Programação & Inscrição Principal) */}
+      <ScrollTriggeredSuspense id="programacao">
+        <ScheduleSection />
+      </ScrollTriggeredSuspense>
+
+      <ScrollTriggeredSuspense id="inscricao">
+        <RegistrationSection />
+      </ScrollTriggeredSuspense>
+
       <ScrollTriggeredSuspense>
-        <JubileeSection />
-        <LegacySection />
+        <ShortRegistrationBanner />
+      </ScrollTriggeredSuspense>
+
+      {/* 4. Apoie / Contribua (Doação & Vaquinha no auge da inspiração) */}
+      <ScrollTriggeredSuspense id="apoie" fallbackBg="#F8F9FA">
+        <CrowdfundingSection />
+      </ScrollTriggeredSuspense>
+
+      {/* 5. Engajamento Adicional (Desafio & Dia do Engenheiro) */}
+      <ScrollTriggeredSuspense>
+        <ChallengeSection />
+      </ScrollTriggeredSuspense>
+
+      <ScrollTriggeredSuspense fallbackBg="#06080c">
+        <EngineerDaySection />
       </ScrollTriggeredSuspense>
 
       <div className="w-full h-px bg-[linear-gradient(90deg,#06080c_0%,#06080c_35%,#d29b21_50%,#06080c_65%,#06080c_100%)] opacity-80" />
 
-      {/* Heavy sections — isolated Suspense so they load independently on scroll */}
-      <ScrollTriggeredSuspense fallbackBg="#0a0c12" minHeight="100vh">
-        <GallerySection />
-      </ScrollTriggeredSuspense>
-
+      {/* 6. Prova Social (Edições Anteriores & Galeria) */}
       <ScrollTriggeredSuspense fallbackBg="#F8F9FA">
         <PastEditionSection />
       </ScrollTriggeredSuspense>
 
-      <ScrollTriggeredSuspense>
-        <ChallengeSection />
-        <RegistrationSection />
-        <ScheduleSection />
+      <ScrollTriggeredSuspense fallbackBg="#0a0c12" minHeight="100vh">
+        <GallerySection />
+      </ScrollTriggeredSuspense>
+
+      {/* 7. Patrocinadores & Realização/Comissão */}
+      <ScrollTriggeredSuspense id="parceiros" fallbackBg="#F8F9FA">
+        <SponsorLogosSection />
       </ScrollTriggeredSuspense>
 
       <ScrollTriggeredSuspense fallbackBg="#F8F9FA">
-        <SponsorsSection />
-        <CrowdfundingSection />
-        <SponsorLogosSection />
         <SupportSection />
       </ScrollTriggeredSuspense>
       
       <Footer />
 
-      {/* Global popups — load them globally after a delay so they don't block main thread */}
+      {/* Global popups */}
       {loadPopups && (
         <Suspense fallback={null}>
           <NewsletterPopup />

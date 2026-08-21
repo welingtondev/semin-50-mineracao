@@ -133,7 +133,7 @@ export function PhotoUploadModal({ children, isAdmin = false }: { children: Reac
           year_cohort: formData.anoTurma,
           description: formData.descricao,
           image_base64: formData.fileBase64,
-          status: 'pending',
+          status: 'approved',
           user_id: session?.user?.id || null
         }
       ]);
@@ -173,7 +173,7 @@ export function PhotoUploadModal({ children, isAdmin = false }: { children: Reac
             Enviar Foto Histórica
           </DialogTitle>
           <DialogDescription className="text-white/60">
-            Envie sua foto diretamente para aprovação da nossa curadoria.
+            Envie sua foto e ela aparecerá automaticamente na galeria.
           </DialogDescription>
         </DialogHeader>
 
@@ -298,7 +298,7 @@ export function PhotoUploadModal({ children, isAdmin = false }: { children: Reac
                   Enviando para o acervo...
                 </>
               ) : (
-                "Enviar Foto para Aprovação"
+                "Enviar Foto para a Galeria"
               )}
             </Button>
           </form>
