@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 import { Button } from "@/components/ui/button";
 import { LoginModal } from "@/components/LoginModal";
-import { Loader2 } from "lucide-react";
+import { Loader2, KeyRound } from "lucide-react";
 
 // ── Types ──
 interface Question {
@@ -297,7 +297,7 @@ function getDifficultyStyle(diff: "facil" | "medio" | "dificil") {
 }
 
 const QuizPage = () => {
-  const { session, profile: authProfile, loading: authLoading, refreshProfile, setProfile: setAuthProfile, logout } = useAuth();
+  const { session, profile: authProfile, loading: authLoading, refreshProfile, setProfile: setAuthProfile, logout, setIsPasswordRecovery } = useAuth();
 
   // Auth UI state (kept local to Quiz — only for screens/tabs)
   const [screen, setScreen] = useState<Screen>("auth");
@@ -370,9 +370,10 @@ const QuizPage = () => {
 
   // ── Init: Check session from AuthContext ──
   useEffect(() => {
-    // When AuthContext profile loads, navigate to profile screen
+    // When AuthContext profile loads, navigate to profile screen only if in auth
     if (!authLoading && authProfile) {
-      loadProfileData(authProfile.id);
+      setScreen(prev => (prev === "auth" ? "profile" : prev));
+      loadProfileData(authProfile.id, false);
     } else if (!authLoading && !authProfile) {
       setScreen("auth");
     }
@@ -387,7 +388,7 @@ const QuizPage = () => {
   }, []);
 
   // ── Profile data loading (quiz-specific stats) ──
-  async function loadProfileData(userId: string) {
+  async function loadProfileData(userId: string, shouldSetScreen = false) {
     try {
       // Executa todas as consultas de forma 100% paralela para velocidade máxima de conexão
       const [
@@ -423,7 +424,9 @@ const QuizPage = () => {
     } catch (e) {
       console.error("Erro ao carregar dados do perfil:", e);
     } finally {
-      setScreen("profile");
+      if (shouldSetScreen) {
+        setScreen("profile");
+      }
     }
   }
 
@@ -590,6 +593,26 @@ const QuizPage = () => {
 
     setScreen("result");
     setResult(null);
+
+    // Auto-heal: Garante que o registro do perfil existe na tabela profiles antes de submeter a partida
+    try {
+      const { data: sessionData } = await supabase.auth.getSession();
+      const currentUserId = sessionData?.session?.user?.id || profile?.id;
+      if (currentUserId) {
+        const userMeta = sessionData?.session?.user?.user_metadata || {};
+        await supabase.from("profiles").upsert({
+          id: currentUserId,
+          nickname: profile?.nickname || userMeta?.nickname || sessionData?.session?.user?.email?.split("@")[0] || "usuario",
+          full_name: profile?.full_name || userMeta?.full_name || "Participante",
+          email: sessionData?.session?.user?.email || profile?.email,
+          phone: profile?.phone || "",
+          consent_lgpd: true,
+          max_score: profile?.max_score || 0,
+        }, { onConflict: "id" });
+      }
+    } catch (healErr) {
+      console.warn("Silent profile heal error:", healErr);
+    }
 
     const { data, error } = await supabase.rpc("submit_match", {
       p_answers: answersToSubmit,
@@ -1041,11 +1064,21 @@ const QuizPage = () => {
                     <span className="text-xs uppercase tracking-widest font-bold" style={{ color: SPONSOR_CONFIG.highlight }}>Jogador Registrado</span>
                   </div>
                 </div>
-                <button onClick={handleLogout} className="text-slate-400 hover:text-white transition-colors p-2" title="Sair">
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => setIsPasswordRecovery(true)}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300 hover:text-amber-400 text-xs font-semibold transition-colors border border-white/5"
+                    title="Alterar Minha Senha"
+                  >
+                    <KeyRound className="w-3.5 h-3.5 text-amber-500" />
+                    <span className="hidden sm:inline">Alterar Senha</span>
+                  </button>
+                  <button onClick={handleLogout} className="text-slate-400 hover:text-rose-400 transition-colors p-2" title="Sair da Conta">
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                   </svg>
-                </button>
+                  </button>
+                </div>
               </div>
 
               {/* Stats */}
@@ -1730,13 +1763,13 @@ const QuizPage = () => {
 
                 {/* Action buttons */}
                 <div className="flex gap-4">
-                  <button onClick={() => { if (profile) loadProfileData(profile.id); }}
-                    className="flex-1 py-4 rounded-xl font-bold text-white transition-all hover:bg-slate-700 active:scale-[0.98]"
+                  <button onClick={() => { setScreen("profile"); if (profile) loadProfileData(profile.id, true); }}
+                    className="flex-1 py-4 rounded-xl font-bold text-white transition-all hover:bg-slate-700 active:scale-[0.98] cursor-pointer"
                     style={{ border: "2px solid rgba(51,65,85,1)" }}>
                     ← INÍCIO
                   </button>
                   <button onClick={startQuiz}
-                    className="flex-1 py-4 rounded-xl font-bold shadow-lg transition-all hover:opacity-90 text-slate-900"
+                    className="flex-1 py-4 rounded-xl font-bold shadow-lg transition-all hover:opacity-90 text-slate-900 cursor-pointer"
                     style={{
                       background: `linear-gradient(135deg, ${SPONSOR_CONFIG.accentFrom}, ${SPONSOR_CONFIG.accentTo})`,
                       boxShadow: "0 0 20px rgba(210, 155, 33, 0.2)",

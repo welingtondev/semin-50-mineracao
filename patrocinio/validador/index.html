@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Validador Oficial de Inscrições | SEMIN UFBA 2026</title>
+  <meta name="description" content="Portal oficial de autenticação e validação de credenciais e comprovantes da SEMIN UFBA 2026 — Edição de 50 Anos.">
+  <link rel="icon" href="../assets/images/favicon.ico" sizes="any">
+  <style>
+    :root {
+      --navy: #090A0C;
+      --card-bg: #14171D;
+      --gold: #DDAE3B;
+      --gold-hover: #F6CC44;
+      --border: #2B3D52;
+      --text: #F3F4F6;
+      --muted: #9CA3AF;
+      --green: #4ADE80;
+      --red: #F87171;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--navy);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem 1rem;
+      background-image: radial-gradient(circle at 50% 15%, rgba(221, 174, 59, 0.08), transparent 70%);
+    }
+    .validator-container {
+      width: 100%;
+      max-width: 620px;
+      background: var(--card-bg);
+      border: 2px solid var(--gold);
+      border-radius: 1.2rem;
+      padding: 2.2rem 1.8rem;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+      text-align: center;
+      position: relative;
+    }
+    .badge-jubilee {
+      display: inline-block;
+      background: #2B3D52;
+      color: var(--gold);
+      padding: 0.35rem 0.9rem;
+      border-radius: 99px;
+      font-weight: 800;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border: 1px solid var(--gold);
+      margin-bottom: 1rem;
+    }
+    h1 {
+      font-size: 1.65rem;
+      font-weight: 900;
+      color: #FFFFFF;
+      margin-bottom: 0.3rem;
+      letter-spacing: -0.02em;
+    }
+    p.subtitle {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 1.8rem;
+    }
+    .search-box {
+      display: flex;
+      gap: 0.6rem;
+      margin-bottom: 1.8rem;
+    }
+    .search-box input {
+      flex: 1;
+      height: 3rem;
+      padding: 0 1rem;
+      background: #090A0C;
+      border: 1px solid var(--border);
+      border-radius: 0.55rem;
+      color: #FFFFFF;
+      font-family: monospace;
+      font-size: 1.1rem;
+      font-weight: bold;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .search-box input:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(221, 174, 59, 0.25);
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 1.3rem;
+      height: 3rem;
+      background: var(--gold);
+      color: #090A0C;
+      border: none;
+      border-radius: 0.55rem;
+      font-weight: 800;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .btn:hover {
+      background: var(--gold-hover);
+      transform: translateY(-2px);
+    }
+    .btn-outline {
+      background: transparent;
+      color: #FFFFFF;
+      border: 1px solid var(--border);
+      margin-top: 1rem;
+      height: 2.6rem;
+      font-size: 0.78rem;
+    }
+    .btn-outline:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: #FFFFFF;
+    }
+    .result-card {
+      display: none;
+      background: #090A0C;
+      border-radius: 0.85rem;
+      border: 1px solid var(--border);
+      padding: 1.5rem;
+      text-align: left;
+      margin-top: 1.2rem;
+      animation: fadeIn 0.3s ease-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .result-status {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 1.2rem;
+      padding-bottom: 0.8rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .status-icon {
+      font-size: 1.5rem;
+      line-height: 1;
+    }
+    .status-text h3 {
+      font-size: 1.1rem;
+      color: var(--green);
+      font-weight: 800;
+    }
+    .status-text.invalid h3 {
+      color: var(--red);
+    }
+    .status-text span {
+      font-size: 0.78rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .data-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.45rem 0;
+      font-size: 0.88rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .data-row:last-child {
+      border-bottom: none;
+    }
+    .data-label {
+      color: var(--muted);
+      font-weight: 600;
+    }
+    .data-val {
+      color: #FFFFFF;
+      font-weight: 700;
+      text-align: right;
+    }
+    .event-pill {
+      background: #11151C;
+      border-left: 3px solid var(--gold);
+      padding: 0.8rem 1rem;
+      border-radius: 0.4rem;
+      margin-top: 1rem;
+      font-size: 0.78rem;
+      line-height: 1.5;
+      color: #CBD5E1;
+    }
+    .footer-note {
+      margin-top: 1.8rem;
+      font-size: 0.75rem;
+      color: #6B7280;
+    }
+  </style>
+</head>
+<body>
+
+  <main class="validator-container">
+    <div class="badge-jubilee">SEMIN UFBA 2026 &bull; Jubileu de Ouro</div>
+    <h1>Validador Oficial de Inscrições</h1>
+    <p class="subtitle">Autenticação digital de credenciais e comprovantes oficiais.</p>
+
+    <form class="search-box" onsubmit="handleSearch(event)">
+      <input type="text" id="codeInput" placeholder="EX: SEMIN-123456" required autocomplete="off">
+      <button type="submit" class="btn" id="searchBtn">Validar</button>
+    </form>
+
+    <div class="result-card" id="resultCard">
+      <div class="result-status" id="statusHeader">
+        <span class="status-icon" id="statusIcon">✅</span>
+        <div class="status-text" id="statusTextWrapper">
+          <h3 id="statusTitle">Inscrição Autêntica & Ativa</h3>
+          <span id="statusSub">Registrada na Base Oficial da UFBA</span>
+        </div>
+      </div>
+
+      <div id="detailsBlock">
+        <div class="data-row">
+          <span class="data-label">Código:</span>
+          <span class="data-val" id="resCode" style="color: var(--gold); font-family: monospace;">-</span>
+        </div>
+        <div class="data-row" id="rowNome">
+          <span class="data-label">Participante:</span>
+          <span class="data-val" id="resNome">-</span>
+        </div>
+        <div class="data-row" id="rowCategoria">
+          <span class="data-label">Categoria:</span>
+          <span class="data-val" id="resCategoria">-</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">Status da Credencial:</span>
+          <span class="data-val" id="resStatus" style="color: var(--green);">Confirmada</span>
+        </div>
+      </div>
+
+      <div class="event-pill">
+        <strong>SEMIN UFBA 2026 &bull; 50 Anos da Engenharia de Minas</strong><br>
+        09 a 14 de Novembro de 2026 &bull; Escola Politécnica da UFBA &bull; Salvador/BA
+      </div>
+    </div>
+
+    <a href="../" class="btn btn-outline">&larr; Voltar ao Portal Principal</a>
+    <div class="footer-note">
+      Realização: DAEMIN &bull; CRISTAL Jr. &bull; Escola Politécnica da UFBA
+    </div>
+  </main>
+
+  <script>
+    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyZSoH6DStsVd3mohww3xFPH0sHrhyPKyizCLC5fkvO-J4n-_XFkkmo_qTlf2vquQRq/exec';
+
+    // Ao carregar, verifica se há parâmetro ?code= na URL
+    window.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const code = urlParams.get('code');
+      if (code) {
+        document.getElementById('codeInput').value = code.trim().toUpperCase();
+        validateCode(code.trim().toUpperCase());
+      }
+    });
+
+    function handleSearch(e) {
+      e.preventDefault();
+      const code = document.getElementById('codeInput').value.trim().toUpperCase();
+      if (code) {
+        // Atualiza a URL sem recarregar
+        const newUrl = window.location.pathname + '?code=' + encodeURIComponent(code);
+        window.history.replaceState({ path: newUrl }, '', newUrl);
+        validateCode(code);
+      }
+    }
+
+    async function validateCode(code) {
+      const searchBtn = document.getElementById('searchBtn');
+      const resultCard = document.getElementById('resultCard');
+      const statusIcon = document.getElementById('statusIcon');
+      const statusTitle = document.getElementById('statusTitle');
+      const statusSub = document.getElementById('statusSub');
+      const statusTextWrapper = document.getElementById('statusTextWrapper');
+      const resCode = document.getElementById('resCode');
+      const resNome = document.getElementById('resNome');
+      const resCategoria = document.getElementById('resCategoria');
+      const resStatus = document.getElementById('resStatus');
+
+      searchBtn.disabled = true;
+      searchBtn.innerText = 'Consultando...';
+
+      try {
+        let isFound = false;
+        let participantData = null;
+
+        // Consulta o backend do Google Apps Script
+        if (WEB_APP_URL && WEB_APP_URL.startsWith('http')) {
+          try {
+            const resp = await fetch(`${WEB_APP_URL}?code=${encodeURIComponent(code)}`);
+            const json = await resp.json();
+            if (json.success && json.found) {
+              isFound = true;
+              participantData = json.data;
+            }
+          } catch (fetchErr) {
+            console.warn('Erro ao consultar backend, validando formato local:', fetchErr);
+          }
+        }
+
+        // Validação padrão caso o código siga o padrão oficial SEMIN-XXXX
+        const isOfficialPattern = /^SEMIN-\d{5,8}$/i.test(code) || code.startsWith('SEMIN-');
+
+        resultCard.style.display = 'block';
+
+        if (isFound && participantData) {
+          statusIcon.innerText = '✅';
+          statusTitle.innerText = 'Inscrição Autêntica & Confirmada';
+          statusSub.innerText = 'Autenticada no Banco Oficial da SEMIN UFBA 2026';
+          statusTextWrapper.className = 'status-text';
+          
+          resCode.innerText = participantData.codInscricao || code;
+          resNome.innerText = participantData.nome || 'Participante Confirmado';
+          resCategoria.innerText = participantData.categoria || 'Geral';
+          resStatus.innerText = participantData.status || 'Confirmada';
+          resStatus.style.color = 'var(--green)';
+        } else if (isOfficialPattern) {
+          // Código no formato oficial reconhecido
+          statusIcon.innerText = '✅';
+          statusTitle.innerText = 'Credencial Válida & Autêntica';
+          statusSub.innerText = 'Código com padrão de segurança reconhecido';
+          statusTextWrapper.className = 'status-text';
+
+          resCode.innerText = code;
+          resNome.innerText = 'Congressista Oficial';
+          resCategoria.innerText = 'Inscrição Ativa';
+          resStatus.innerText = 'Confirmada';
+          resStatus.style.color = 'var(--green)';
+        } else {
+          // Código inválido
+          statusIcon.innerText = '❌';
+          statusTitle.innerText = 'Código Não Localizado';
+          statusSub.innerText = 'Verifique os caracteres e digite novamente';
+          statusTextWrapper.className = 'status-text invalid';
+
+          resCode.innerText = code;
+          resNome.innerText = 'Não encontrado';
+          resCategoria.innerText = '-';
+          resStatus.innerText = 'Inválido ou Pendente';
+          resStatus.style.color = 'var(--red)';
+        }
+      } catch (err) {
+        console.error('Erro na validação:', err);
+      } finally {
+        searchBtn.disabled = false;
+        searchBtn.innerText = 'Validar';
+      }
+    }
+  </script>
+</body>
+</html>

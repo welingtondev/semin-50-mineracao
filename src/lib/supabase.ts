@@ -1,4 +1,4 @@
-import { createClient } from '@supabase/supabase-js';
+﻿import { createClient } from '@supabase/supabase-js';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://dtdfzpsaxowfxybebykp.supabase.co';
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR0ZGZ6cHNheG93Znh5YmVieWtwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYyOTU2MzQsImV4cCI6MjA5MTg3MTYzNH0.ZUu7Jv4Ist3Sjhx_cXHn8UMCOkcKqGnjwRbhmtjNe1g';
@@ -19,11 +19,17 @@ const customStorage = {
   }
 };
 
+// Pass-through lock to prevent navigator.locks stealing across concurrent calls / tabs in React 18
+const safeLock = async <R>(_name: string, _acquireTimeout: number, fn: () => Promise<R>): Promise<R> => {
+  return await fn();
+};
+
 export const supabase = createClient(supabaseUrl || '', supabaseAnonKey || '', {
   auth: {
     storage: customStorage,
     autoRefreshToken: true,
     persistSession: true,
     detectSessionInUrl: true,
+    lock: safeLock,
   }
 });

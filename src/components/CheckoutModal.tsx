@@ -14,9 +14,10 @@ const DONATION_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz0T_fZYdL5
 interface CheckoutModalProps {
   isOpen: boolean;
   onClose: () => void;
+  initialValue?: string;
 }
 
-const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
+const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose, initialValue = "" }) => {
   const [step, setStep] = useState(1); // 1: Info, 2: Payment Method, 3: Processing/Result
   const [loading, setLoading] = useState(false);
   const [billingType, setBillingType] = useState<"PIX" | "CREDIT_CARD" | "BOLETO">("PIX");
@@ -27,10 +28,13 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
     email: "",
     cpf: "",
     phone: "",
-    value: ""
+    value: initialValue || ""
   });
 
   React.useEffect(() => {
+    if (isOpen && initialValue) {
+      setFormData(prev => ({ ...prev, value: initialValue }));
+    }
     if (!isOpen) {
       const timer = setTimeout(() => {
         setStep(1);
@@ -41,7 +45,7 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
       }, 300);
       return () => clearTimeout(timer);
     }
-  }, [isOpen]);
+  }, [isOpen, initialValue]);
 
   const formatBRL = (value: string) => {
     // Remove all non-digits

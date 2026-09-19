@@ -68,6 +68,15 @@ const episodes: Episode[] = [
     company: "Grupo Civil",
     description: "No sexto episódio da série O Legado, recebemos Roberto Matos (conhecido carinhosamente como \"Galego\"), Engenheiro de Minas graduado na turma de 1988.1 pela Universidade Federal da Bahia (UFBA). Neste bate-papo, Roberto relembra sua época no Colégio Militar de Salvador e a inusitada decisão de escolher a Engenharia de Minas diretamente na fila de inscrição do vestibular. Ele compartilha memórias marcantes da vida universitária nos anos 80, a origem de seu apelido \"Galego\" por conta dos tempos de surfista e as amizades construídas na Escola Politécnica — laços que abriram portas fundamentais em sua trajetória profissional. Com mais de três décadas de experiência, Roberto detalha sua sólida carreira no setor de agregados e rochas ornamentais: desde o início na Pedreira Carangi passando por 16 anos na Mineração Corcovado, até assumir a diretoria de mineração no Grupo Civil em 2009. Além disso, ele traz reflexões valiosas sobre o valor do networking e a importância da humildade na profissão, destacando o aprendizado diário com os operadores, encarregados e trabalhadores que estão na lida diária do campo.",
     youtubeId: "XBkSbHCHRTU",
+  },
+  {
+    id: 7,
+    title: "O Legado - Capítulo 7",
+    name: "Viviane Franco",
+    role: "Engenheira de Minas",
+    company: "Planejamento de Mina (Austrália)",
+    description: "No sétimo episódio da série O Legado, recebemos Viviane Franco, Engenheira de Minas formada pela Universidade Federal da Bahia (UFBA), onde ingressou em 2013. Natural de Piripá, no interior baiano, Viviane conta como a afinidade com a área de exatas e o contato inicial com a disciplina de recuperação de áreas degradadas em um curso técnico ambiental despertaram sua paixão por uma engenharia diferenciada. Ela relembra os desafios de adaptação na chegada a Salvador, momento transformado em uma experiência enriquecedora graças ao acolhimento de amigos de várias regiões e ao suporte próximo de professores como Luiz Rogério, China e Erisvaldo, fortalecendo os laços que fazem do curso uma verdadeira família. Na carreira profissional, construiu uma sólida trajetória na indústria, com forte base em operações subterrâneas no Brasil e passagens por Open Pit. Há quase três anos radicada na Austrália, Viviane atua com planejamento de mina subterrânea e celebra as portas abertas pela sua formação na UFBA, destacando que o curso lhe entregou uma carreira internacional, conexões para a vida e um legado de oportunidades que faz questão de retribuir apoiando as próximas gerações.",
+    youtubeId: "n3nO4CYaQKQ",
   }
 ];
 

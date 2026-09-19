@@ -5,7 +5,23 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { Loader2, CheckCircle, XCircle, Trash2, ShieldCheck, Image as ImageIcon, Lock, UploadCloud, Maximize2, LogOut } from "lucide-react";
+import { 
+  Loader2, 
+  CheckCircle, 
+  XCircle, 
+  Trash2, 
+  ShieldCheck, 
+  Image as ImageIcon, 
+  Lock, 
+  UploadCloud, 
+  Maximize2, 
+  LogOut,
+  RefreshCw,
+  Copy,
+  Check,
+  ExternalLink,
+  CheckCheck
+} from "lucide-react";
 import { PhotoUploadModal } from "@/components/PhotoUploadModal";
 import { useAuth } from "@/contexts/AuthContext";
 import { Link } from "react-router-dom";
@@ -39,9 +55,23 @@ export default function AdminGallery() {
   const [activeTab, setActiveTab] = useState<"gallery" | "fundraising" | "comments" | "backup">("gallery");
 
   // Backup State
-  const [backupUrl, setBackupUrl] = useState(localStorage.getItem("semin_backup_url") || "https://script.google.com/macros/library/d/1QBB62qw948GomPX2CIeRUMfzBw3QTT9_sRsw1GYiVodcuGFoiynxvKWp/3");
+  const [backupUrl, setBackupUrl] = useState(
+    localStorage.getItem("semin_backup_url") || 
+    "https://script.google.com/macros/library/d/1QBB62qw948GomPX2CIeRUMfzBw3QTT9_sRsw1GYiVodcuGFoiynxvKWp/3"
+  );
+  const [autoBackupEnabled, setAutoBackupEnabled] = useState(
+    localStorage.getItem("semin_auto_backup_enabled") !== "false"
+  );
+  const [backedUpIds, setBackedUpIds] = useState<string[]>(() => {
+    try {
+      return JSON.parse(localStorage.getItem("semin_backed_up_ids") || "[]");
+    } catch {
+      return [];
+    }
+  });
   const [isBackingUp, setIsBackingUp] = useState(false);
   const [backupProgress, setBackupProgress] = useState(0);
+  const [copiedScript, setCopiedScript] = useState(false);
 
   // Fundraising State
   const [fundDonations, setFundDonations] = useState(0);
@@ -141,26 +171,35 @@ export default function AdminGallery() {
     setSavingFund(false);
   };
 
-  const handleBackupToDrive = async () => {
+  const handleBackupToDrive = async (isAuto = false, forceAll = false) => {
     if (!backupUrl) {
-      toast.error("Insira a URL do Google Apps Script para o backup.");
+      if (!isAuto) toast.error("Insira a URL do Google Apps Script para o backup.");
       return;
     }
     localStorage.setItem("semin_backup_url", backupUrl);
     
-    if (photos.length === 0) {
-      toast.error("Nenhuma foto para fazer backup.");
+    const currentBackedUpIds: string[] = forceAll 
+      ? [] 
+      : JSON.parse(localStorage.getItem("semin_backed_up_ids") || "[]");
+      
+    const photosToBackup = forceAll 
+      ? photos 
+      : photos.filter(p => !currentBackedUpIds.includes(p.id));
+
+    if (photosToBackup.length === 0) {
+      if (!isAuto) toast.info("Todas as fotos já estão no Google Drive.");
       return;
     }
 
-    setIsBackingUp(true);
+    if (!isAuto) setIsBackingUp(true);
     setBackupProgress(0);
 
     let successCount = 0;
     let errorCount = 0;
+    const newlyBackedUp: string[] = [];
 
-    for (let i = 0; i < photos.length; i++) {
-      const photo = photos[i];
+    for (let i = 0; i < photosToBackup.length; i++) {
+      const photo = photosToBackup[i];
       try {
         const payload = new URLSearchParams();
         payload.append("id", photo.id);
@@ -176,20 +215,56 @@ export default function AdminGallery() {
           body: payload
         });
         successCount++;
+        newlyBackedUp.push(photo.id);
       } catch (e) {
         console.error("Erro ao fazer backup da foto " + photo.id, e);
         errorCount++;
       }
-      setBackupProgress(Math.round(((i + 1) / photos.length) * 100));
+      setBackupProgress(Math.round(((i + 1) / photosToBackup.length) * 100));
     }
 
-    setIsBackingUp(false);
-    if (errorCount === 0) {
-      toast.success(`Backup concluído! ${successCount} fotos enviadas.`);
-    } else {
-      toast.warning(`Backup finalizado com ${errorCount} erros e ${successCount} sucessos.`);
+    const updatedBackedUp = forceAll 
+      ? newlyBackedUp 
+      : Array.from(new Set([...currentBackedUpIds, ...newlyBackedUp]));
+      
+    localStorage.setItem("semin_backed_up_ids", JSON.stringify(updatedBackedUp));
+    setBackedUpIds(updatedBackedUp);
+
+    if (!isAuto) setIsBackingUp(false);
+    
+    if (!isAuto) {
+      if (errorCount === 0) {
+        toast.success(`Backup concluído com sucesso! ${successCount} fotos sincronizadas.`);
+      } else {
+        toast.warning(`Backup finalizado com ${errorCount} erros e ${successCount} sucessos.`);
+      }
+    } else if (successCount > 0) {
+      toast.success(`Backup automático: ${successCount} nova(s) foto(s) enviada(s) ao Google Drive.`);
     }
   };
+
+  // Disparo automático do backup ao carregar as fotos
+  useEffect(() => {
+    if (isAuthenticated && autoBackupEnabled && backupUrl && photos.length > 0 && !loading && !isBackingUp) {
+      const timer = setTimeout(() => {
+        const pending = photos.filter(p => !backedUpIds.includes(p.id));
+        if (pending.length > 0) {
+          handleBackupToDrive(true);
+        }
+      }, 1500);
+      return () => clearTimeout(timer);
+    }
+  }, [isAuthenticated, autoBackupEnabled, backupUrl, photos.length, loading]);
+
+  // Intervalo periódico de sincronização automática
+  useEffect(() => {
+    if (isAuthenticated && autoBackupEnabled && backupUrl && photos.length > 0) {
+      const interval = setInterval(() => {
+        handleBackupToDrive(true);
+      }, 60000); // 1 minuto
+      return () => clearInterval(interval);
+    }
+  }, [isAuthenticated, autoBackupEnabled, backupUrl, photos.length]);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -453,53 +528,191 @@ export default function AdminGallery() {
         )}
 
         {activeTab === "backup" && (
-          <div className="bg-white/5 border border-white/10 rounded-2xl p-8 max-w-2xl">
-            <h2 className="text-2xl font-display font-bold text-semin-yellow mb-2">Backup no Google Drive</h2>
-            <p className="text-white/60 text-sm mb-6">
-              Envie todas as fotos do banco de dados para uma pasta no Google Drive usando um script do Google Apps Script.
-            </p>
-            
-            <div className="space-y-6">
-              <div className="space-y-2">
-                <Label htmlFor="backupUrl" className="text-white/80 font-bold">URL do Webhook (Google Apps Script)</Label>
-                <Input
-                  id="backupUrl"
-                  type="url"
-                  placeholder="https://script.google.com/macros/s/.../exec"
-                  value={backupUrl}
-                  onChange={(e) => setBackupUrl(e.target.value)}
-                  className="bg-black/20 border-white/10 text-white text-sm"
-                />
+          <div className="space-y-6 max-w-4xl">
+            <div className="bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+                <div>
+                  <h2 className="text-2xl font-display font-bold text-semin-yellow mb-1 flex items-center gap-2">
+                    <UploadCloud className="w-6 h-6" /> Backup no Google Drive
+                  </h2>
+                  <p className="text-white/60 text-sm">
+                    Envie todas as fotos do banco de dados para uma pasta no Google Drive automaticamente usando o Google Apps Script.
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-3 bg-black/40 px-4 py-2.5 rounded-xl border border-white/10 shrink-0">
+                  <div className="flex flex-col">
+                    <span className="text-xs font-bold text-white">Sincronização Automática</span>
+                    <span className="text-[10px] text-white/50">
+                      {autoBackupEnabled ? "Ativa (envia novas fotos automaticamente)" : "Pausada"}
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const nextState = !autoBackupEnabled;
+                      setAutoBackupEnabled(nextState);
+                      localStorage.setItem("semin_auto_backup_enabled", String(nextState));
+                      toast.info(nextState ? "Sincronização automática ATIVADA!" : "Sincronização automática PAUSADA.");
+                    }}
+                    className={`w-12 h-6 flex items-center rounded-full p-1 transition-colors duration-300 ${
+                      autoBackupEnabled ? "bg-semin-yellow" : "bg-white/20"
+                    }`}
+                  >
+                    <div
+                      className={`bg-semin-dark w-4 h-4 rounded-full shadow-md transform transition-transform duration-300 ${
+                        autoBackupEnabled ? "translate-x-6" : "translate-x-0"
+                      }`}
+                    />
+                  </button>
+                </div>
               </div>
 
-              {isBackingUp && (
-                <div className="space-y-2">
-                  <div className="flex justify-between text-xs text-white/60">
-                    <span>Progresso...</span>
-                    <span>{backupProgress}%</span>
-                  </div>
-                  <div className="h-2 w-full bg-black/40 rounded-full overflow-hidden">
-                    <div 
-                      className="h-full bg-semin-yellow transition-all duration-300"
-                      style={{ width: `${backupProgress}%` }}
-                    />
-                  </div>
+              {/* Status Cards */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+                <div className="bg-black/30 border border-white/10 rounded-xl p-4">
+                  <p className="text-xs text-white/50 font-bold uppercase tracking-wider">Total no Banco</p>
+                  <p className="text-2xl font-bold text-white mt-1">{photos.length} fotos</p>
                 </div>
-              )}
+                <div className="bg-green-500/10 border border-green-500/30 rounded-xl p-4">
+                  <p className="text-xs text-green-400 font-bold uppercase tracking-wider">Sincronizadas no Drive</p>
+                  <p className="text-2xl font-bold text-green-400 mt-1">
+                    {photos.filter(p => backedUpIds.includes(p.id)).length} fotos
+                  </p>
+                </div>
+                <div className="bg-amber-500/10 border border-amber-500/30 rounded-xl p-4">
+                  <p className="text-xs text-amber-400 font-bold uppercase tracking-wider">Pendentes de Envio</p>
+                  <p className="text-2xl font-bold text-amber-400 mt-1">
+                    {photos.filter(p => !backedUpIds.includes(p.id)).length} fotos
+                  </p>
+                </div>
+              </div>
+              
+              <div className="space-y-6">
+                <div className="space-y-2">
+                  <Label htmlFor="backupUrl" className="text-white/80 font-bold flex items-center justify-between">
+                    <span>URL do Webhook (Google Apps Script)</span>
+                    <span className="text-xs text-semin-yellow font-normal">Padrão configurado</span>
+                  </Label>
+                  <Input
+                    id="backupUrl"
+                    type="url"
+                    placeholder="https://script.google.com/macros/s/.../exec"
+                    value={backupUrl}
+                    onChange={(e) => {
+                      setBackupUrl(e.target.value);
+                      localStorage.setItem("semin_backup_url", e.target.value);
+                    }}
+                    className="bg-black/20 border-white/10 text-white text-sm"
+                  />
+                  <p className="text-[11px] text-white/40">
+                    Webhook ativo para recebimento dos arquivos e armazenamento seguro no Google Drive.
+                  </p>
+                </div>
 
-              <div className="pt-4">
-                <Button 
-                  onClick={handleBackupToDrive} 
-                  disabled={isBackingUp || !backupUrl}
-                  className="bg-semin-yellow text-semin-dark font-bold hover:bg-amber-400 w-full md:w-auto"
+                {isBackingUp && (
+                  <div className="space-y-2 bg-black/40 border border-white/10 p-4 rounded-xl">
+                    <div className="flex justify-between text-xs text-white/80 font-semibold">
+                      <span className="flex items-center gap-2">
+                        <Loader2 className="w-3.5 h-3.5 animate-spin text-semin-yellow" />
+                        Sincronizando fotos com o Google Drive...
+                      </span>
+                      <span className="text-semin-yellow font-mono">{backupProgress}%</span>
+                    </div>
+                    <div className="h-2.5 w-full bg-black/60 rounded-full overflow-hidden">
+                      <div 
+                        className="h-full bg-semin-yellow transition-all duration-300"
+                        style={{ width: `${backupProgress}%` }}
+                      />
+                    </div>
+                  </div>
+                )}
+
+                <div className="flex flex-col sm:flex-row gap-3 pt-2">
+                  <Button 
+                    onClick={() => handleBackupToDrive(false, false)} 
+                    disabled={isBackingUp || !backupUrl || photos.length === 0}
+                    className="bg-semin-yellow text-semin-dark font-bold hover:bg-amber-400 flex-1 h-11"
+                  >
+                    {isBackingUp ? (
+                      <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Sincronizando com o Drive...</>
+                    ) : (
+                      <><UploadCloud className="w-4 h-4 mr-2" /> Iniciar Backup das Fotos ({photos.length})</>
+                    )}
+                  </Button>
+
+                  <Button 
+                    onClick={() => {
+                      if (confirm("Deseja reenviar TODAS as fotos cadastradas para o Google Drive?")) {
+                        handleBackupToDrive(false, true);
+                      }
+                    }} 
+                    disabled={isBackingUp || !backupUrl || photos.length === 0}
+                    variant="outline"
+                    className="border-white/20 text-white/80 hover:bg-white/10 hover:text-white h-11 font-semibold"
+                  >
+                    <RefreshCw className="w-4 h-4 mr-2" /> Forçar Reenvio Completo
+                  </Button>
+                </div>
+              </div>
+            </div>
+
+            {/* Google Apps Script Reference Guide */}
+            <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-base font-bold text-white flex items-center gap-2">
+                  <ShieldCheck className="w-4 h-4 text-semin-yellow" /> Código do Google Apps Script (Webhook)
+                </h3>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => {
+                    const scriptCode = `function doPost(e) {
+  try {
+    var folderName = "SEMIN_50_ANOS_FOTOS";
+    var folders = DriveApp.getFoldersByName(folderName);
+    var folder = folders.hasNext() ? folders.next() : DriveApp.createFolder(folderName);
+    
+    var params = e.parameter;
+    var base64Data = params.image_base64;
+    var author = params.author_name || "Autor";
+    var year = params.year_cohort || "Ano";
+    var id = params.id || Utilities.getUuid();
+    
+    var contentType = "image/jpeg";
+    var cleanBase64 = base64Data;
+    if (base64Data.indexOf("data:") === 0) {
+      var parts = base64Data.split(",");
+      contentType = parts[0].split(":")[1].split(";")[0];
+      cleanBase64 = parts[1];
+    }
+    
+    var decoded = Utilities.base64Decode(cleanBase64);
+    var blob = Utilities.newBlob(decoded, contentType, author + "_" + year + "_" + id.substring(0, 8) + ".jpg");
+    var file = folder.createFile(blob);
+    file.setDescription("Autor: " + author + " | Turma: " + year + " | ID: " + id);
+    
+    return ContentService.createTextOutput(JSON.stringify({ status: "success", fileId: file.getId(), url: file.getUrl() }))
+      .setMimeType(ContentService.MimeType.JSON);
+  } catch (err) {
+    return ContentService.createTextOutput(JSON.stringify({ status: "error", message: err.toString() }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}`;
+                    navigator.clipboard.writeText(scriptCode);
+                    setCopiedScript(true);
+                    toast.success("Código copiado para a área de transferência!");
+                    setTimeout(() => setCopiedScript(false), 3000);
+                  }}
+                  className="text-xs text-white/70 hover:text-white bg-white/5 hover:bg-white/10"
                 >
-                  {isBackingUp ? (
-                    <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Fazendo Backup...</>
-                  ) : (
-                    <><UploadCloud className="w-4 h-4 mr-2" /> Iniciar Backup das Fotos ({photos.length})</>
-                  )}
+                  {copiedScript ? <Check className="w-3.5 h-3.5 mr-1 text-green-400" /> : <Copy className="w-3.5 h-3.5 mr-1" />}
+                  {copiedScript ? "Copiado!" : "Copiar Script"}
                 </Button>
               </div>
+              <p className="text-xs text-white/50 leading-relaxed mb-3">
+                Caso crie uma nova implantação no Google Apps Script, publique como <strong>Aplicativo da Web</strong> com acesso configurado para <em>"Qualquer pessoa"</em> (Anyone).
+              </p>
             </div>
           </div>
         )}

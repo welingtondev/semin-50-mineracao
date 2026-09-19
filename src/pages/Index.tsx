@@ -1,4 +1,4 @@
-import React, { Suspense, useState, useEffect, useRef } from "react";
+import React, { Suspense, useState, useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
 import Footer from "@/components/Footer";
@@ -23,64 +23,21 @@ const CrowdfundingSection = React.lazy(() => import("@/components/CrowdfundingSe
 const SupportSection = React.lazy(() => import("@/components/SupportSection"));
 const EngineerDaySection = React.lazy(() => import("@/components/EngineerDaySection"));
 
-// Component that delays rendering its children until it enters the viewport
-const ScrollTriggeredSuspense = ({ children, fallbackBg = "transparent", minHeight = "40vh", id }: { children: React.ReactNode, fallbackBg?: string, minHeight?: string, id?: string }) => {
-  const [shouldLoad, setShouldLoad] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    // If hash matches this id, load immediately
-    if (id && window.location.hash === `#${id}`) {
-      setShouldLoad(true);
-      return;
-    }
-
-    // Se o navegador não suportar IntersectionObserver, carrega imediatamente
-    if (!window.IntersectionObserver) {
-      setShouldLoad(true);
-      return;
-    }
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          setShouldLoad(true);
-          observer.disconnect(); // Only need to trigger once
-        }
-      },
-      { rootMargin: "300px" } // Load when within 300px of viewport
-    );
-
-    if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, [id]);
-
-  useEffect(() => {
-    if (!id) return;
-    const handleHashChange = () => {
-      if (window.location.hash === `#${id}`) {
-        setShouldLoad(true);
-      }
-    };
-    window.addEventListener("hashchange", handleHashChange);
-    return () => window.removeEventListener("hashchange", handleHashChange);
-  }, [id]);
-
-  return (
-    <div id={id} ref={ref} style={{ minHeight: shouldLoad ? "auto" : minHeight, background: fallbackBg }}>
-      {shouldLoad ? (
-        <Suspense fallback={<div style={{ minHeight, background: fallbackBg }} />}>
-          {children}
-        </Suspense>
-      ) : null}
-    </div>
-  );
-};
-
 const Index = () => {
   const [loadPopups, setLoadPopups] = useState(false);
 
   useEffect(() => {
+    // Handle initial hash in URL if present
+    if (window.location.hash) {
+      const targetId = window.location.hash.substring(1);
+      setTimeout(() => {
+        const el = document.getElementById(targetId);
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }, 350);
+    }
+
     const timer = setTimeout(() => {
       setLoadPopups(true);
     }, 4000);
@@ -88,71 +45,63 @@ const Index = () => {
   }, []);
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-[#fdfaf5]">
       <Navbar />
       <HeroSection />
       
-      {/* 1. Visão Geral & Proposta do Evento */}
-      <ScrollTriggeredSuspense fallbackBg="#F8F9FA">
+      {/* 1. Visão Geral & Proposta do Evento (#sobre) */}
+      <Suspense fallback={<div className="min-h-[40vh]" />}>
         <AboutSection />
-      </ScrollTriggeredSuspense>
+      </Suspense>
 
-      {/* 2. História, Orgulho & Legado dos 50 Anos (Construção de Valor Emocional) */}
-      <ScrollTriggeredSuspense>
+      {/* 2. História, Orgulho & Legado dos 50 Anos (#jubileu & #legado) */}
+      <Suspense fallback={<div className="min-h-[40vh]" />}>
         <JubileeSection />
         <LegacySection />
-      </ScrollTriggeredSuspense>
+      </Suspense>
 
-      <ScrollTriggeredSuspense fallbackBg="#06080c">
+      <Suspense fallback={<div className="min-h-[40vh]" />}>
         <DocumentarySection />
-      </ScrollTriggeredSuspense>
+      </Suspense>
 
-      {/* 3. O que o participante vai viver (Programação & Inscrição Principal) */}
-      <ScrollTriggeredSuspense id="programacao">
+      {/* 3. Programação Oficial & 4 Grandes Painéis (#programacao) */}
+      <Suspense fallback={<div className="min-h-[50vh]" />}>
         <ScheduleSection />
-      </ScrollTriggeredSuspense>
+      </Suspense>
 
-      <ScrollTriggeredSuspense id="inscricao">
-        <RegistrationSection />
-      </ScrollTriggeredSuspense>
-
-      <ScrollTriggeredSuspense>
+      {/* 4. Inscrição (#inscricao / #inscricoes) */}
+      <Suspense fallback={<div className="min-h-[40vh]" />}>
+        <div id="inscricao">
+          <RegistrationSection />
+        </div>
         <ShortRegistrationBanner />
-      </ScrollTriggeredSuspense>
+      </Suspense>
 
-      {/* 4. Apoie / Contribua (Doação & Vaquinha no auge da inspiração) */}
-      <ScrollTriggeredSuspense id="apoie" fallbackBg="#F8F9FA">
+      {/* 5. Apoie / Crowdfunding (#apoie) */}
+      <Suspense fallback={<div className="min-h-[40vh]" />}>
         <CrowdfundingSection />
-      </ScrollTriggeredSuspense>
+      </Suspense>
 
-      {/* 5. Engajamento Adicional (Desafio & Dia do Engenheiro) */}
-      <ScrollTriggeredSuspense>
+      {/* 6. Desafio SEMIN & Dia do Engenheiro (#desafio) */}
+      <Suspense fallback={<div className="min-h-[30vh]" />}>
         <ChallengeSection />
-      </ScrollTriggeredSuspense>
-
-      <ScrollTriggeredSuspense fallbackBg="#06080c">
         <EngineerDaySection />
-      </ScrollTriggeredSuspense>
+      </Suspense>
 
       <div className="w-full h-px bg-[linear-gradient(90deg,#06080c_0%,#06080c_35%,#d29b21_50%,#06080c_65%,#06080c_100%)] opacity-80" />
 
-      {/* 6. Prova Social (Edições Anteriores & Galeria) */}
-      <ScrollTriggeredSuspense fallbackBg="#F8F9FA">
+      {/* 7. Prova Social & Galeria (#galeria & #ultima-edicao) */}
+      <Suspense fallback={<div className="min-h-[50vh]" />}>
         <PastEditionSection />
-      </ScrollTriggeredSuspense>
-
-      <ScrollTriggeredSuspense fallbackBg="#0a0c12" minHeight="100vh">
         <GallerySection />
-      </ScrollTriggeredSuspense>
+      </Suspense>
 
-      {/* 7. Patrocinadores & Realização/Comissão */}
-      <ScrollTriggeredSuspense id="parceiros" fallbackBg="#F8F9FA">
+      {/* 8. Cotas de Patrocínio & Parceiros (#parceiros & #cotas) */}
+      <Suspense fallback={<div className="min-h-[40vh]" />}>
+        {/* <SponsorsSection /> */}
         <SponsorLogosSection />
-      </ScrollTriggeredSuspense>
-
-      <ScrollTriggeredSuspense fallbackBg="#F8F9FA">
         <SupportSection />
-      </ScrollTriggeredSuspense>
+      </Suspense>
       
       <Footer />
 

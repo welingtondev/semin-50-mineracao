@@ -75,7 +75,7 @@ const HeroSection = () => {
   return (
     <section
       id="inicio"
-      className="relative min-h-[100svh] flex items-center justify-center overflow-hidden bg-semin-dark"
+      className="relative min-h-[100svh] flex flex-col justify-start md:justify-center items-center overflow-hidden bg-semin-dark pt-32 pb-16 sm:pt-36 sm:pb-20 md:py-32"
     >
       {/* Background */}
       <div className="absolute inset-0 bg-[#06080c]">
@@ -106,29 +106,29 @@ const HeroSection = () => {
         <div className="absolute -bottom-[20%] -right-[10%] w-[600px] sm:w-[800px] h-[600px] sm:h-[800px] bg-semin-orange/[0.04] rounded-full blur-[100px] md:blur-[180px] pointer-events-none" />
       </div>
 
-      <div className="container mx-auto px-4 relative z-10 text-center -mt-10 sm:mt-16 md:mt-24">
+      <div className="container mx-auto px-4 relative z-10 text-center">
         <div className="animate-fade-in-up opacity-0 [animation-delay:100ms]">
-          <div className="relative inline-flex items-center mb-8 md:mb-12 group cta-float">
+          <div className="relative inline-flex items-center mb-5 sm:mb-8 md:mb-12 group cta-float">
             {/* Glow ring outsite */}
             <div className="absolute inset-0 bg-gradient-to-r from-semin-orange to-amber-500 opacity-30 blur-2xl rounded-full" />
             
-            <div className="relative inline-flex items-center gap-2 md:gap-3 px-6 py-3 md:px-10 md:py-4 border-2 border-semin-orange/60 rounded-full bg-semin-dark/95 backdrop-blur-xl shadow-[0_0_30px_rgba(224,115,19,0.25)]">
-              <Gem className="h-4 w-4 md:h-5 md:w-5 text-semin-orange drop-shadow-md animate-pulse" />
-              <span className="bg-gradient-to-r from-semin-orange to-amber-500 bg-clip-text text-transparent font-display text-xs sm:text-sm font-extrabold tracking-[0.25em] sm:tracking-[0.3em] uppercase">
+            <div className="relative inline-flex items-center gap-2 md:gap-3 px-4 py-2 sm:px-8 sm:py-3 md:px-10 md:py-4 border-2 border-semin-orange/60 rounded-full bg-semin-dark/95 backdrop-blur-xl shadow-[0_0_30px_rgba(224,115,19,0.25)]">
+              <Gem className="h-3.5 w-3.5 sm:h-4 sm:w-4 md:h-5 md:w-5 text-semin-orange drop-shadow-md animate-pulse shrink-0" />
+              <span className="bg-gradient-to-r from-semin-orange to-amber-500 bg-clip-text text-transparent font-display text-[10px] sm:text-xs md:text-sm font-extrabold tracking-[0.18em] sm:tracking-[0.25em] md:tracking-[0.3em] uppercase">
                 1976 - 2026 • Edição Histórica • 50 Anos
               </span>
-              <Gem className="h-4 w-4 md:h-5 md:w-5 text-semin-orange drop-shadow-md" />
+              <Gem className="h-3.5 w-3.5 sm:h-4 sm:w-4 md:h-5 md:w-5 text-semin-orange drop-shadow-md shrink-0" />
             </div>
           </div>
 
-          <h1 className="text-6xl sm:text-7xl md:text-8xl lg:text-[10rem] font-black mb-4 md:mb-6 leading-tight tracking-tighter">
+          <h1 className="text-4xl sm:text-6xl md:text-8xl lg:text-[10rem] font-black mb-4 md:mb-6 leading-tight tracking-tighter">
             <span className="text-golden-mirror filter drop-shadow-[0_0_15px_rgba(210,155,33,0.4)] block mb-1">
               SEMIN UFBA
             </span>
-            <span className="block text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-wide bg-gradient-to-r from-semin-orange to-amber-500 bg-clip-text text-transparent font-extrabold drop-shadow-sm mt-3">
+            <span className="block text-xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-wide bg-gradient-to-r from-semin-orange to-amber-500 bg-clip-text text-transparent drop-shadow-sm mt-2 sm:mt-3">
               50 Anos • Jubileu de Ouro
             </span>
-            <span className="block text-xs sm:text-sm md:text-base font-semibold mt-4 tracking-widest text-white/50 uppercase">
+            <span className="block text-[11px] sm:text-sm md:text-base font-semibold mt-3 sm:mt-4 tracking-widest text-white/50 uppercase">
               Edição Histórica • Semana de Mineração da UFBA
             </span>
           </h1>

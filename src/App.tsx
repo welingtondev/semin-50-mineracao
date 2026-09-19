@@ -1,10 +1,11 @@
-import { Toaster } from "@/components/ui/toaster";
+﻿import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import React, { Suspense } from "react";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { ResetPasswordModal } from "@/components/ResetPasswordModal";
 import Index from "./pages/Index";
 
 // Lazy-load heavy pages to reduce initial bundle (~253 KiB savings)
@@ -21,6 +22,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <AuthProvider>
+        <ResetPasswordModal />
         <BrowserRouter>
           <Suspense fallback={<div style={{minHeight:'100vh',background:'#161b22'}} />}>
             <Routes>
@@ -39,4 +41,3 @@ const App = () => (
 );
 
 export default App;
-

@@ -20,7 +20,9 @@
 <link rel="dns-prefetch" href="https://wa.me">
 <link rel="preload" as="image" href="assets/images/logo-semin-2026-cabecalho.png" fetchpriority="high">
 <link rel="stylesheet" href="assets/styles.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <script src="assets/app.js" defer></script>
+<script src="assets/script.js" defer></script>
 </head>
 <body>
 <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
@@ -41,6 +43,7 @@
 <a href="#patrocinar">Por que Patrocinar</a>
 <a href="#cotas">Cotas</a>
 <a href="#processo">Como Participar</a>
+<a href="#inscricao">Inscrição</a>
 <a href="#faq">Dúvidas</a>
 <a href="#contato">Contato</a>
 <a class="button button-small whatsapp" href="#" data-message="general">Seja patrocinador</a>
@@ -123,18 +126,54 @@
 </article>
 <article class="program-card">
 <span>12–13 nov.</span>
-<h3>Seminário técnico</h3>
-<p>Palestras com especialistas do setor, coffee break, continuidade das temáticas e painel de debates no Auditório Leopoldo Amaral.</p>
+<h3>Seminário técnico & Painéis</h3>
+<p>Palestras magnas com especialistas do setor, coffee breaks de networking e grandes painéis de discussão técnica com mediação de empresas parceiras.</p>
 </article>
 <article class="program-card program-card-highlight">
 <span>14 nov.</span>
-<h3>Solenidades e Festa</h3>
-<p>Solenidades comemorativas, homenagem a egressos, lançamento da 2ª edição de <em>Sagrado e Profano</em>, documentário dos 50 anos e Festa do Engenheiro de Minas.</p>
+<h3>Solenidades, Painéis & Festa</h3>
+<p>Painéis temáticos de encerramento, solenidades comemorativas, lançamento da 2ª edição de <em>Sagrado e Profano</em>, documentário dos 50 anos e Festa do Engenheiro de Minas.</p>
 </article>
 </div>
+<div style="margin-top: 2rem; padding: 1.5rem; background: #fffaf3; border: 1px solid rgba(143,112,57,0.25); border-radius: 1rem; box-shadow: 0 10px 24px rgba(43,28,5,0.06);">
+<div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1rem;">
+<div>
+<span style="color: #a16b08; font-size: 0.74rem; font-weight: 900; letter-spacing: 0.12em; text-transform: uppercase; display: block; margin-bottom: 0.25rem;">Eixo de Liderança Técnica &middot; 4 Grandes Painéis</span>
+<h3 style="margin: 0; color: #20252a; font-size: 1.25rem; text-transform: none;">Painéis de Discussão com a Indústria</h3>
+</div>
+<span style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.4rem 0.8rem; background: linear-gradient(135deg, #ffd85d, #d88905); color: #111827; font-size: 0.72rem; font-weight: 800; border-radius: 99px; text-transform: uppercase; letter-spacing: 0.05em;">
+Mediação Exclusiva: Cotas Diamante e Córindon
+</span>
+</div>
+<p style="margin-bottom: 1.25rem; font-size: 0.92rem; color: #58636d; line-height: 1.55;">
+Os 4 painéis de debate reúnem especialistas, pesquisadores e lideranças executivas para debater os temas mais estratégicos da mineração contemporânea. <strong>As empresas das Cotas Diamante e Córindon contam com o benefício exclusivo de indicar mediadores oficiais</strong> para conduzir as mesas de debate:
+</p>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem;">
+<div style="padding: 1rem; border-left: 3px solid #e9a313; background: rgba(255,255,255,0.75); border-radius: 0.5rem; border-top: 1px solid rgba(143,112,57,0.15); border-right: 1px solid rgba(143,112,57,0.15); border-bottom: 1px solid rgba(143,112,57,0.15);">
+<span style="color: #845600; font-size: 0.72rem; font-weight: 800; text-transform: uppercase;">Painel 1 &middot; 12/Nov (Fim da Tarde)</span>
+<h4 style="margin: 0.3rem 0 0.4rem; color: #1e293b; font-size: 0.95rem; font-weight: 700;">Desmonte de Rochas & Operações de Lavra</h4>
+<p style="margin: 0; font-size: 0.82rem; color: #64748b; line-height: 1.45;">Técnicas de desmonte por explosivos, controle de vibrações sismográficas, segurança operacional e fragmentação.</p>
+</div>
+<div style="padding: 1rem; border-left: 3px solid #e9a313; background: rgba(255,255,255,0.75); border-radius: 0.5rem; border-top: 1px solid rgba(143,112,57,0.15); border-right: 1px solid rgba(143,112,57,0.15); border-bottom: 1px solid rgba(143,112,57,0.15);">
+<span style="color: #845600; font-size: 0.72rem; font-weight: 800; text-transform: uppercase;">Painel 2 &middot; 13/Nov (Fim da Tarde)</span>
+<h4 style="margin: 0.3rem 0 0.4rem; color: #1e293b; font-size: 0.95rem; font-weight: 700;">Desafios para Terras Raras & Minerais Críticos</h4>
+<p style="margin: 0; font-size: 0.82rem; color: #64748b; line-height: 1.45;">O papel estratégico da Bahia e do Brasil na transição energética global, processamento mineral e agregação de valor.</p>
+</div>
+<div style="padding: 1rem; border-left: 3px solid #e9a313; background: rgba(255,255,255,0.75); border-radius: 0.5rem; border-top: 1px solid rgba(143,112,57,0.15); border-right: 1px solid rgba(143,112,57,0.15); border-bottom: 1px solid rgba(143,112,57,0.15);">
+<span style="color: #845600; font-size: 0.72rem; font-weight: 800; text-transform: uppercase;">Painel 3 &middot; 14/Nov (Fim da Manhã)</span>
+<h4 style="margin: 0.3rem 0 0.4rem; color: #1e293b; font-size: 0.95rem; font-weight: 700;">Gestão, Sustentabilidade & Governança Mineral (ESG)</h4>
+<p style="margin: 0; font-size: 0.82rem; color: #64748b; line-height: 1.45;">Gestão de rejeitos, relações com comunidades, licenciamento e práticas sustentáveis no ciclo de vida da mineração.</p>
+</div>
+<div style="padding: 1rem; border-left: 3px solid #e9a313; background: rgba(255,255,255,0.75); border-radius: 0.5rem; border-top: 1px solid rgba(143,112,57,0.15); border-right: 1px solid rgba(143,112,57,0.15); border-bottom: 1px solid rgba(143,112,57,0.15);">
+<span style="color: #845600; font-size: 0.72rem; font-weight: 800; text-transform: uppercase;">Painel 4 &middot; 14/Nov (Fim da Tarde)</span>
+<h4 style="margin: 0.3rem 0 0.4rem; color: #1e293b; font-size: 0.95rem; font-weight: 700;">Inovação, Inteligência de Processos & Futuro</h4>
+<p style="margin: 0; font-size: 0.82rem; color: #64748b; line-height: 1.45;">Automação, IA aplicada a processos minerais, novas competências e a visão para os próximos 50 anos da indústria.</p>
+</div>
+</div>
+</div>
 <div class="program-note">
-<strong>Seminário com eixos temáticos abertos.</strong>
-<span>Profissionais convidados compartilharão cases reais, experiências de mercado, inovações e soluções para a otimização de processos na mineração contemporânea.</span>
+<strong>Seminário com eixos temáticos e mediação empresarial.</strong>
+<span>Empresas patrocinadoras das Cotas Diamante e Córindon posicionam seus líderes e especialistas como mediadores oficiais nos debates temáticos, aproximando indústria, academia e tomadores de decisão.</span>
 </div>
 </div>
 </section>
@@ -431,8 +470,12 @@
 <p>A formalização é realizada institucionalmente através das entidades realizadoras (DAEMIN e CRISTAL Empresa Júnior da UFBA), com emissão de termo de compromisso e documentação formal das contrapartidas acordadas.</p>
 </details>
 <details class="faq-item">
-<summary>Nossa empresa pode propor temas específicos para palestras ou painéis?</summary>
-<p>Sim. Nas cotas com espaço de fala (Diamante, Córindon e Topázio), o tema da palestra ou participação em painel é alinhado em conjunto com a coordenação do evento para conectar a experiência da empresa ao norte técnico da edição.</p>
+<summary>Como funciona a mediação nos 4 painéis de discussão para as cotas Diamante e Córindon?</summary>
+<p>O evento contará com 4 grandes painéis de discussão técnica: <strong>Painel 1 (12/nov - Tarde: Desmonte de Rochas)</strong>, <strong>Painel 2 (13/nov - Tarde: Terras Raras e Minerais Críticos)</strong>, <strong>Painel 3 (14/nov - Manhã: Gestão e Governança Mineral ESG)</strong> e <strong>Painel 4 (14/nov - Tarde: Inovação e Futuro da Mineração)</strong>. As empresas parceiras nas Cotas Diamante e Córindon contam com o benefício exclusivo de indicar os mediadores oficiais das mesas, conduzindo o diálogo com especialistas e posicionando sua liderança e autoridade técnica frente ao setor.</p>
+</details>
+<details class="faq-item">
+<summary>Nossa empresa pode propor temas específicos para palestras técnicas?</summary>
+<p>Sim. Nas cotas com espaço de fala (Diamante, Córindon e Topázio), o tema da palestra técnica de 30 min + 10 min de Q&A é alinhado em conjunto com a coordenação do evento para conectar a expertise da empresa aos eixos temáticos da edição.</p>
 </details>
 <details class="faq-item">
 <summary>Como funciona o espaço para exposição e estandes?</summary>
@@ -511,6 +554,77 @@
 <span>Coordenador financeiro</span>
 </div>
 </article>
+</div>
+</div>
+</section>
+<section class="section registration-section" id="inscricao">
+<div class="container narrow centered">
+<div class="section-heading centered">
+<p class="eyebrow">SEMIN UFBA 2026 &middot; 50 Anos</p>
+<h2>Garanta sua Inscrição Oficial</h2>
+<p>Preencha os dados abaixo para confirmar sua participação no Jubileu de Ouro da Engenharia de Minas da UFBA. Receba seu código oficial e faça o download instantâneo do comprovante de inscrição com credencial e autenticação digital.</p>
+</div>
+<div class="registration-wrapper">
+<div id="formSection" class="registration-card">
+<form id="registrationForm" onsubmit="handleFormSubmit(event)" class="registration-form">
+<div class="form-grid">
+<div class="form-group full-width">
+<label for="nome">Nome Completo</label>
+<input type="text" id="nome" name="nome" placeholder="Digite seu nome completo" required autocomplete="name">
+</div>
+<div class="form-group">
+<label for="email">E-mail Principal</label>
+<input type="email" id="email" name="email" placeholder="seu.email@exemplo.com" required autocomplete="email">
+</div>
+<div class="form-group">
+<label for="telefone">WhatsApp / Telefone</label>
+<input type="tel" id="telefone" name="telefone" placeholder="(71) 99999-9999" required autocomplete="tel">
+</div>
+<div class="form-group full-width">
+<label for="categoria">Categoria de Participação</label>
+<select id="categoria" name="categoria" required>
+<option value="" disabled selected>Selecione sua categoria...</option>
+<option value="Estudante de Graduação UFBA">Estudante de Graduação UFBA</option>
+<option value="Estudante de Pós-Graduação UFBA">Estudante de Pós-Graduação UFBA</option>
+<option value="Estudante Geral (Outras IES)">Estudante Geral (Outras IES)</option>
+<option value="Profissional / Empresa">Profissional / Empresa</option>
+<option value="Professor / Pesquisador">Professor / Pesquisador</option>
+<option value="Patrocinador / Expositor">Patrocinador / Expositor</option>
+</select>
+</div>
+</div>
+<button type="submit" id="submitBtn" class="button submit-btn">Garantir Inscrição</button>
+<p class="form-security-note">🔒 Confirmação segura e instantânea &middot; Emissão automática de comprovante oficial e credencial em PDF</p>
+</form>
+</div>
+<div id="successSection" class="success-card" style="display: none;">
+<div class="success-icon-badge" aria-hidden="true">&#10003;</div>
+<h3>Inscrição Confirmada!</h3>
+<p class="success-sub">Seu cadastro para a <strong>SEMIN UFBA 2026</strong> foi processado com sucesso. Guarde o seu código oficial de acesso:</p>
+<div class="code-display-box">
+<span class="code-title">Código Oficial de Inscrição</span>
+<strong class="code-value" id="displayCode">SEMIN-2026-0000</strong>
+</div>
+<div class="validation-direct-box">
+<span class="validation-label">Autenticação Digital no Validador Oficial:</span>
+<a id="validationLink" href="https://seminufba.com.br/validador" target="_blank" rel="noopener noreferrer" class="validation-url">https://seminufba.com.br/validador</a>
+</div>
+<div class="success-actions">
+<button type="button" id="downloadPdfBtn" class="button" onclick="downloadReceiptPDF()">
+&#128196; Baixar Comprovante em PDF
+</button>
+<a href="https://chat.whatsapp.com/GiV7WJficGV51jbmO0Wfm5" target="_blank" rel="noopener noreferrer" class="button" style="background-color: #25D366; color: #080A0E; font-weight: 700;">
+&#128172; Entrar no Grupo do WhatsApp
+</a>
+<button type="button" class="button button-outline" onclick="resetRegistrationForm()">
+Nova Inscrição
+</button>
+</div>
+<div class="success-event-info">
+<strong>Data:</strong> 09 a 14 de Novembro de 2026 &middot; <strong>Local:</strong> Escola Politécnica da UFBA — Salvador/BA<br>
+Apresente o comprovante em PDF ou o QR Code no credenciamento oficial.
+</div>
+</div>
 </div>
 </div>
 </section>

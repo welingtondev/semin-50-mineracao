@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, useCallback, useRef, type ReactNode } from "react";
+﻿import { createContext, useContext, useState, useEffect, useCallback, useRef, type ReactNode } from "react";
 import { supabase } from "@/lib/supabase";
 import type { Session } from "@supabase/supabase-js";
 
@@ -18,8 +18,11 @@ interface AuthContextType {
   session: Session | null;
   profile: UserProfile | null;
   loading: boolean;
+  isPasswordRecovery: boolean;
+  setIsPasswordRecovery: (open: boolean) => void;
   login: (email: string, password: string) => Promise<string | null>;
   register: (data: RegisterData) => Promise<string | null>;
+  updatePassword: (newPassword: string) => Promise<string | null>;
   logout: () => Promise<void>;
   deleteAccount: () => Promise<void>;
   refreshProfile: () => Promise<void>;
@@ -59,6 +62,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isPasswordRecovery, setIsPasswordRecovery] = useState(false);
 
   // Track if login/register is handling profile load to avoid duplicate work
   const manualAuthInProgress = useRef(false);
@@ -118,10 +122,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     let mounted = true;
 
+    // Check if current URL contains recovery indicator
+    const hash = window.location.hash || "";
+    const search = window.location.search || "";
+    if (hash.includes("type=recovery") || search.includes("type=recovery")) {
+      console.log("[AUTH] Password recovery detected in URL");
+      setIsPasswordRecovery(true);
+    }
+
     // Subscribe to auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, s) => {
         if (!mounted) return;
+        console.log("[AUTH] onAuthStateChange event:", event);
+
+        if (event === "PASSWORD_RECOVERY") {
+          console.log("[AUTH] PASSWORD_RECOVERY event received");
+          setIsPasswordRecovery(true);
+        }
+
         // Skip if login/register is handling it directly
         if (manualAuthInProgress.current) return;
 
@@ -342,6 +361,38 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [loadProfile]);
 
+  // ── Update password (recovery or voluntary) ──
+  const updatePassword = useCallback(async (newPassword: string): Promise<string | null> => {
+    try {
+      if (!newPassword || newPassword.length < 6) {
+        return "A nova senha deve ter no mínimo 6 caracteres.";
+      }
+
+      console.log("[AUTH] updatePassword() called");
+      const { error } = await withTimeout(
+        supabase.auth.updateUser({ password: newPassword }),
+        15000,
+        "updateUser"
+      );
+
+      if (error) {
+        console.error("[AUTH] updatePassword error:", error.message);
+        return error.message;
+      }
+
+      console.log("[AUTH] Password successfully updated");
+      // Clean up the URL hash/search if it was a recovery redirect
+      if (window.location.hash.includes("type=recovery") || window.location.search.includes("type=recovery")) {
+        window.history.replaceState(null, "", window.location.pathname);
+      }
+      setIsPasswordRecovery(false);
+      return null;
+    } catch (err: any) {
+      console.error("[AUTH] updatePassword exception:", err?.message || err);
+      return err?.message || "Erro inesperado ao atualizar a senha.";
+    }
+  }, []);
+
   // ── Logout ──
   const logout = useCallback(async () => {
     try {
@@ -372,8 +423,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   return (
     <AuthContext.Provider value={{
-      session, profile, loading,
-      login, register, logout, deleteAccount, refreshProfile, setProfile,
+      session, profile, loading, isPasswordRecovery, setIsPasswordRecovery,
+      login, register, updatePassword, logout, deleteAccount, refreshProfile, setProfile,
     }}>
       {children}
     </AuthContext.Provider>

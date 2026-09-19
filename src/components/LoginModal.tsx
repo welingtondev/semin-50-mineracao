@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+﻿import { useState, useCallback } from "react";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/lib/supabase";
@@ -125,7 +125,7 @@ export function LoginModal({ children, defaultTab = "login", onSuccess, open: co
     }
   }
 
-  async function handleForgot(e: React.FormEvent<HTMLFormElement>) {
+    async function handleForgot(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (loading) return; // Prevent double-submit
     setLoading(true);
@@ -133,13 +133,14 @@ export function LoginModal({ children, defaultTab = "login", onSuccess, open: co
     try {
       const fd = new FormData(e.currentTarget);
       const email = (fd.get("email") as string).toLowerCase().trim();
+      const redirectUrl = `${window.location.origin}/desafio-semin`;
       const { error: err } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: window.location.origin + "/desafio-semin",
+        redirectTo: redirectUrl,
       });
       if (err) {
         showError(err.message);
       } else {
-        setSuccessMessage("Se o e-mail estiver cadastrado, um link de recuperação foi enviado.");
+        setSuccessMessage("Se o e-mail estiver cadastrado, enviamos um link de recuperação. Ao abrir o link recebido no e-mail, a tela para criar sua nova senha abrirá automaticamente.");
         setTab("login");
       }
     } catch (err: any) {
