@@ -23,7 +23,7 @@ type SponsorLogo = {
 
 const organizadores: SponsorLogo[] = [
   { name: "UFBA", logo: ufbaLogo, className: "h-20 sm:h-24 md:h-32 lg:h-36 max-w-[140px] md:max-w-[220px]" },
-  { name: "SINDIMIBA", logo: sindimibaLogo, className: "h-20 sm:h-24 md:h-32 lg:h-36 max-w-[180px] md:max-w-[260px]" },
+  { name: "SINDIMIBA", logo: sindimibaLogo, className: "h-22 sm:h-26 md:h-36 lg:h-40 max-w-[200px] md:max-w-[280px] scale-115" },
   { name: "CREA-BA", logo: creaLogo, className: "h-20 sm:h-24 md:h-32 lg:h-36 max-w-[160px] md:max-w-[240px]" },
   { name: "IBRAM", logo: ibramLogo, className: "h-20 sm:h-24 md:h-32 lg:h-36 max-w-[160px] md:max-w-[240px]" },
 ];
@@ -96,7 +96,7 @@ const sponsorsByTier: TierGroup[] = [
     glowColor: "bg-slate-400/10",
     ringColor: "ring-slate-400/15",
     sponsors: [
-      { name: "Clariant", logo: clariantLogo },
+      { name: "Clariant", logo: clariantLogo, className: "scale-115" },
       { name: "Grupo Iguana", logo: grupoIguanaLogo },
       { name: "Minerallis", logo: minerallisLogo },
       { name: "Patrocinador Quartzo 1" },
@@ -183,7 +183,7 @@ const SponsorLogosSection = () => {
                             alt={sponsor.name}
                             width="256"
                             height="160"
-                            className="max-w-full max-h-full object-contain transition-all duration-500 group-hover:scale-110"
+                            className={`max-w-full max-h-full object-contain transition-all duration-500 group-hover:scale-110 ${sponsor.className || ""}`}
                             style={{ imageRendering: 'auto' }}
                             loading="lazy"
                           />
