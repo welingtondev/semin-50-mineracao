@@ -146,7 +146,7 @@ const HeroSection = () => {
           {/* Contador Regressivo de Escassez / Evento */}
           <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-6 mb-8 md:mb-12">
             <div className="bg-white/5 border border-semin-yellow/20 backdrop-blur-md px-4 py-2 sm:px-6 sm:py-3 rounded-2xl text-center shadow-lg">
-              <span className="block font-display text-2xl sm:text-4xl font-black text-semin-yellow">09 a 13</span>
+              <span className="block font-display text-2xl sm:text-4xl font-black text-semin-yellow">09 a 14</span>
               <span className="text-[10px] sm:text-xs font-body font-bold text-white/70 uppercase tracking-widest">Novembro 2026</span>
             </div>
             <div className="bg-white/5 border border-semin-orange/20 backdrop-blur-md px-4 py-2 sm:px-6 sm:py-3 rounded-2xl text-center shadow-lg">
