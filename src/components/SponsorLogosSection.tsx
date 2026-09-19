@@ -12,6 +12,8 @@ import minerallisLogo from "@/assets/minerallis_logo.webp";
 import geosolLogo from "@/assets/geosol_logo.png";
 import drillgeoLogo from "@/assets/drillgeo_logo.png";
 import ibramLogo from "@/assets/ibram_logo.jpg";
+import sandvikLogo from "@/assets/sandvik_logo.png";
+import clariantLogo from "@/assets/clariant_logo.png";
 
 type SponsorLogo = {
   name: string;
@@ -78,6 +80,7 @@ const sponsorsByTier: TierGroup[] = [
     glowColor: "bg-amber-400/15",
     ringColor: "ring-amber-400/20",
     sponsors: [
+      { name: "Sandvik", logo: sandvikLogo },
       { name: "DrillGeo", logo: drillgeoLogo },
       { name: "JMC", logo: jmcLogo },
       { name: "Support Mining Engenharia", logo: suporteMineLogo },
@@ -93,6 +96,7 @@ const sponsorsByTier: TierGroup[] = [
     glowColor: "bg-slate-400/10",
     ringColor: "ring-slate-400/15",
     sponsors: [
+      { name: "Clariant", logo: clariantLogo },
       { name: "Grupo Iguana", logo: grupoIguanaLogo },
       { name: "Minerallis", logo: minerallisLogo },
       { name: "Patrocinador Quartzo 1" },
