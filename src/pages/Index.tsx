@@ -5,7 +5,6 @@ import Footer from "@/components/Footer";
 
 // Lazy-loaded components
 const NewsletterPopup = React.lazy(() => import("@/components/NewsletterPopup").then(module => ({ default: module.NewsletterPopup })));
-const WhatsAppPopup = React.lazy(() => import("@/components/WhatsAppPopup").then(module => ({ default: module.WhatsAppPopup })));
 const AboutSection = React.lazy(() => import("@/components/AboutSection"));
 const ScheduleSection = React.lazy(() => import("@/components/ScheduleSection"));
 const ChallengeSection = React.lazy(() => import("@/components/ChallengeSection"));
@@ -109,7 +108,6 @@ const Index = () => {
       {loadPopups && (
         <Suspense fallback={null}>
           <NewsletterPopup />
-          <WhatsAppPopup />
         </Suspense>
       )}
     </div>

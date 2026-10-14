@@ -112,7 +112,7 @@ const Navbar = () => {
               window.scrollTo({ top: 0, behavior: "smooth" });
             }
           }}
-          className="flex items-center gap-2 shrink-0 group"
+          className="flex items-center gap-2.5 sm:gap-3.5 shrink-0 group"
           aria-label="SEMIN UFBA 2026 - Página Inicial"
         >
           <img 
@@ -120,7 +120,7 @@ const Navbar = () => {
             alt="SEMIN UFBA 2026" 
             width="170" 
             height="55" 
-            className="h-8 sm:h-10 md:h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-105" 
+            className="h-8 sm:h-10 md:h-11 w-auto object-contain transition-transform duration-300 group-hover:scale-105" 
             fetchPriority="high" 
           />
         </Link>
@@ -256,7 +256,9 @@ const Navbar = () => {
               
               {/* Mobile Header */}
               <div className="flex items-center justify-between pb-6 border-b border-white/10 mb-6">
-                <img src={seminLogo} alt="SEMIN UFBA" width="140" height="48" className="h-10 w-auto" />
+                <div className="flex items-center gap-2.5">
+                  <img src={seminLogo} alt="SEMIN UFBA" width="130" height="44" className="h-9 w-auto" />
+                </div>
               </div>
 
               {/* Mobile Links */}

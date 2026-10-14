@@ -161,6 +161,20 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose, initialV
         setPixData(billingType === "PIX" ? data.pixData : { invoiceUrl: data.invoiceUrl });
         setStep(3);
 
+        // Track donation conversion in Meta Pixel
+        try {
+          if (typeof window !== "undefined" && (window as any).fbq) {
+            (window as any).fbq("track", "Donate", {
+              value: parsedValue,
+              currency: "BRL",
+              content_name: "Doação SEMIN UFBA 50 Anos",
+              payment_method: billingType,
+            });
+          }
+        } catch (err) {
+          console.warn("Meta Pixel tracking error:", err);
+        }
+
         // Envia os dados para a planilha do Google Sheets de doadores
         if (DONATION_SCRIPT_URL) {
           try {

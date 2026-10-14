@@ -14,19 +14,23 @@ interface WhatsAppPopupProps {
 export function WhatsAppPopup({ forceShow = false, onClose }: WhatsAppPopupProps) {
   const [visible, setVisible] = useState(forceShow);
 
+  // O popup da comunidade nunca deve abrir de surpresa por temporizador no meio da navegação
+  // ou do preenchimento do formulário. Ele só é disparado explicitamente (ex: após inscrição confirmada).
   useEffect(() => {
-    if (forceShow) {
-      setVisible(true);
-      return;
-    }
-    
-    // Auto-show after 30 seconds apenas se nunca foi fechado antes
-    const hasClosedPopup = localStorage.getItem("semin_whatsapp_popup_closed");
-    if (!hasClosedPopup) {
-      const timer = setTimeout(() => setVisible(true), 30000);
-      return () => clearTimeout(timer);
-    }
+    setVisible(Boolean(forceShow));
   }, [forceShow]);
+
+  // Suporte para fechar via tecla Escape
+  useEffect(() => {
+    if (!visible) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        handleClose();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [visible]);
 
   const handleClose = () => {
     localStorage.setItem("semin_whatsapp_popup_closed", "true");

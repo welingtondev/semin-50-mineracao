@@ -75,7 +75,7 @@ const ShortRegistrationBanner = () => {
                   >
                     <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-[100%] group-hover:translate-x-[100%] transition-transform duration-700"></span>
                     <HardHat className="h-5 w-5 md:h-6 md:w-6 text-semin-yellow shrink-0" />
-                    <span className="truncate">Garantir Entrada Solidária</span>
+                    <span className="truncate">Inscrição</span>
                     <ArrowRight className="h-5 w-5 text-semin-yellow group-hover:translate-x-1 transition-transform shrink-0" />
                   </Button>
                 </div>

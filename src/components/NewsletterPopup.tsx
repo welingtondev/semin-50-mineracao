@@ -13,9 +13,10 @@ export function NewsletterPopup() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // Only show if user hasn't dismissed or subscribed before
+    // Only show if user hasn't dismissed or subscribed/registered before
     const dismissed = localStorage.getItem("semin_newsletter_dismissed");
-    if (dismissed) return;
+    const registered = localStorage.getItem("semin_user_registered");
+    if (dismissed || registered) return;
 
     // Show after 8 seconds
     const timer = setTimeout(() => setVisible(true), 8000);

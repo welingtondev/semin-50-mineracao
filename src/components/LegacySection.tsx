@@ -77,11 +77,20 @@ const episodes: Episode[] = [
     company: "Planejamento de Mina (Austrália)",
     description: "No sétimo episódio da série O Legado, recebemos Viviane Franco, Engenheira de Minas formada pela Universidade Federal da Bahia (UFBA), onde ingressou em 2013. Natural de Piripá, no interior baiano, Viviane conta como a afinidade com a área de exatas e o contato inicial com a disciplina de recuperação de áreas degradadas em um curso técnico ambiental despertaram sua paixão por uma engenharia diferenciada. Ela relembra os desafios de adaptação na chegada a Salvador, momento transformado em uma experiência enriquecedora graças ao acolhimento de amigos de várias regiões e ao suporte próximo de professores como Luiz Rogério, China e Erisvaldo, fortalecendo os laços que fazem do curso uma verdadeira família. Na carreira profissional, construiu uma sólida trajetória na indústria, com forte base em operações subterrâneas no Brasil e passagens por Open Pit. Há quase três anos radicada na Austrália, Viviane atua com planejamento de mina subterrânea e celebra as portas abertas pela sua formação na UFBA, destacando que o curso lhe entregou uma carreira internacional, conexões para a vida e um legado de oportunidades que faz questão de retribuir apoiando as próximas gerações.",
     youtubeId: "n3nO4CYaQKQ",
+  },
+  {
+    id: 8,
+    title: "O Legado - Capítulo 12",
+    name: "Silvano Andrade",
+    role: "Engenheiro de Minas / CEO",
+    company: "Ferbasa",
+    description: "No 12º episódio da série O Legado, recebemos Silvano Andrade, Engenheiro de Minas formado pela Universidade Federal da Bahia (UFBA) e Diretor-Presidente (CEO) da Ferbasa. Com mais de três décadas de sólida atuação e liderança na mineração brasileira, acumulando passagens de destaque por grandes companhias como Mineração Caraíba, Mineração Rio do Norte (MRN) e Beadell Brasil, Silvano compartilha suas memórias dos tempos de graduação na Escola Politécnica, a importância das amizades e da rede de apoio forjada no curso, além de reflexões valiosas sobre liderança, gestão e superação de desafios ao longo de sua trajetória executiva. Um testemunho marcante sobre o impacto transformador da formação na UFBA e o orgulho de celebrar os 50 anos do curso.",
+    youtubeId: "0G9f4reQrYQ",
   }
 ];
 
 const LegacySection = () => {
-  const [activeEpisode, setActiveEpisode] = useState<Episode>(episodes[0]);
+  const [activeEpisode, setActiveEpisode] = useState<Episode>(episodes[episodes.length - 1]);
   const { ref, isVisible } = useScrollAnimation(0.1);
 
   return (

@@ -170,7 +170,7 @@ const HeroSection = () => {
                     className="cta-shine relative w-auto min-w-[240px] sm:w-auto md:w-[320px] bg-gradient-to-r from-semin-yellow via-amber-400 to-semin-orange text-semin-dark hover:from-semin-orange hover:via-amber-500 hover:to-semin-yellow font-display font-bold text-sm md:text-lg px-8 py-4 md:py-8 rounded-2xl shadow-2xl shadow-semin-yellow/20 transition-all duration-300 hover:shadow-semin-orange/30 active:scale-95 md:hover:scale-105 group"
                   >
                     <HardHat className="h-4 w-4 md:h-6 md:w-6 mr-2 group-hover:rotate-12 transition-transform duration-300" />
-                    Garantir Minha Vaga
+                    Inscrição
                     <ArrowRight className="ml-2 h-4 w-4 md:h-5 md:w-5 group-hover:translate-x-1 transition-transform duration-300" />
                   </Button>
                 </div>

@@ -22,10 +22,10 @@ type SponsorLogo = {
 };
 
 const organizadores: SponsorLogo[] = [
-  { name: "UFBA", logo: ufbaLogo, className: "h-20 sm:h-24 md:h-32 lg:h-36 max-w-[140px] md:max-w-[220px]" },
-  { name: "SINDIMIBA", logo: sindimibaLogo, className: "h-22 sm:h-26 md:h-36 lg:h-40 max-w-[200px] md:max-w-[280px] scale-115" },
-  { name: "CREA-BA", logo: creaLogo, className: "h-20 sm:h-24 md:h-32 lg:h-36 max-w-[160px] md:max-w-[240px]" },
-  { name: "IBRAM", logo: ibramLogo, className: "h-20 sm:h-24 md:h-32 lg:h-36 max-w-[160px] md:max-w-[240px]" },
+  { name: "UFBA", logo: ufbaLogo, className: "h-16 sm:h-20 md:h-26 lg:h-30 max-w-[130px] md:max-w-[190px]" },
+  { name: "SINDIMIBA", logo: sindimibaLogo, className: "h-12 sm:h-16 md:h-22 lg:h-26 max-w-[140px] md:max-w-[200px]" },
+  { name: "CREA-BA", logo: creaLogo, className: "h-16 sm:h-20 md:h-26 lg:h-30 max-w-[140px] md:max-w-[200px]" },
+  { name: "IBRAM", logo: ibramLogo, className: "h-16 sm:h-20 md:h-26 lg:h-30 max-w-[140px] md:max-w-[200px]" },
 ];
 
 type TierGroup = {
@@ -255,7 +255,7 @@ const SponsorLogosSection = () => {
                 key={sponsor.name}
                 className="group cursor-pointer w-[calc(50%-6px)] sm:w-[calc(50%-10px)] md:w-auto"
               >
-                <div className="relative bg-white rounded-2xl px-3 sm:px-6 py-4 sm:py-6 shadow-xl shadow-black/15 ring-1 ring-semin-yellow/10 hover:shadow-2xl hover:ring-semin-yellow/25 hover:-translate-y-1 sm:hover:-translate-y-2 transition-all duration-500 flex items-center justify-center w-full h-24 sm:h-32 md:w-64 md:h-40">
+                <div className="relative bg-white rounded-2xl px-3 sm:px-6 py-4 sm:py-6 shadow-xl shadow-black/15 ring-1 ring-semin-yellow/10 hover:shadow-2xl hover:ring-semin-yellow/25 hover:-translate-y-1 sm:hover:-translate-y-2 transition-all duration-500 flex items-center justify-center w-full h-24 sm:h-32 md:w-64 md:h-40 overflow-hidden">
                   {/* Gold accent top line */}
                   <div className="absolute top-0 left-[20%] right-[20%] h-[2px] bg-gradient-to-r from-semin-yellow/40 via-amber-400/60 to-semin-yellow/40 rounded-full" />
                     <img
@@ -263,7 +263,7 @@ const SponsorLogosSection = () => {
                       alt={sponsor.name}
                       width="240"
                       height="176"
-                      className={`${sponsor.className || "h-8 sm:h-10 md:h-20 lg:h-24 max-w-[100px] sm:max-w-none"} w-auto object-contain transition-all duration-500 group-hover:scale-110`}
+                      className={`${sponsor.className || "h-8 sm:h-10 md:h-20 lg:h-24"} max-w-[85%] max-h-[80%] w-auto object-contain transition-all duration-500 group-hover:scale-105`}
                       style={{ imageRendering: 'auto' }}
                       loading="lazy"
                     />

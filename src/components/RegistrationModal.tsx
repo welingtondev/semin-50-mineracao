@@ -148,6 +148,21 @@ export function RegistrationModal({ children }: { children: React.ReactNode }) {
       });
 
       setIsSuccess(true);
+      localStorage.setItem("semin_user_registered", "true");
+      localStorage.setItem("semin_newsletter_dismissed", "true");
+
+      // Track conversion in Meta Pixel
+      try {
+        if (typeof window !== "undefined" && (window as any).fbq) {
+          (window as any).fbq("track", "CompleteRegistration", {
+            content_name: "Inscrição SEMIN UFBA 50 Anos",
+            status: true,
+          });
+        }
+      } catch (err) {
+        console.warn("Meta Pixel tracking error:", err);
+      }
+
       toast.success("Inscrição confirmada!", {
         description: "Sua vaga no evento de 50 Anos está reservada com sucesso.",
       });
@@ -182,10 +197,10 @@ export function RegistrationModal({ children }: { children: React.ReactNode }) {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-2xl font-display text-semin-yellow">
               <HardHat className="h-6 w-6" />
-              Vagas Limitadas
+              Inscrição Oficial
             </DialogTitle>
             <DialogDescription className="text-white/60">
-              Sua entrada é validada mediante a doação de 1kg de alimento no dia do evento. Garanta sua vaga agora.
+              Sua entrada é validada mediante a doação de 1kg de alimento no dia do evento.
             </DialogDescription>
           </DialogHeader>
 
@@ -263,6 +278,7 @@ export function RegistrationModal({ children }: { children: React.ReactNode }) {
                     <SelectItem value="Estudante de outra Instituição">Estudante de outra Instituição</SelectItem>
                     <SelectItem value="Profissional">Profissional do Setor</SelectItem>
                     <SelectItem value="Professor / Pesquisador">Professor / Pesquisador</SelectItem>
+                    <SelectItem value="Geral">Geral</SelectItem>
                   </SelectContent>
                 </Select>
               </div>

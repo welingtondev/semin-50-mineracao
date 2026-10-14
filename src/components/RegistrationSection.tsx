@@ -80,7 +80,7 @@ const RegistrationSection = () => {
               className="w-full font-bold py-8 text-lg rounded-2xl bg-gradient-to-r from-semin-yellow via-amber-400 to-semin-orange text-semin-dark hover:shadow-xl hover:shadow-semin-orange/30 transition-all duration-300 hover:scale-[1.02]"
             >
               <HardHat className="w-6 h-6 mr-3" />
-              Garantir Minha Credencial Ouro
+              Inscrição
               <ArrowRight className="w-6 h-6 ml-3" />
             </Button>
           </RegistrationModal>

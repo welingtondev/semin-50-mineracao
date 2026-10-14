@@ -1,4 +1,4 @@
-import { Mail, Instagram, Linkedin, ArrowUp, Mountain, Pickaxe } from "lucide-react";
+import { Mail, Instagram, Linkedin, ArrowUp, Mountain, Pickaxe, MessageCircle } from "lucide-react";
 
 const footerLinks = [
   { label: "Sobre", href: "#sobre" },
@@ -69,6 +69,9 @@ const Footer = () => (
             </a>
             <a href="https://www.linkedin.com/in/daeminufba" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn DAEMIN" className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-white/5 flex items-center justify-center text-white/60 hover:bg-semin-yellow/10 hover:text-semin-yellow transition-all duration-300 active:scale-90">
               <Linkedin className="h-4 w-4" />
+            </a>
+            <a href="https://chat.whatsapp.com/GiV7WJficGV51jbmO0Wfm5" target="_blank" rel="noopener noreferrer" aria-label="Comunidade WhatsApp SEMIN UFBA" title="Comunidade oficial no WhatsApp" className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-white/5 flex items-center justify-center text-white/60 hover:bg-[#25D366]/20 hover:text-[#25D366] transition-all duration-300 active:scale-90">
+              <MessageCircle className="h-4 w-4" />
             </a>
           </div>
         </div>
