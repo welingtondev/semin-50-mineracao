@@ -55,12 +55,12 @@ const RegistrationSection = () => {
 
           <div className="text-center mb-8">
             <h3 className="text-3xl font-display font-bold text-semin-blue mb-4 mt-4">Sua Experiência Completa na SEMIN</h3>
-            <p className="text-semin-blue/70">Uma vivência integrada de 5 dias pensada para estudantes, ex-alunos e profissionais do setor. Garanta sua credencial oficial com acesso a todos os benefícios.</p>
+            <p className="text-semin-blue/70">Uma vivência integrada de 6 dias pensada para estudantes, ex-alunos e profissionais do setor. Garanta sua credencial oficial com acesso a todos os benefícios.</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10 border-y border-black/5 py-8">
             {[
-              "Acesso integral aos 5 dias de programação",
+              "Acesso integral aos 6 dias de programação",
               "Certificado digital de participação oficial",
               "Kit e material exclusivo do congresso",
               "Entrada em todas as palestras e painéis",

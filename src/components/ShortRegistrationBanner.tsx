@@ -61,7 +61,7 @@ const ShortRegistrationBanner = () => {
                 </div>
                 <div className="flex items-center gap-2">
                   <Calendar className="w-5 h-5 text-semin-dark" />
-                  <span className="font-sans text-sm font-semibold text-semin-dark">09 a 12 de Nov 2026</span>
+                  <span className="font-sans text-sm font-semibold text-semin-dark">09 a 14 de Nov 2026</span>
                 </div>
               </div>
             </div>

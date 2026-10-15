@@ -206,7 +206,7 @@ const HeroSection = () => {
 
           <div className="flex justify-center gap-8 sm:gap-12 md:gap-16 lg:gap-24 bg-white/5 border border-white/10 backdrop-blur-xl p-6 md:p-8 rounded-3xl max-w-4xl mx-auto shadow-2xl">
             <Counter end={50} label="Anos de história" />
-            <Counter end={5} label="Dias de imersão" />
+            <Counter end={6} label="Dias de imersão" />
             <Counter end={120} label="Vagas confirmadas" prefix="+" />
             <Counter end={10} label="Empresas parceiras" suffix="+" />
           </div>
