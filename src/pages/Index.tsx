@@ -1,10 +1,12 @@
 import React, { Suspense, useState, useEffect } from "react";
+import { toast } from "sonner";
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
 import Footer from "@/components/Footer";
 
 // Lazy-loaded components
 const NewsletterPopup = React.lazy(() => import("@/components/NewsletterPopup").then(module => ({ default: module.NewsletterPopup })));
+const WhatsAppPopup = React.lazy(() => import("@/components/WhatsAppPopup").then(module => ({ default: module.WhatsAppPopup })));
 const AboutSection = React.lazy(() => import("@/components/AboutSection"));
 const ScheduleSection = React.lazy(() => import("@/components/ScheduleSection"));
 const ChallengeSection = React.lazy(() => import("@/components/ChallengeSection"));
@@ -24,8 +26,23 @@ const EngineerDaySection = React.lazy(() => import("@/components/EngineerDaySect
 
 const Index = () => {
   const [loadPopups, setLoadPopups] = useState(false);
+  const [showSuccessWhatsApp, setShowSuccessWhatsApp] = useState(false);
 
   useEffect(() => {
+    // Check if coming from a successful registration redirect
+    const searchParams = new URLSearchParams(window.location.search);
+    if (searchParams.get("inscricao") === "sucesso") {
+      toast.success("Inscrição confirmada com sucesso! 🎉", {
+        description: "Sua vaga no SEMIN UFBA 50 Anos está garantida. Nos vemos no evento!",
+        duration: 9000,
+      });
+      setShowSuccessWhatsApp(true);
+
+      // Clean up search query param cleanly without reloading
+      const cleanUrl = window.location.pathname + (window.location.hash || "");
+      window.history.replaceState({}, document.title, cleanUrl);
+    }
+
     // Handle initial hash in URL if present
     if (window.location.hash) {
       const targetId = window.location.hash.substring(1);
@@ -105,7 +122,13 @@ const Index = () => {
       <Footer />
 
       {/* Global popups */}
-      {loadPopups && (
+      {showSuccessWhatsApp && (
+        <Suspense fallback={null}>
+          <WhatsAppPopup forceShow onClose={() => setShowSuccessWhatsApp(false)} />
+        </Suspense>
+      )}
+
+      {loadPopups && !showSuccessWhatsApp && (
         <Suspense fallback={null}>
           <NewsletterPopup />
         </Suspense>

@@ -1,7 +1,7 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, HardHat, Heart, MapPin, Calendar, ExternalLink } from "lucide-react";
-import { RegistrationModal } from "./RegistrationModal";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import CheckoutModal from "./CheckoutModal";
 
@@ -67,19 +67,17 @@ const ShortRegistrationBanner = () => {
             </div>
             
             <div className="flex-shrink-0 w-full lg:w-auto flex flex-col sm:flex-row lg:flex-col justify-center items-center gap-4">
-              <RegistrationModal>
-                <div className="w-full sm:w-[280px] md:w-[320px]">
-                  <Button
-                    size="lg"
-                    className="bg-semin-dark text-white hover:bg-black font-display font-bold text-base md:text-lg h-14 md:h-16 px-6 rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.25)] transition-all duration-300 active:scale-95 hover:scale-[1.02] w-full flex items-center justify-center gap-2.5 relative overflow-hidden group cursor-pointer"
-                  >
-                    <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-[100%] group-hover:translate-x-[100%] transition-transform duration-700"></span>
-                    <HardHat className="h-5 w-5 md:h-6 md:w-6 text-semin-yellow shrink-0" />
-                    <span className="truncate">Inscrição</span>
-                    <ArrowRight className="h-5 w-5 text-semin-yellow group-hover:translate-x-1 transition-transform shrink-0" />
-                  </Button>
-                </div>
-              </RegistrationModal>
+              <Link to="/inscricao" className="w-full sm:w-[280px] md:w-[320px]">
+                <Button
+                  size="lg"
+                  className="bg-semin-dark text-white hover:bg-black font-display font-bold text-base md:text-lg h-14 md:h-16 px-6 rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.25)] transition-all duration-300 active:scale-95 hover:scale-[1.02] w-full flex items-center justify-center gap-2.5 relative overflow-hidden group cursor-pointer"
+                >
+                  <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-[100%] group-hover:translate-x-[100%] transition-transform duration-700"></span>
+                  <HardHat className="h-5 w-5 md:h-6 md:w-6 text-semin-yellow shrink-0" />
+                  <span className="truncate">Garantir Inscrição</span>
+                  <ArrowRight className="h-5 w-5 text-semin-yellow group-hover:translate-x-1 transition-transform shrink-0" />
+                </Button>
+              </Link>
 
               <div className="w-full sm:w-[280px] md:w-[320px]">
                 <Button

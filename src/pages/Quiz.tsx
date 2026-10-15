@@ -801,7 +801,7 @@ const QuizPage = () => {
             resolve();
           };
           logo.onerror = () => resolve(); // Continua sem logo se falhar
-          logo.src = "/semin_logo.webp";
+          logo.src = "/50anos_logo.png";
         });
       } catch { /* continua sem logo */ }
 

@@ -14,6 +14,11 @@ import drillgeoLogo from "@/assets/drillgeo_logo.png";
 import ibramLogo from "@/assets/ibram_logo.jpg";
 import sandvikLogo from "@/assets/sandvik_logo.png";
 import clariantLogo from "@/assets/clariant_logo.png";
+import tomraLogo from "@/assets/tomra_logo.png";
+import corecaseLogo from "@/assets/corecase_logo.png";
+import cbpmLogo from "@/assets/cbpm_logo.png";
+import anmLogo from "@/assets/anm_logo.png";
+import sindibritaLogo from "@/assets/sindibrita_logo.png";
 
 type SponsorLogo = {
   name: string;
@@ -26,6 +31,8 @@ const organizadores: SponsorLogo[] = [
   { name: "SINDIMIBA", logo: sindimibaLogo, className: "h-12 sm:h-16 md:h-22 lg:h-26 max-w-[140px] md:max-w-[200px]" },
   { name: "CREA-BA", logo: creaLogo, className: "h-16 sm:h-20 md:h-26 lg:h-30 max-w-[140px] md:max-w-[200px]" },
   { name: "IBRAM", logo: ibramLogo, className: "h-16 sm:h-20 md:h-26 lg:h-30 max-w-[140px] md:max-w-[200px]" },
+  { name: "ANM", logo: anmLogo, className: "h-14 sm:h-18 md:h-24 lg:h-28 max-w-[140px] md:max-w-[190px]" },
+  { name: "SINDIBRITA", logo: sindibritaLogo, className: "h-14 sm:h-18 md:h-24 lg:h-28 max-w-[140px] md:max-w-[190px]" },
 ];
 
 type TierGroup = {
@@ -41,20 +48,7 @@ type TierGroup = {
 };
 
 const sponsorsByTier: TierGroup[] = [
-  {
-    tier: "Diamante",
-    label: "Diamante",
-    icon: Diamond,
-    accentFrom: "from-sky-400",
-    accentTo: "to-indigo-400",
-    accentText: "text-sky-300",
-    glowColor: "bg-sky-400/20",
-    ringColor: "ring-sky-400/30",
-    sponsors: [
-      { name: "Patrocinador Diamante 1" },
-      { name: "Patrocinador Diamante 2" },
-    ],
-  },
+  // Cota Diamante oculta a pedido
   {
     tier: "Córindon",
     label: "Córindon",
@@ -80,6 +74,7 @@ const sponsorsByTier: TierGroup[] = [
     glowColor: "bg-amber-400/15",
     ringColor: "ring-amber-400/20",
     sponsors: [
+      { name: "TOMRA", logo: tomraLogo },
       { name: "Sandvik", logo: sandvikLogo },
       { name: "DrillGeo", logo: drillgeoLogo },
       { name: "JMC", logo: jmcLogo },
@@ -97,10 +92,10 @@ const sponsorsByTier: TierGroup[] = [
     ringColor: "ring-slate-400/15",
     sponsors: [
       { name: "Clariant", logo: clariantLogo, className: "scale-115" },
+      { name: "Core Case", logo: corecaseLogo },
+      { name: "CBPM", logo: cbpmLogo },
       { name: "Grupo Iguana", logo: grupoIguanaLogo },
       { name: "Minerallis", logo: minerallisLogo },
-      { name: "Patrocinador Quartzo 1" },
-      { name: "Patrocinador Quartzo 2" },
     ],
   },
 ];

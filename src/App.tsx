@@ -1,4 +1,4 @@
-﻿import { Toaster } from "@/components/ui/toaster";
+import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -12,6 +12,7 @@ import Index from "./pages/Index";
 const QuizPage = React.lazy(() => import("./pages/Quiz"));
 const AdminGallery = React.lazy(() => import("./pages/AdminGallery"));
 const ThankYouPage = React.lazy(() => import("./pages/ThankYou"));
+const InscricaoPage = React.lazy(() => import("./pages/Inscricao"));
 const NotFound = React.lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient();
@@ -27,6 +28,8 @@ const App = () => (
           <Suspense fallback={<div style={{minHeight:'100vh',background:'#161b22'}} />}>
             <Routes>
               <Route path="/" element={<Index />} />
+              <Route path="/inscricao" element={<InscricaoPage />} />
+              <Route path="/inscricoes" element={<InscricaoPage />} />
               <Route path="/desafio-semin" element={<QuizPage />} />
               <Route path="/admin" element={<AdminGallery />} />
               <Route path="/obrigado" element={<ThankYouPage />} />

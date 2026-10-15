@@ -1,7 +1,7 @@
 import { useState, useEffect, lazy, Suspense } from "react";
 import { Menu, User, LogOut, Trophy, LayoutDashboard, KeyRound, Sparkles, Flame, ShieldCheck, HeartHandshake } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import seminLogo from "@/assets/logo-semin-2026-cabecalho.png";
+import seminLogo from "@/assets/50anos_logo.png";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useAuth } from "@/contexts/AuthContext";
@@ -13,9 +13,6 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-
-// Lazy-load - only needed when user clicks "Inscreva-se"
-const RegistrationModal = lazy(() => import("./RegistrationModal").then(m => ({ default: m.RegistrationModal })));
 
 interface NavItem {
   label: string;
@@ -112,15 +109,13 @@ const Navbar = () => {
               window.scrollTo({ top: 0, behavior: "smooth" });
             }
           }}
-          className="flex items-center gap-2.5 sm:gap-3.5 shrink-0 group"
+          className="flex items-center shrink-0 group py-1"
           aria-label="SEMIN UFBA 2026 - Página Inicial"
         >
           <img 
             src={seminLogo} 
-            alt="SEMIN UFBA 2026" 
-            width="170" 
-            height="55" 
-            className="h-8 sm:h-10 md:h-11 w-auto object-contain transition-transform duration-300 group-hover:scale-105" 
+            alt="SEMIN UFBA 50 Anos" 
+            className="h-10 sm:h-12 md:h-14 lg:h-16 w-auto object-contain transition-transform duration-300 group-hover:scale-105" 
             fetchPriority="high" 
           />
         </Link>
@@ -227,18 +222,14 @@ const Navbar = () => {
           )}
 
           {/* Inscreva-se CTA */}
-          <Suspense fallback={null}>
-            <RegistrationModal>
-              <div className="cursor-pointer">
-                <Button 
-                  size="sm"
-                  className="bg-gradient-to-r from-semin-yellow to-semin-orange text-semin-dark hover:from-semin-orange hover:to-semin-yellow font-extrabold text-xs shadow-md shadow-amber-500/20 px-4 h-9 rounded-xl transition-all duration-300 hover:scale-105 active:scale-95"
-                >
-                  Inscreva-se
-                </Button>
-              </div>
-            </RegistrationModal>
-          </Suspense>
+          <Link to="/inscricao">
+            <Button 
+              size="sm"
+              className="bg-gradient-to-r from-semin-yellow to-semin-orange text-semin-dark hover:from-semin-orange hover:to-semin-yellow font-extrabold text-xs shadow-md shadow-amber-500/20 px-4 h-9 rounded-xl transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer"
+            >
+              Inscreva-se
+            </Button>
+          </Link>
         </div>
 
         {/* Mobile Hamburger Toggle */}
@@ -257,7 +248,7 @@ const Navbar = () => {
               {/* Mobile Header */}
               <div className="flex items-center justify-between pb-6 border-b border-white/10 mb-6">
                 <div className="flex items-center gap-2.5">
-                  <img src={seminLogo} alt="SEMIN UFBA" width="130" height="44" className="h-9 w-auto" />
+                  <img src={seminLogo} alt="SEMIN UFBA 50 Anos" className="h-11 sm:h-12 w-auto object-contain" />
                 </div>
               </div>
 
@@ -335,15 +326,11 @@ const Navbar = () => {
                   </Button>
                 </Link>
 
-                <Suspense fallback={null}>
-                  <RegistrationModal>
-                    <div onClick={() => setOpen(false)} className="cursor-pointer">
-                      <Button className="w-full bg-gradient-to-r from-semin-yellow to-semin-orange text-semin-dark hover:from-semin-orange hover:to-semin-yellow font-black py-5 text-sm rounded-xl shadow-lg shadow-amber-500/20">
-                        Inscreva-se no Evento
-                      </Button>
-                    </div>
-                  </RegistrationModal>
-                </Suspense>
+                <Link to="/inscricao" onClick={() => setOpen(false)} className="w-full">
+                  <Button className="w-full bg-gradient-to-r from-semin-yellow to-semin-orange text-semin-dark hover:from-semin-orange hover:to-semin-yellow font-black py-5 text-sm rounded-xl shadow-lg shadow-amber-500/20 cursor-pointer">
+                    Inscreva-se no Evento
+                  </Button>
+                </Link>
               </div>
 
             </div>

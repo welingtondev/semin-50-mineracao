@@ -128,7 +128,7 @@ const SupportSection = () => {
             Comissão Organizadora
           </span>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-black mb-6 tracking-tight leading-tight text-white">
-            Quem transforma esta edição histórica em uma <span className="text-semin-orange">experiência relevante.</span>
+            Conheça a <span className="text-semin-orange">comissão organizadora</span> desta edição.
           </h2>
         </div>
 

@@ -9,7 +9,7 @@ const footerLinks = [
   { label: "O Legado", href: "#legado" },
   { label: "Desafio", href: "#desafio" },
 //  { label: "Patrocínio", href: "#patrocinio" },
-  { label: "Inscrições", href: "#inscricoes" },
+  { label: "Inscrições", href: "/inscricao" },
 ];
 
 const Footer = () => (

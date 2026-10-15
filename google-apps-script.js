@@ -12,7 +12,7 @@ const SPREADSHEET_ID = '1MUpQGUWd3KV-Dm1KIyRZ_q2IlJkFUhxEjLkZouOOG4M';
 const LINKS = {
   SITE: 'https://seminufba.com.br',
   VALIDADOR: 'https://seminufba.com.br/validador',
-  INSTAGRAM: 'https://instagram.com/seminufba',
+  INSTAGRAM: 'https://www.instagram.com/semin.ufba/',
   COMUNIDADE: 'https://chat.whatsapp.com/GiV7WJficGV51jbmO0Wfm5' // Link direto do Grupo Oficial no WhatsApp
 };
 
@@ -209,6 +209,7 @@ function enviarEmailConfirmacao(nome, email, codInscricao, categoria, dataHora, 
           .grid { width: 100%; border-collapse: collapse; margin-bottom: 18px; }
           .grid td { font-size: 13px; padding: 6px 0; }
           .info-box { background: #161B24; border-left: 3px solid #2563EB; padding: 12px 16px; border-radius: 4px; font-size: 12px; line-height: 1.5; margin-bottom: 16px; color: #E2E8F0; }
+          .solidario-box { background: rgba(221, 174, 59, 0.08); border: 1px solid #DDAE3B; border-left: 4px solid #DDAE3B; padding: 12px 16px; border-radius: 4px; font-size: 12px; line-height: 1.5; margin-bottom: 16px; color: #F1F5F9; }
           .agenda { font-size: 11px; color: #94A3B8; line-height: 1.6; border-top: 1px solid #232C3D; padding-top: 12px; }
           .footer { font-size: 10px; color: #64748B; margin-top: 16px; text-align: center; border-top: 1px solid #1E293B; padding-top: 10px; }
         </style>
@@ -231,10 +232,17 @@ function enviarEmailConfirmacao(nome, email, codInscricao, categoria, dataHora, 
             <tr><td style="color:#94A3B8;"><strong>Data de Registro:</strong></td><td style="color:#E2E8F0;">${dataHora}</td></tr>
             <tr><td style="color:#94A3B8;"><strong>Status Oficial:</strong></td><td style="color:#4ADE80; font-weight:bold;">Confirmada</td></tr>
           </table>
+          <div class="solidario-box">
+            <strong style="color: #DDAE3B;">ENTRADA SOLIDÁRIA &bull; COMPROMISSO SOCIAL:</strong><br>
+            A entrada no evento é validada mediante a <strong>entrega obrigatória de 1kg de alimento não perecível</strong> no balcão de credenciamento.
+          </div>
           <div class="info-box">
             <strong>Período:</strong> 09 a 14 de Novembro de 2026<br>
-            <strong>Local:</strong> Escola Politécnica da UFBA (Auditório Leopoldo Amaral) &bull; Salvador/BA<br>
-            <strong>Autenticação Online:</strong> ${linkValidacao}
+            <strong>Local:</strong> Escola Politécnica da UFBA (Auditório Leopoldo Amaral) &bull; Salvador/BA
+          </div>
+          <div style="text-align: center; margin: 16px 0 10px;">
+            <img src="${qrCodeUrl}" alt="QR Code Oficial" width="115" height="115" style="border: 2px solid #DDAE3B; border-radius: 4px; padding: 4px;" />
+            <div style="font-size: 10px; color: #94A3B8; margin-top: 6px; text-transform: uppercase; letter-spacing: 1px;">Apresente este QR Code no credenciamento</div>
           </div>
           <div class="agenda">
             &bull; <strong>09 a 11/11:</strong> Treinamentos e Minicursos Práticos Especializados<br>
@@ -315,6 +323,25 @@ function enviarEmailConfirmacao(nome, email, codInscricao, categoria, dataHora, 
                   </td>
                 </tr>
 
+                <!-- Box de Compromisso Social: 1kg de Alimento -->
+                <tr>
+                  <td style="padding: 0 30px 20px;">
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: rgba(221, 174, 59, 0.08); border: 1px solid rgba(221, 174, 59, 0.35); border-left: 4px solid #DDAE3B; border-radius: 6px; padding: 14px 18px;">
+                      <tr>
+                        <td>
+                          <div style="font-size: 12px; font-weight: 800; color: #DDAE3B; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px;">
+                            <span style="background-color: #DDAE3B; color: #0A0D12; padding: 2px 6px; border-radius: 3px; font-size: 10px; font-weight: 900; margin-right: 6px; display: inline-block; vertical-align: middle;">AVISO</span>
+                            Entrada Solidária &bull; Doação de 1kg de Alimento
+                          </div>
+                          <div style="font-size: 13px; color: #E2E8F0; line-height: 1.5;">
+                            A sua inscrição é gratuita, mas a validação do seu acesso e retirada da credencial são condicionadas à <strong>entrega presencial de 1kg de alimento não perecível</strong> no balcão de credenciamento no dia do evento. As doações serão destinadas a instituições beneficentes.
+                          </div>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+
                 <!-- Resumo dos Dados do Congressista -->
                 <tr>
                   <td style="padding: 0 30px 20px;">
@@ -339,23 +366,18 @@ function enviarEmailConfirmacao(nome, email, codInscricao, categoria, dataHora, 
                   </td>
                 </tr>
 
-                <!-- Bloco de Validação & QR Code -->
+                <!-- Bloco do QR Code (Apenas QR Code, sem links de validação) -->
                 <tr>
                   <td style="padding: 0 30px 22px;">
-                    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #0A0D12; border: 1px solid #232C3D; border-radius: 6px; padding: 18px;">
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #0A0D12; border: 1px solid #232C3D; border-radius: 6px; padding: 22px 18px;">
                       <tr>
                         <td align="center">
-                          <div style="font-size: 11px; font-weight: 700; color: #DDAE3B; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;">
-                            Validação Digital da Credencial
+                          <div style="font-size: 11px; font-weight: 800; color: #DDAE3B; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;">
+                            QR Code Oficial de Credenciamento
                           </div>
-                          <img src="${qrCodeUrl}" alt="QR Code Oficial" width="120" height="120" style="border: 2px solid #DDAE3B; border-radius: 4px; padding: 4px; display: block; margin: 0 auto 14px;" />
-                          
-                          <a href="${linkValidacao}" target="_blank" style="display: inline-block; background-color: #DDAE3B; color: #090A0C; padding: 11px 24px; border-radius: 5px; font-weight: 700; font-size: 12px; text-decoration: none; text-transform: uppercase; letter-spacing: 0.5px;">
-                            Acessar Validador Oficial
-                          </a>
-                          
-                          <div style="margin-top: 10px; font-size: 10px; color: #94A3B8;">
-                            Link: <a href="${linkValidacao}" target="_blank" style="color: #DDAE3B; text-decoration: underline;">${linkValidacao}</a>
+                          <img src="${qrCodeUrl}" alt="QR Code Oficial" width="130" height="130" style="border: 2px solid #DDAE3B; border-radius: 6px; padding: 6px; display: block; margin: 0 auto 12px; background-color: #11141A;" />
+                          <div style="font-size: 11px; color: #94A3B8; max-width: 340px; line-height: 1.4;">
+                            Apresente este QR Code (na tela do seu celular ou no comprovante em PDF anexo) junto com <strong>1kg de alimento não perecível</strong> no balcão de credenciamento.
                           </div>
                         </td>
                       </tr>

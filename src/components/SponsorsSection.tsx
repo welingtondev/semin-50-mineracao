@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Check, Sparkles, Gem, Mountain, Diamond, Crown, Star, ChevronDown, Rocket } from "lucide-react";
@@ -7,6 +7,8 @@ import { SponsorModal } from "./SponsorModal";
 import { motion, AnimatePresence } from "framer-motion";
 
 const tiers = [
+  // Cota Diamante oculta a pedido
+  /*
   {
     name: "Diamante",
     price: "R$ 20.000",
@@ -23,6 +25,7 @@ const tiers = [
       "Patrocinador Oficial do DESAFIO SEMIN UFBA",
     ],
   },
+  */
   {
     name: "Córindon",
     price: "R$ 10.000",
@@ -123,71 +126,11 @@ const SponsorsSection = () => {
           </p>
         </div>
 
-        {/* ── COTA DIAMANTE - destaque principal ── */}
-        <div className="max-w-4xl mx-auto mb-12 md:mb-16">
-          <div
-            className={`transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"}`}
-          >
-            <div className="relative group">
-              {/* Outer Intense Glow */}
-              <div className="absolute -inset-1 rounded-[2.5rem] bg-gradient-to-r from-sky-400 via-cyan-300 to-blue-500 opacity-30 group-hover:opacity-60 blur-xl transition-all duration-500 animate-pulse" />
+        {/* ── COTA DIAMANTE OCULTA A PEDIDO ── */}
 
-              <Card className="relative overflow-hidden bg-gradient-to-b from-[#0b1528] via-[#08101e] to-[#040811] border-2 border-sky-400/50 rounded-[2rem] shadow-[0_0_50px_rgba(56,189,248,0.2)]">
-                {/* Internal dynamic mesh & reflections */}
-                <div className="absolute top-0 right-0 w-96 h-96 bg-sky-400/10 rounded-full blur-3xl pointer-events-none" />
-                <div className="absolute bottom-0 left-0 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl pointer-events-none" />
-                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-sky-400/10 via-transparent to-transparent pointer-events-none" />
-
-                <CardHeader className="text-center pb-4 pt-12 md:pt-16 px-6 md:px-10 relative z-10">
-                  <div className="inline-flex mx-auto mb-6 px-6 py-2.5 rounded-full text-xs md:text-sm font-bold bg-white/5 border border-sky-400/30 text-sky-300 shadow-[0_0_20px_rgba(56,189,248,0.15)] tracking-[0.2em] uppercase">
-                    <Crown className="h-4 w-4 mr-2.5 text-sky-400" />
-                    Cota Diamante
-                  </div>
-                  <Diamond className="h-20 w-20 md:h-28 md:w-28 mx-auto text-sky-400 drop-shadow-[0_0_25px_rgba(56,189,248,0.4)]" />
-                  <div className="mt-6 md:mt-8">
-                    <span className="font-display text-5xl md:text-7xl font-black bg-gradient-to-b from-white to-white/70 bg-clip-text text-transparent drop-shadow-lg">R$ 20.000</span>
-                  </div>
-                </CardHeader>
-                <CardContent className="px-6 md:px-14 pb-12 relative z-10">
-                  <div className="text-center mb-8">
-                    <Button
-                      variant="ghost"
-                      onClick={() => toggleTier("Diamante")}
-                      className="text-sky-300 hover:text-sky-200 hover:bg-sky-400/10 font-bold gap-2 rounded-xl transition-all duration-300 border border-sky-400/20"
-                    >
-                      {expandedTiers["Diamante"] ? "Ocultar Pacote de Benefícios" : "Ver Pacote de Benefícios"}
-                      <ChevronDown className={`h-4 w-4 transition-transform duration-300 ${expandedTiers["Diamante"] ? "rotate-180" : ""}`} />
-                    </Button>
-                  </div>
-
-                  <AnimatePresence>
-                    {expandedTiers["Diamante"] && (
-                      <motion.div 
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: "auto" }}
-                        exit={{ opacity: 0, height: 0 }}
-                        className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-x-12 md:gap-y-6 border-t border-white/10 pt-8 overflow-hidden"
-                      >
-                        {tiers[0].benefits.map((b) => (
-                          <div key={b} className="flex items-start gap-4">
-                            <div className="mt-1 shrink-0 w-6 h-6 rounded-full bg-sky-500/20 border border-sky-400/40 flex items-center justify-center shadow-[0_0_15px_rgba(56,189,248,0.2)]">
-                              <Check className="h-3.5 w-3.5 text-sky-300" />
-                            </div>
-                            <span className="font-body text-sm md:text-base text-white/80 leading-relaxed">{b}</span>
-                          </div>
-                        ))}
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        </div>
-
-        {/* ── DEMAIS COTAS ── grid uniforme ── */}
+        {/* ── COTAS DE PATROCÍNIO (Córindon, Topázio, Quartzo) ── */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 max-w-6xl mx-auto">
-          {tiers.slice(1).map((t, i) => (
+          {tiers.map((t, i) => (
             <div
               key={t.name}
               className={`transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"}`}

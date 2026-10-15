@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 import { ArrowRight, HardHat, CheckCircle2, GraduationCap, Award, Building, Sparkles } from "lucide-react";
-import { RegistrationModal } from "./RegistrationModal";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 const personas = [
@@ -74,16 +74,16 @@ const RegistrationSection = () => {
             ))}
           </div>
 
-          <RegistrationModal>
+          <Link to="/inscricao" className="block w-full">
             <Button
               size="lg"
-              className="w-full font-bold py-8 text-lg rounded-2xl bg-gradient-to-r from-semin-yellow via-amber-400 to-semin-orange text-semin-dark hover:shadow-xl hover:shadow-semin-orange/30 transition-all duration-300 hover:scale-[1.02]"
+              className="w-full font-bold py-8 text-lg rounded-2xl bg-gradient-to-r from-semin-yellow via-amber-400 to-semin-orange text-semin-dark hover:shadow-xl hover:shadow-semin-orange/30 transition-all duration-300 hover:scale-[1.02] cursor-pointer"
             >
               <HardHat className="w-6 h-6 mr-3" />
-              Inscrição
+              Garantir Minha Inscrição Gratuita
               <ArrowRight className="w-6 h-6 ml-3" />
             </Button>
-          </RegistrationModal>
+          </Link>
         </div>
 
         {/* Why Participate Section */}

@@ -1,12 +1,9 @@
 import { useEffect, useState, useRef, lazy, Suspense } from "react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ChevronDown, Mountain, Pickaxe, Gem, HardHat, ArrowRight, Heart } from "lucide-react";
 import CheckoutModal from "./CheckoutModal";
 import { SponsorModal } from "./SponsorModal";
-
-
-// Lazy-load modal components — they are only needed on button click
-const RegistrationModal = lazy(() => import("./RegistrationModal").then(m => ({ default: m.RegistrationModal })));
 
 const Counter = ({ end, label, prefix = "", suffix = "" }: { end: number; label: string; prefix?: string; suffix?: string }) => {
   const [count, setCount] = useState(() => {
@@ -160,22 +157,18 @@ const HeroSection = () => {
           </div>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 md:gap-5 mb-14 md:mb-16 px-4 sm:px-0">
-            <Suspense fallback={null}>
-              <RegistrationModal>
-                <div className="relative inline-flex w-auto sm:w-auto cta-float cursor-pointer">
-                  {/* Glow ring behind CTA */}
-                  <div className="absolute -inset-1 md:-inset-1.5 rounded-2xl bg-gradient-to-r from-semin-yellow via-semin-orange to-semin-yellow opacity-40 blur-md cta-glow" />
-                  <Button
-                    size="lg"
-                    className="cta-shine relative w-auto min-w-[240px] sm:w-auto md:w-[320px] bg-gradient-to-r from-semin-yellow via-amber-400 to-semin-orange text-semin-dark hover:from-semin-orange hover:via-amber-500 hover:to-semin-yellow font-display font-bold text-sm md:text-lg px-8 py-4 md:py-8 rounded-2xl shadow-2xl shadow-semin-yellow/20 transition-all duration-300 hover:shadow-semin-orange/30 active:scale-95 md:hover:scale-105 group"
-                  >
-                    <HardHat className="h-4 w-4 md:h-6 md:w-6 mr-2 group-hover:rotate-12 transition-transform duration-300" />
-                    Inscrição
-                    <ArrowRight className="ml-2 h-4 w-4 md:h-5 md:w-5 group-hover:translate-x-1 transition-transform duration-300" />
-                  </Button>
-                </div>
-              </RegistrationModal>
-            </Suspense>
+            <Link to="/inscricao" className="relative inline-flex w-auto sm:w-auto cta-float cursor-pointer">
+              {/* Glow ring behind CTA */}
+              <div className="absolute -inset-1 md:-inset-1.5 rounded-2xl bg-gradient-to-r from-semin-yellow via-semin-orange to-semin-yellow opacity-40 blur-md cta-glow" />
+              <Button
+                size="lg"
+                className="cta-shine relative w-auto min-w-[240px] sm:w-auto md:w-[320px] bg-gradient-to-r from-semin-yellow via-amber-400 to-semin-orange text-semin-dark hover:from-semin-orange hover:via-amber-500 hover:to-semin-yellow font-display font-bold text-sm md:text-lg px-8 py-4 md:py-8 rounded-2xl shadow-2xl shadow-semin-yellow/20 transition-all duration-300 hover:shadow-semin-orange/30 active:scale-95 md:hover:scale-105 group cursor-pointer"
+              >
+                <HardHat className="h-4 w-4 md:h-6 md:w-6 mr-2 group-hover:rotate-12 transition-transform duration-300" />
+                Inscrição
+                <ArrowRight className="ml-2 h-4 w-4 md:h-5 md:w-5 group-hover:translate-x-1 transition-transform duration-300" />
+              </Button>
+            </Link>
 
             <a href="#apoie" className="relative inline-flex w-auto sm:w-auto cursor-pointer">
               <div className="absolute -inset-[1px] rounded-2xl bg-gradient-to-r from-semin-orange/60 via-amber-500/40 to-semin-orange/60 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
