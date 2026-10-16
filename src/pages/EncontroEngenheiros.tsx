@@ -18,7 +18,8 @@ import {
   GraduationCap, 
   Building, 
   MessageSquare, 
-  ShieldCheck
+  ShieldCheck,
+  RefreshCw
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -96,6 +97,8 @@ export default function EncontroEngenheirosPage() {
     aceitaTermos: true
   });
 
+  const printRef = useRef<HTMLDivElement>(null);
+  const [errors, setErrors] = useState<FormErrors>({});
   const [searchParams, setSearchParams] = useSearchParams();
   const ticketParam = searchParams.get("ticket") || searchParams.get("code");
 
