@@ -6,6 +6,10 @@
  * Planilha Vinculada:
  * https://docs.google.com/spreadsheets/d/1seBafr2DACgq6yHCnbW-mc1CraWhjz3sG8okG3Q2tN8/edit
  * SPREADSHEET_ID: 1seBafr2DACgq6yHCnbW-mc1CraWhjz3sG8okG3Q2tN8
+ * 
+ * Implantação Web App Ativa:
+ * ID: AKfycbyB2t4BHlwhkl1lFb4OmFNCBpVINvEVYEeNO1LUpfvmJ1koWppPAdCSGXHwR8OteBfd
+ * URL: https://script.google.com/macros/s/AKfycbyB2t4BHlwhkl1lFb4OmFNCBpVINvEVYEeNO1LUpfvmJ1koWppPAdCSGXHwR8OteBfd/exec
  * ==============================================================================
  */
 

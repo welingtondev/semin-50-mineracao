@@ -27,8 +27,8 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import seminLogo from "@/assets/logo branca semin site.png";
 
-// URL padrão do script do 16º Encontro (o usuário pode configurar via VITE_ENCONTRO_SCRIPT_URL ou conectar a sua publicação)
-const SCRIPT_URL = import.meta.env.VITE_ENCONTRO_SCRIPT_URL || "https://script.google.com/macros/s/AKfycbxutodaEtABT1eOEVKffTlGZhqGAA9wr_zV-Rbk-azPLqyIl4MtAXKtjFp1Kx-X1x2LVw/exec";
+// URL oficial de produção do script do 16º Encontro (Google Sheets & Envio de QR Code)
+const SCRIPT_URL = import.meta.env.VITE_ENCONTRO_SCRIPT_URL || "https://script.google.com/macros/s/AKfycbyB2t4BHlwhkl1lFb4OmFNCBpVINvEVYEeNO1LUpfvmJ1koWppPAdCSGXHwR8OteBfd/exec";
 
 // Opções rápidas de Turma / Ano de Formatura
 const TURMAS_DESTAQUE = [

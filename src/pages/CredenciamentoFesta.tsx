@@ -23,8 +23,8 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import seminLogo from "@/assets/logo branca semin site.png";
 
-// Endpoint do Google Apps Script
-const SCRIPT_URL = import.meta.env.VITE_ENCONTRO_SCRIPT_URL || "https://script.google.com/macros/s/AKfycbxutodaEtABT1eOEVKffTlGZhqGAA9wr_zV-Rbk-azPLqyIl4MtAXKtjFp1Kx-X1x2LVw/exec";
+// Endpoint oficial do Google Apps Script (Planilha & Validação de Presença)
+const SCRIPT_URL = import.meta.env.VITE_ENCONTRO_SCRIPT_URL || "https://script.google.com/macros/s/AKfycbyB2t4BHlwhkl1lFb4OmFNCBpVINvEVYEeNO1LUpfvmJ1koWppPAdCSGXHwR8OteBfd/exec";
 
 interface Participante {
   nome: string;
