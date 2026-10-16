@@ -103,6 +103,37 @@ export default function EncontroEngenheirosPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const ticketParam = searchParams.get("ticket") || searchParams.get("code");
 
+  // Atualização dinâmica dos títulos e tags de compartilhamento
+  useEffect(() => {
+    const originalTitle = document.title;
+    document.title = "16º Encontro dos Engenheiros de Minas da Bahia • SEMIN 50 Anos";
+
+    const setMetaTag = (property: string, content: string) => {
+      let el = document.querySelector(`meta[property="${property}"]`) as HTMLMetaElement | null;
+      if (!el) {
+        el = document.querySelector(`meta[name="${property}"]`) as HTMLMetaElement | null;
+      }
+      if (!el) {
+        el = document.createElement("meta");
+        el.setAttribute(property.startsWith("og:") || property.startsWith("twitter:") ? "property" : "name", property);
+        document.head.appendChild(el);
+      }
+      el.setAttribute("content", content);
+    };
+
+    setMetaTag("og:title", "16º Encontro dos Engenheiros de Minas da Bahia");
+    setMetaTag("og:description", "Festa Oficial do Cinquentenário (1976 - 2026) • 14 de Novembro no Da Tetê - Bar (Rio Vermelho, Salvador). Open Bar: Stella Pure Gold, Chivas 12 Anos, Água, Refrigerante e Suco.");
+    setMetaTag("og:image", "https://seminufba.com.br/50anos_logo.png");
+    setMetaTag("og:url", "https://seminufba.com.br/16-encontro-engenheiros-minas");
+    setMetaTag("twitter:title", "16º Encontro dos Engenheiros de Minas da Bahia");
+    setMetaTag("twitter:description", "Festa Oficial do Cinquentenário (1976 - 2026) • 14 de Novembro no Da Tetê - Bar (Rio Vermelho).");
+    setMetaTag("description", "Festa Oficial do Cinquentenário (1976 - 2026) • Sábado, 14 de Novembro no Da Tetê - Bar. Open Bar Incluso!");
+
+    return () => {
+      document.title = originalTitle;
+    };
+  }, []);
+
   // Se o participante acessar o link direto da sua inscrição online (?ticket=16EM-2026-XXXX)
   useEffect(() => {
     if (ticketParam) {

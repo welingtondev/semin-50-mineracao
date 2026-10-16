@@ -1,5 +1,7 @@
 {
   "rewrites": [
+    { "source": "/16-encontro-engenheiros-minas", "destination": "/16-encontro-engenheiros-minas.html" },
+    { "source": "/encontro-engenheiros", "destination": "/16-encontro-engenheiros-minas.html" },
     { "source": "/(.*)", "destination": "/index.html" }
   ],
   "headers": [
@@ -59,6 +61,15 @@
     },
     {
       "source": "/index.html",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        }
+      ]
+    },
+    {
+      "source": "/16-encontro-engenheiros-minas.html",
       "headers": [
         {
           "key": "Cache-Control",

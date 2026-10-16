@@ -19,6 +19,10 @@ export default defineConfig(({ mode }) => ({
   },
   build: {
     rollupOptions: {
+      input: {
+        main: path.resolve(__dirname, "index.html"),
+        encontro: path.resolve(__dirname, "16-encontro-engenheiros-minas.html"),
+      },
       output: {
         manualChunks(id) {
           if (id.includes('node_modules')) {
