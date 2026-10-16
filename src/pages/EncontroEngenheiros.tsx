@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { 
   Sparkles, 
   Calendar, 
@@ -97,24 +97,36 @@ export default function EncontroEngenheirosPage() {
   });
 
   const [errors, setErrors] = useState<FormErrors>({});
-  const printRef = useRef<HTMLDivElement>(null);
+  const [searchParams] = useSearchParams();
+  const ticketParam = searchParams.get("ticket") || searchParams.get("code");
 
-  // Garante que a página é estritamente privada (não indexada por mecanismos de busca)
+  // Se o participante acessar o link direto da sua inscrição online (?ticket=16EM-2026-XXXX)
   useEffect(() => {
-    document.title = "16º Encontro dos Engenheiros de Minas da Bahia • Inscrição Exclusiva";
-    
-    let metaRobots = document.querySelector('meta[name="robots"]');
-    if (!metaRobots) {
-      metaRobots = document.createElement("meta");
-      metaRobots.setAttribute("name", "robots");
-      document.head.appendChild(metaRobots);
+    if (ticketParam) {
+      setIsLoading(true);
+      fetch(`${SCRIPT_URL}?code=${encodeURIComponent(ticketParam)}`)
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.success && data.found && data.participante) {
+            const p = data.participante;
+            setTicketData({
+              nome: p.nome,
+              cpf: p.cpf || "",
+              email: p.email,
+              phone: p.telefone,
+              formatura: p.formatura,
+              empresa: p.empresa,
+              mensagem: p.mensagem,
+              codInscricao: p.codInscricao,
+              dataRegistro: p.dataRegistro
+            });
+            setIsSuccess(true);
+          }
+        })
+        .catch(console.error)
+        .finally(() => setIsLoading(false));
     }
-    metaRobots.setAttribute("content", "noindex, nofollow");
-
-    return () => {
-      metaRobots?.setAttribute("content", "index, follow");
-    };
-  }, []);
+  }, [ticketParam]);
 
   // Máscara dinâmica de CPF (000.000.000-00)
   const formatCPF = (val: string) => {
@@ -292,15 +304,15 @@ export default function EncontroEngenheirosPage() {
     window.print();
   };
 
-  const validadorUrl = useMemo(() => {
+  const onlineTicketUrl = useMemo(() => {
     if (!ticketData) return "";
-    return `https://seminufba.com.br/credenciamento-festa?code=${encodeURIComponent(ticketData.codInscricao)}`;
+    return `https://seminufba.com.br/16-encontro-engenheiros-minas?ticket=${encodeURIComponent(ticketData.codInscricao)}`;
   }, [ticketData]);
 
   const qrCodeUrl = useMemo(() => {
-    if (!validadorUrl) return "";
-    return `https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=${encodeURIComponent(validadorUrl)}&color=06080c&bgcolor=ffffff`;
-  }, [validadorUrl]);
+    if (!onlineTicketUrl) return "";
+    return `https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=${encodeURIComponent(onlineTicketUrl)}&color=06080c&bgcolor=ffffff`;
+  }, [onlineTicketUrl]);
 
   return (
     <div className="min-h-screen bg-[#07090E] text-white flex flex-col justify-between selection:bg-semin-yellow selection:text-semin-dark">

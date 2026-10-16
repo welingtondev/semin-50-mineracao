@@ -18,7 +18,10 @@ import {
   ArrowLeft,
   ShieldCheck,
   RefreshCw,
-  ExternalLink
+  ExternalLink,
+  Lock,
+  LogOut,
+  KeyRound
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -45,6 +48,17 @@ export default function CredenciamentoFestaPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const initialCode = searchParams.get("code") || "";
 
+  // Controle de Acesso Restrito da Portaria
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
+    return (
+      sessionStorage.getItem("semin_portaria_auth") === "true" ||
+      sessionStorage.getItem("semin_admin_auth") === "true"
+    );
+  });
+  const [loginUser, setLoginUser] = useState("");
+  const [loginPass, setLoginPass] = useState("");
+  const [loginError, setLoginError] = useState("");
+
   const [inputCode, setInputCode] = useState(initialCode);
   const [loading, setLoading] = useState(false);
   const [actionLoading, setActionLoading] = useState(false);
@@ -65,19 +79,62 @@ export default function CredenciamentoFestaPage() {
     metaRobots.setAttribute("content", "noindex, nofollow");
   }, []);
 
-  // Se tiver código na URL ao carregar, busca automaticamente
+  // Se tiver código na URL ao carregar e estiver autenticado, busca automaticamente
   useEffect(() => {
-    if (initialCode) {
+    if (initialCode && isAuthenticated) {
       buscarCredencial(initialCode);
     }
-  }, [initialCode]);
+  }, [initialCode, isAuthenticated]);
+
+  const handleStaffLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    const userClean = loginUser.trim().toLowerCase();
+    const passClean = loginPass.trim();
+
+    if (
+      (userClean === "seminadmin" || userClean === "portaria" || userClean === "admin") &&
+      (passClean === "seminufba2026@" || passClean === "festa50anos" || passClean === "portaria50anos")
+    ) {
+      setIsAuthenticated(true);
+      sessionStorage.setItem("semin_portaria_auth", "true");
+      setLoginError("");
+      toast.success("Acesso autorizado à portaria!");
+      if (initialCode) {
+        buscarCredencial(initialCode);
+      }
+    } else {
+      setLoginError("Usuário ou senha incorretos. Apenas a comissão tem acesso.");
+      toast.error("Credenciais inválidas.");
+    }
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    sessionStorage.removeItem("semin_portaria_auth");
+    sessionStorage.removeItem("semin_admin_auth");
+    setParticipante(null);
+    toast.info("Sessão da portaria bloqueada.");
+  };
 
   const buscarCredencial = async (codigoOuEmailOuCpf: string) => {
-    const termo = codigoOuEmailOuCpf.trim();
-    if (!termo) {
+    let raw = (codigoOuEmailOuCpf || "").trim();
+    if (!raw) {
       toast.error("Informe o código, CPF ou e-mail da credencial");
       return;
     }
+
+    // Se a leitura do leitor/scanner vier com a URL completa da inscrição
+    let termo = raw;
+    if (termo.includes("ticket=")) {
+      const match = termo.match(/[?&]ticket=([^&#]+)/);
+      if (match) termo = decodeURIComponent(match[1]).trim();
+    } else if (termo.includes("code=")) {
+      const match = termo.match(/[?&]code=([^&#]+)/);
+      if (match) termo = decodeURIComponent(match[1]).trim();
+    }
+
+    // Atualiza o campo visível com o código limpo para a equipe
+    setInputCode(termo);
 
     setLoading(true);
     setNotFound(false);
@@ -232,31 +289,126 @@ export default function CredenciamentoFestaPage() {
             </div>
           </div>
 
-          <Link
-            to="/16-encontro-engenheiros-minas"
-            className="text-xs text-white/60 hover:text-amber-400 transition-colors flex items-center gap-1.5"
-          >
-            <ArrowLeft className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Página de Inscrição</span>
-          </Link>
+          {isAuthenticated ? (
+            <div className="flex items-center gap-3">
+              <span className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-[11px] font-bold text-emerald-400">
+                <ShieldCheck className="w-3.5 h-3.5" />
+                Portaria Conectada
+              </span>
+              <Button
+                onClick={handleLogout}
+                variant="outline"
+                size="sm"
+                className="border-white/20 text-white/80 hover:text-white hover:bg-white/10 text-xs flex items-center gap-1.5 py-1.5 px-3 rounded-lg cursor-pointer"
+              >
+                <LogOut className="w-3.5 h-3.5" />
+                <span>Bloquear / Sair</span>
+              </Button>
+            </div>
+          ) : (
+            <Link
+              to="/16-encontro-engenheiros-minas"
+              className="text-xs text-white/60 hover:text-amber-400 transition-colors flex items-center gap-1.5"
+            >
+              <ArrowLeft className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Página de Inscrição</span>
+            </Link>
+          )}
         </div>
       </header>
 
-      {/* Main Content */}
-      <main className="flex-1 max-w-3xl w-full mx-auto px-4 py-8 sm:py-12">
-        {/* Titulo do Scanner */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-semibold mb-3">
-            <QrCode className="w-3.5 h-3.5" />
-            Sistema Oficial de Validação e Portaria
+      {/* Se NÃO estiver autenticado, exibe Tela de Login da Portaria */}
+      {!isAuthenticated ? (
+        <main className="flex-1 max-w-md w-full mx-auto px-4 py-12 flex flex-col justify-center">
+          <div className="bg-[#0E131F] border border-amber-500/30 rounded-3xl p-6 sm:p-8 shadow-2xl backdrop-blur-xl relative overflow-hidden animate-fade-in">
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-500 via-emerald-400 to-amber-500" />
+            
+            <div className="w-14 h-14 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-400 flex items-center justify-center mx-auto mb-4 shadow-[0_0_20px_rgba(245,158,11,0.2)]">
+              <Lock className="w-7 h-7" />
+            </div>
+
+            <div className="text-center mb-6">
+              <span className="text-[10px] font-black uppercase tracking-widest text-amber-400 block mb-1">
+                ÁREA RESTRITA • DA TETÊ - BAR
+              </span>
+              <h1 className="text-xl sm:text-2xl font-black text-white">
+                Portaria & Recepção
+              </h1>
+              <p className="text-xs text-white/60 mt-1.5 leading-relaxed">
+                Acesso exclusivo para a comissão organizadora. Os participantes têm acesso apenas à sua inscrição online.
+              </p>
+            </div>
+
+            <form onSubmit={handleStaffLogin} className="space-y-4">
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-white/80 mb-1.5">
+                  Usuário da Organização
+                </label>
+                <input
+                  type="text"
+                  value={loginUser}
+                  onChange={(e) => setLoginUser(e.target.value)}
+                  placeholder="Ex: seminadmin ou portaria"
+                  className="w-full bg-[#161C2A] border border-white/15 focus:border-amber-400 rounded-xl px-4 py-3 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-amber-400/20 transition-all font-mono"
+                  autoCapitalize="none"
+                  autoFocus
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-white/80 mb-1.5">
+                  Senha de Acesso
+                </label>
+                <input
+                  type="password"
+                  value={loginPass}
+                  onChange={(e) => setLoginPass(e.target.value)}
+                  placeholder="Digite a senha da portaria"
+                  className="w-full bg-[#161C2A] border border-white/15 focus:border-amber-400 rounded-xl px-4 py-3 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-amber-400/20 transition-all"
+                />
+              </div>
+
+              {loginError && (
+                <p className="text-xs text-red-400 font-medium text-center bg-red-500/10 border border-red-500/30 rounded-lg py-2 px-3">
+                  {loginError}
+                </p>
+              )}
+
+              <Button
+                type="submit"
+                className="w-full py-5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-semin-dark font-extrabold text-sm rounded-xl shadow-lg shadow-amber-500/20 cursor-pointer flex items-center justify-center gap-2"
+              >
+                <KeyRound className="w-4 h-4" />
+                Acessar Portaria & Scanner
+              </Button>
+            </form>
+
+            <div className="mt-6 pt-4 border-t border-white/10 text-center">
+              <Link
+                to="/16-encontro-engenheiros-minas"
+                className="text-xs text-amber-400/80 hover:text-amber-300 underline underline-offset-4"
+              >
+                ← Ir para a Inscrição Online do Participante
+              </Link>
+            </div>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-white">
-            Credenciamento da Festa do Cinquentenário
-          </h1>
-          <p className="text-sm text-white/60 max-w-lg mx-auto mt-2">
-            Portaria oficial no <strong>Da Tetê - Bar</strong> (Rio Vermelho) &bull; A partir das <strong>18h00</strong>. Aponte a câmera para o QR Code ou digite o código/CPF para liberar a entrada.
-          </p>
-        </div>
+        </main>
+      ) : (
+        /* Main Content para Usuários Autenticados */
+        <main className="flex-1 max-w-3xl w-full mx-auto px-4 py-8 sm:py-12 animate-fade-in">
+          {/* Titulo do Scanner */}
+          <div className="text-center mb-8">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-semibold mb-3">
+              <QrCode className="w-3.5 h-3.5" />
+              Sistema Oficial de Validação e Portaria
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-white">
+              Credenciamento da Festa do Cinquentenário
+            </h1>
+            <p className="text-sm text-white/60 max-w-lg mx-auto mt-2">
+              Portaria oficial no <strong>Da Tetê - Bar</strong> (Rio Vermelho) &bull; A partir das <strong>18h00</strong>. Aponte a câmera para o QR Code ou digite o código/CPF para liberar a entrada.
+            </p>
+          </div>
 
         {/* Input de Busca Rápida */}
         <div className="bg-[#0E131F] border border-white/10 rounded-2xl p-4 sm:p-6 mb-8 shadow-2xl">
@@ -491,6 +643,7 @@ export default function CredenciamentoFestaPage() {
           </p>
         </div>
       </main>
+      )}
 
       {/* Footer */}
       <footer className="border-t border-white/10 py-6 text-center text-xs text-white/40">

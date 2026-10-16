@@ -23,6 +23,7 @@ const EVENTO = {
   HORARIO: 'A partir das 18h00',
   LOCAL: 'Da Tetê - Bar • R. Borges dos Reis, 103 - Rio Vermelho, Salvador - BA, 41950-600',
   LINK_SITE: 'https://seminufba.com.br',
+  LINK_INSCRICAO_ONLINE: 'https://seminufba.com.br/16-encontro-engenheiros-minas',
   LINK_VALIDADOR: 'https://seminufba.com.br/credenciamento-festa'
 };
 
@@ -42,9 +43,49 @@ const CABECALHOS = [
 ];
 
 /**
- * Inicializa os cabeçalhos na planilha e migra coluna CPF se necessário
+ * Retorna a aba ativa da planilha vinculada com tratamento seguro de erros
+ */
+function obterPlanilhaAtiva() {
+  var ss = null;
+  try {
+    ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+  } catch (err) {
+    try {
+      ss = SpreadsheetApp.getActiveSpreadsheet();
+    } catch (errActive) {
+      Logger.log('Erro ao abrir planilha: ' + err.toString());
+    }
+  }
+
+  if (!ss) {
+    throw new Error('Não foi possível carregar a planilha. Verifique o SPREADSHEET_ID: ' + SPREADSHEET_ID);
+  }
+
+  return ss.getSheets()[0];
+}
+
+/**
+ * Função de Diagnóstico / Teste para execução no Editor do Apps Script
+ * Pode ser selecionada no topo do editor e executada com segurança
+ */
+function testarConexaoEPlanilha() {
+  var sheet = obterPlanilhaAtiva();
+  var col = obterIndicesColunas(sheet);
+  Logger.log('Planilha conectada com sucesso! Aba: ' + sheet.getName());
+  Logger.log('Linhas preenchidas: ' + sheet.getLastRow());
+  Logger.log('Estrutura de colunas identificada: ' + JSON.stringify(col));
+  return 'Conexão validada com sucesso! Total de registros: ' + (sheet.getLastRow() > 1 ? sheet.getLastRow() - 1 : 0);
+}
+
+/**
+ * Inicializa os cabeçalhos na planilha e migra coluna CPF se necessário.
+ * Seguro para ser executado diretamente pelo editor do Google Apps Script.
  */
 function obterIndicesColunas(sheet) {
+  if (!sheet) {
+    sheet = obterPlanilhaAtiva();
+  }
+
   if (sheet.getLastRow() === 0) {
     sheet.appendRow(CABECALHOS);
     var headerRange = sheet.getRange(1, 1, 1, CABECALHOS.length);
@@ -95,8 +136,7 @@ function obterIndicesColunas(sheet) {
  */
 function doGet(e) {
   try {
-    var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
-    var sheet = ss.getSheets()[0];
+    var sheet = obterPlanilhaAtiva();
     var col = obterIndicesColunas(sheet);
 
     var code = (e && e.parameter && e.parameter.code) ? e.parameter.code.trim().toUpperCase() : '';
@@ -246,8 +286,7 @@ function doPost(e) {
       })).setMimeType(ContentService.MimeType.JSON);
     }
 
-    var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
-    var sheet = ss.getSheets()[0];
+    var sheet = obterPlanilhaAtiva();
     var col = obterIndicesColunas(sheet);
 
     var rows = sheet.getDataRange().getValues();
@@ -307,13 +346,14 @@ function doPost(e) {
       Logger.log('Erro no envio de e-mail: ' + mailErr.toString());
     }
 
-    var linkValidacao = EVENTO.LINK_VALIDADOR + '?code=' + encodeURIComponent(codInscricao);
-    var qrCodeUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=' + encodeURIComponent(linkValidacao) + '&color=000000&bgcolor=FFFFFF';
+    // O participante recebe apenas seu link de Inscrição Online e o QR Code pessoal
+    var linkInscricaoOnline = EVENTO.LINK_INSCRICAO_ONLINE + '?ticket=' + encodeURIComponent(codInscricao);
+    var qrCodeUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=' + encodeURIComponent(linkInscricaoOnline) + '&color=000000&bgcolor=FFFFFF';
 
     return ContentService.createTextOutput(JSON.stringify({
       success: true,
       codInscricao: codInscricao,
-      linkValidacao: linkValidacao,
+      linkInscricaoOnline: linkInscricaoOnline,
       qrCodeUrl: qrCodeUrl,
       emailEnviado: emailEnviado,
       message: 'Inscrição confirmada com sucesso! Credencial enviada por e-mail.',
@@ -342,12 +382,13 @@ function doPost(e) {
 
 /**
  * Envia o E-mail Oficial com a Credencial e o QR Code
+ * Os participantes recebem apenas o QR Code e o número de inscrição, sem link de credenciamento
  */
 function enviarEmailCredencial(nome, email, codInscricao, formatura, empresa) {
-  var linkValidacao = EVENTO.LINK_VALIDADOR + '?code=' + encodeURIComponent(codInscricao);
+  var linkInscricaoOnline = EVENTO.LINK_INSCRICAO_ONLINE + '?ticket=' + encodeURIComponent(codInscricao);
   
-  // URL do QR Code de alta qualidade
-  var qrCodeApiUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=' + encodeURIComponent(linkValidacao) + '&color=111827&bgcolor=FFFFFF';
+  // URL do QR Code de alta qualidade apontando para a Inscrição Online do participante
+  var qrCodeApiUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=' + encodeURIComponent(linkInscricaoOnline) + '&color=111827&bgcolor=FFFFFF';
   
   // Baixa o QR Code para anexar como imagem inline segura
   var qrCodeBlob = null;
@@ -498,8 +539,8 @@ function enviarEmailCredencial(nome, email, codInscricao, formatura, empresa) {
                   <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
                     <tr>
                       <td align="center" style="padding-bottom: 10px;">
-                        <a href="${linkValidacao}" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%); color: #111827; font-weight: 800; font-size: 14px; text-decoration: none; padding: 12px 28px; border-radius: 10px; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);">
-                          Ver Minha Credencial Online 🎟️
+                        <a href="${linkInscricaoOnline}" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%); color: #111827; font-weight: 800; font-size: 14px; text-decoration: none; padding: 12px 28px; border-radius: 10px; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);">
+                          Ver Minha Inscrição Online 🎟️
                         </a>
                       </td>
                     </tr>
