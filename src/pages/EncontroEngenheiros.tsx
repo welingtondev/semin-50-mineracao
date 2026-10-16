@@ -96,13 +96,25 @@ export default function EncontroEngenheirosPage() {
     aceitaTermos: true
   });
 
-  const [errors, setErrors] = useState<FormErrors>({});
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const ticketParam = searchParams.get("ticket") || searchParams.get("code");
 
   // Se o participante acessar o link direto da sua inscrição online (?ticket=16EM-2026-XXXX)
   useEffect(() => {
     if (ticketParam) {
+      // Tenta recuperar do cache local primeiro para exibição instantânea
+      try {
+        const local = localStorage.getItem("credencial_16_encontro");
+        if (local) {
+          const parsed = JSON.parse(local);
+          if (parsed.codInscricao === ticketParam) {
+            setTicketData(parsed);
+            setIsSuccess(true);
+            return;
+          }
+        }
+      } catch (e) {}
+
       setIsLoading(true);
       fetch(`${SCRIPT_URL}?code=${encodeURIComponent(ticketParam)}`)
         .then((res) => res.json())
@@ -273,22 +285,26 @@ export default function EncontroEngenheirosPage() {
         empresa: formData.empresa.trim(),
         mensagem: formData.mensagem.trim(),
         codInscricao: generatedCode,
+        dataRegistro: dataHoraFormatada
       };
 
       setTicketData(finalTicket);
 
-      // Salva localmente para backup
+      // Salva localmente para backup imediato
       try {
         localStorage.setItem("credencial_16_encontro", JSON.stringify(finalTicket));
       } catch (e) {
         // storage fallback
       }
 
-      await new Promise((r) => setTimeout(r, 400));
+      // Atualiza os parâmetros da URL para que o link online do participante fique registrado
+      setSearchParams({ ticket: generatedCode }, { replace: true });
+
+      await new Promise((r) => setTimeout(r, 300));
       setIsSuccess(true);
-      toast.success("Credencial emitida com sucesso! 🎉", {
-        description: "Enviamos uma cópia completa com QR Code para seu e-mail.",
-        duration: 8000
+      toast.success("Inscrição confirmada com sucesso! 🎉", {
+        description: "Sua credencial oficial com QR Code foi emitida na tela e enviada ao seu e-mail.",
+        duration: 9000
       });
       window.scrollTo({ top: 0, behavior: "smooth" });
 
