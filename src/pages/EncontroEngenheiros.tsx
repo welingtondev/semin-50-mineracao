@@ -19,7 +19,8 @@ import {
   Building, 
   MessageSquare, 
   ShieldCheck,
-  RefreshCw
+  RefreshCw,
+  Zap
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -142,6 +143,44 @@ export default function EncontroEngenheirosPage() {
         .finally(() => setIsLoading(false));
     }
   }, [ticketParam]);
+
+  // Detecção se quem está escaneando pelo celular é membro da equipe de recepção autenticado
+  const [isStaffAuthenticated] = useState<boolean>(() => {
+    return (
+      sessionStorage.getItem("semin_portaria_auth") === "true" ||
+      localStorage.getItem("semin_portaria_auth") === "true" ||
+      sessionStorage.getItem("semin_admin_auth") === "true"
+    );
+  });
+  const [staffCheckinLoading, setStaffCheckinLoading] = useState(false);
+  const [staffCheckinDone, setStaffCheckinDone] = useState(false);
+
+  const handleStaffFastCheckin = async () => {
+    if (!ticketData?.codInscricao) return;
+    setStaffCheckinLoading(true);
+    try {
+      const url = `${SCRIPT_URL}?code=${encodeURIComponent(ticketData.codInscricao)}&action=credenciar`;
+      const res = await fetch(url);
+      const data = await res.json();
+      if (data.success && data.checkInSuccess) {
+        setStaffCheckinDone(true);
+        toast.success(`🎉 ENTRADA LIBERADA! Check-in de ${ticketData.nome} confirmado com sucesso!`, {
+          duration: 7000
+        });
+      } else if (data.alreadyCheckedIn) {
+        toast.error(`⛔ ENTRADA BLOQUEADA! Check-in já havia sido realizado anteriormente!`, {
+          description: data.message || "Entrada duplicada não permitida.",
+          duration: 8000
+        });
+      } else {
+        toast.error(data.message || "Erro ao realizar check-in.");
+      }
+    } catch (e) {
+      toast.error("Erro na comunicação com a planilha.");
+    } finally {
+      setStaffCheckinLoading(false);
+    }
+  };
 
   // Máscara dinâmica de CPF (000.000.000-00)
   const formatCPF = (val: string) => {
@@ -388,6 +427,41 @@ export default function EncontroEngenheirosPage() {
           }
         }
       `}</style>
+
+      {/* Barra de Portaria Rápida (para Staff que lê QR Code com a câmera do celular) */}
+      {isStaffAuthenticated && ticketData && (
+        <div className="bg-[#0B1524] border-b-2 border-emerald-500 text-white px-4 py-2.5 text-xs flex flex-wrap items-center justify-between gap-2 shadow-lg no-print sticky top-0 z-50">
+          <div className="flex items-center gap-2 font-bold">
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="text-emerald-400 font-mono">PORTARIA CONECTADA:</span>
+            <span>{ticketData.nome} ({ticketData.codInscricao})</span>
+          </div>
+          <div className="flex items-center gap-2">
+            {!staffCheckinDone ? (
+              <Button
+                size="sm"
+                onClick={handleStaffFastCheckin}
+                disabled={staffCheckinLoading}
+                className="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs py-1.5 px-3 rounded-lg shadow cursor-pointer flex items-center gap-1.5"
+              >
+                {staffCheckinLoading ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Zap className="w-3.5 h-3.5" />}
+                Confirmar Check-in Automático
+              </Button>
+            ) : (
+              <span className="px-3 py-1 rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 font-extrabold flex items-center gap-1.5">
+                <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                Check-in Confirmado!
+              </span>
+            )}
+            <Link
+              to={`/credenciamento-festa?code=${encodeURIComponent(ticketData.codInscricao)}&autocheckin=true`}
+              className="text-amber-300 hover:text-amber-200 underline font-semibold ml-1"
+            >
+              Abrir Painel Portaria →
+            </Link>
+          </div>
+        </div>
+      )}
 
       {/* Top Header Privado - Mantido Exclusivamente Escuro */}
       <header className="border-b border-white/10 bg-[#0A0D14] sticky top-0 z-40 text-white shadow-md">
