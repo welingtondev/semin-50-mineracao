@@ -334,7 +334,7 @@ export default function EncontroEngenheirosPage() {
   }, [onlineTicketUrl]);
 
   return (
-    <div className="min-h-screen bg-[#07090E] text-white flex flex-col justify-between selection:bg-semin-yellow selection:text-semin-dark">
+    <div className="min-h-screen bg-[#F6EFE6] text-slate-800 flex flex-col justify-between selection:bg-semin-yellow selection:text-semin-dark">
       
       {/* Estilos para Impressão da Credencial em folha ou crachá */}
       <style>{`
@@ -361,8 +361,8 @@ export default function EncontroEngenheirosPage() {
         }
       `}</style>
 
-      {/* Top Header Privado */}
-      <header className="border-b border-white/10 bg-[#0A0D14]/90 backdrop-blur-md sticky top-0 z-40">
+      {/* Top Header Privado - Mantido Exclusivamente Escuro */}
+      <header className="border-b border-white/10 bg-[#0A0D14] sticky top-0 z-40 text-white shadow-md">
         <div className="container mx-auto px-4 py-3 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-3 group">
             <img 
@@ -378,23 +378,23 @@ export default function EncontroEngenheirosPage() {
         </div>
       </header>
 
-      {/* Conteúdo Principal */}
+      {/* Conteúdo Principal em Fundo Bege Nobre */}
       <main className="container mx-auto px-4 py-8 md:py-14 flex-1 flex flex-col items-center justify-center relative">
         
-        {/* Glows de ambientação em tom Ouro e Esmeralda */}
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] sm:w-[600px] h-[350px] sm:h-[600px] bg-gradient-to-tr from-amber-500/10 via-emerald-500/5 to-transparent rounded-full blur-[120px] pointer-events-none" />
+        {/* Glow suave em tons âmbar/dourado */}
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] sm:w-[600px] h-[350px] sm:h-[600px] bg-gradient-to-tr from-amber-400/15 via-orange-300/10 to-transparent rounded-full blur-[140px] pointer-events-none" />
 
         {isLoading && !isSuccess && ticketParam ? (
           /* Loading State para Consulta de Credencial via Link */
           <div className="w-full max-w-md mx-auto py-20 text-center relative z-10 animate-fade-in">
-            <div className="w-16 h-16 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-400 flex items-center justify-center mx-auto mb-4 animate-spin">
+            <div className="w-16 h-16 rounded-2xl bg-amber-500/20 border border-amber-500/40 text-amber-700 flex items-center justify-center mx-auto mb-4 animate-spin">
               <RefreshCw className="w-8 h-8" />
             </div>
-            <h2 className="text-2xl font-black text-white mb-2">
+            <h2 className="text-2xl font-black text-slate-900 mb-2">
               Carregando Inscrição Online...
             </h2>
-            <p className="text-xs text-white/60">
-              Buscando credencial oficial <strong className="text-amber-400 font-mono">{ticketParam}</strong> na base do Cinquentenário.
+            <p className="text-xs text-slate-600">
+              Buscando credencial oficial <strong className="text-amber-800 font-mono">{ticketParam}</strong> na base do Cinquentenário.
             </p>
           </div>
         ) : !isSuccess ? (
@@ -405,47 +405,47 @@ export default function EncontroEngenheirosPage() {
             
             {/* Header da Página */}
             <div className="text-center mb-8 md:mb-10">
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-semin-orange/20 to-amber-500/20 border border-amber-500/40 text-amber-300 text-xs font-extrabold uppercase tracking-widest mb-4 shadow-sm">
-                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-900 text-xs font-extrabold uppercase tracking-widest mb-4 shadow-sm">
+                <Sparkles className="w-3.5 h-3.5 text-amber-700" />
                 Edição Histórica • 50 Anos (1976 - 2026)
               </div>
-              <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight mb-3">
-                16º Encontro dos <span className="bg-gradient-to-r from-amber-400 via-amber-300 to-semin-orange bg-clip-text text-transparent">Engenheiros de Minas</span> da Bahia
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 tracking-tight mb-3">
+                16º Encontro dos <span className="bg-gradient-to-r from-amber-700 via-amber-600 to-semin-orange bg-clip-text text-transparent">Engenheiros de Minas</span> da Bahia
               </h1>
-              <p className="text-amber-200/90 font-medium text-base md:text-lg mb-6">
+              <p className="text-slate-700 font-medium text-base md:text-lg mb-6">
                 Festa Oficial do Cinquentenário &bull; A Grande Celebração de Meio Século
               </p>
 
               {/* Informações de Data e Hora */}
               <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 max-w-2xl mx-auto mb-4">
-                <div className="flex items-center gap-2 bg-white/5 border border-white/10 px-3.5 py-1.5 rounded-xl text-xs md:text-sm text-white/90">
-                  <Calendar className="w-4 h-4 text-amber-400 shrink-0" />
+                <div className="flex items-center gap-2 bg-white/80 border border-amber-200/80 shadow-sm px-3.5 py-1.5 rounded-xl text-xs md:text-sm text-slate-800">
+                  <Calendar className="w-4 h-4 text-amber-600 shrink-0" />
                   <span>Sábado, <strong>14 de Novembro de 2026</strong></span>
                 </div>
-                <div className="flex items-center gap-2 bg-white/5 border border-white/10 px-3.5 py-1.5 rounded-xl text-xs md:text-sm text-white/90">
-                  <Clock className="w-4 h-4 text-amber-400 shrink-0" />
+                <div className="flex items-center gap-2 bg-white/80 border border-amber-200/80 shadow-sm px-3.5 py-1.5 rounded-xl text-xs md:text-sm text-slate-800">
+                  <Clock className="w-4 h-4 text-amber-600 shrink-0" />
                   <span>A partir das <strong>18h00</strong></span>
                 </div>
               </div>
 
               {/* Destaque Oficial: Da Tetê - Bar & Rio Vermelho e Open Bar */}
-              <div className="max-w-xl mx-auto bg-gradient-to-b from-[#131A29] to-[#0D121D] border-2 border-amber-500/50 rounded-2xl p-5 text-center shadow-xl shadow-amber-500/10 mb-2">
-                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-amber-400 block mb-1">
+              <div className="max-w-xl mx-auto bg-white/90 border-2 border-amber-500/60 rounded-2xl p-5 text-center shadow-lg shadow-amber-900/5 mb-2">
+                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-amber-700 block mb-1">
                   LOCAL DA FESTA
                 </span>
-                <h2 className="text-2xl sm:text-3xl font-black text-white tracking-wide uppercase">
+                <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-wide uppercase">
                   Da Tetê - Bar
                 </h2>
-                <div className="flex items-center justify-center gap-1.5 text-xs sm:text-sm text-amber-200/90 font-medium mt-1">
-                  <MapPin className="w-4 h-4 text-amber-400 shrink-0" />
+                <div className="flex items-center justify-center gap-1.5 text-xs sm:text-sm text-slate-700 font-medium mt-1">
+                  <MapPin className="w-4 h-4 text-amber-600 shrink-0" />
                   <span>R. Borges dos Reis, 103 &bull; Rio Vermelho, Salvador - BA</span>
                 </div>
 
-                <div className="mt-4 pt-3.5 border-t border-white/10">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-white/60 block mb-0.5">
+                <div className="mt-4 pt-3.5 border-t border-amber-100">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 block mb-0.5">
                     Open Bar Incluso
                   </span>
-                  <p className="text-sm sm:text-base font-extrabold text-white">
+                  <p className="text-sm sm:text-base font-extrabold text-slate-900">
                     Stella Pure Gold &bull; Chivas 12 Anos
                   </p>
                 </div>
@@ -453,15 +453,15 @@ export default function EncontroEngenheirosPage() {
             </div>
 
             {/* Card com Formulário */}
-            <div className="bg-[#0F1420]/90 border border-amber-500/30 rounded-3xl p-6 sm:p-10 shadow-2xl backdrop-blur-xl relative overflow-hidden">
-              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-500 via-emerald-400 to-amber-500" />
+            <div className="bg-white/95 border border-amber-200/90 rounded-3xl p-6 sm:p-10 shadow-xl shadow-amber-900/5 relative overflow-hidden text-slate-800">
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-500 via-amber-400 to-semin-orange" />
 
-              <div className="mb-6 pb-6 border-b border-white/10">
-                <h2 className="text-xl font-bold text-white mb-1.5 flex items-center gap-2">
-                  <Award className="w-5 h-5 text-amber-400" />
+              <div className="mb-6 pb-6 border-b border-slate-100">
+                <h2 className="text-xl font-bold text-slate-900 mb-1.5 flex items-center gap-2">
+                  <Award className="w-5 h-5 text-amber-600" />
                   Credenciamento Antecipado Obrigatório
                 </h2>
-                <p className="text-xs sm:text-sm text-white/60 leading-relaxed">
+                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
                   Preencha seus dados abaixo para receber sua <strong>Credencial Digital com QR Code</strong> diretamente no seu e-mail e garantir seu acesso à festa e à solenidade.
                 </p>
               </div>
@@ -471,8 +471,8 @@ export default function EncontroEngenheirosPage() {
                 {/* Nome Completo & CPF em Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-white/80 mb-2 flex items-center gap-2">
-                      <User className="w-3.5 h-3.5 text-amber-400" />
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2 flex items-center gap-2">
+                      <User className="w-3.5 h-3.5 text-amber-600" />
                       Nome Completo *
                     </label>
                     <input
@@ -480,17 +480,17 @@ export default function EncontroEngenheirosPage() {
                       value={formData.nome}
                       onChange={(e) => setFormData((p) => ({ ...p, nome: e.target.value }))}
                       placeholder="Ex: Carlos Alberto da Silva"
-                      className={`w-full bg-white/5 border ${
-                        errors.nome ? "border-red-500" : "border-white/15 focus:border-amber-400"
-                      } rounded-xl px-4 py-3 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-amber-400/20 transition-all`}
+                      className={`w-full bg-slate-50/60 border ${
+                        errors.nome ? "border-red-500" : "border-slate-300 focus:border-amber-500"
+                      } rounded-xl px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500/20 transition-all`}
                     />
-                    {errors.nome && <p className="text-red-400 text-xs mt-1.5 font-medium">{errors.nome}</p>}
+                    {errors.nome && <p className="text-red-500 text-xs mt-1.5 font-medium">{errors.nome}</p>}
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-white/80 mb-2 flex items-center gap-2">
-                      <ShieldCheck className="w-3.5 h-3.5 text-amber-400" />
-                      CPF * <span className="text-[10px] text-amber-400/80 font-normal lowercase">(inscrição única)</span>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2 flex items-center gap-2">
+                      <ShieldCheck className="w-3.5 h-3.5 text-amber-600" />
+                      CPF * <span className="text-[10px] text-amber-700 font-normal lowercase">(inscrição única)</span>
                     </label>
                     <input
                       type="text"
@@ -498,19 +498,19 @@ export default function EncontroEngenheirosPage() {
                       onChange={handleCpfChange}
                       placeholder="000.000.000-00"
                       maxLength={14}
-                      className={`w-full bg-white/5 border ${
-                        errors.cpf ? "border-red-500" : "border-white/15 focus:border-amber-400"
-                      } rounded-xl px-4 py-3 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-amber-400/20 transition-all font-mono`}
+                      className={`w-full bg-slate-50/60 border ${
+                        errors.cpf ? "border-red-500" : "border-slate-300 focus:border-amber-500"
+                      } rounded-xl px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500/20 transition-all font-mono`}
                     />
-                    {errors.cpf && <p className="text-red-400 text-xs mt-1.5 font-medium">{errors.cpf}</p>}
+                    {errors.cpf && <p className="text-red-500 text-xs mt-1.5 font-medium">{errors.cpf}</p>}
                   </div>
                 </div>
 
                 {/* E-mail & WhatsApp em Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-white/80 mb-2 flex items-center gap-2">
-                      <Mail className="w-3.5 h-3.5 text-amber-400" />
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2 flex items-center gap-2">
+                      <Mail className="w-3.5 h-3.5 text-amber-600" />
                       E-mail *
                     </label>
                     <input
@@ -518,17 +518,17 @@ export default function EncontroEngenheirosPage() {
                       value={formData.email}
                       onChange={(e) => setFormData((p) => ({ ...p, email: e.target.value }))}
                       placeholder="seu.email@exemplo.com"
-                      className={`w-full bg-white/5 border ${
-                        errors.email ? "border-red-500" : "border-white/15 focus:border-amber-400"
-                      } rounded-xl px-4 py-3 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-amber-400/20 transition-all`}
+                      className={`w-full bg-slate-50/60 border ${
+                        errors.email ? "border-red-500" : "border-slate-300 focus:border-amber-500"
+                      } rounded-xl px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500/20 transition-all`}
                     />
-                    {errors.email && <p className="text-red-400 text-xs mt-1.5 font-medium">{errors.email}</p>}
-                    <span className="text-[11px] text-white/40 mt-1 block">O QR Code do ingresso será enviado para este e-mail.</span>
+                    {errors.email && <p className="text-red-500 text-xs mt-1.5 font-medium">{errors.email}</p>}
+                    <span className="text-[11px] text-slate-500 mt-1 block">O QR Code do ingresso será enviado para este e-mail.</span>
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-white/80 mb-2 flex items-center gap-2">
-                      <Phone className="w-3.5 h-3.5 text-emerald-400" />
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2 flex items-center gap-2">
+                      <Phone className="w-3.5 h-3.5 text-emerald-600" />
                       WhatsApp com DDD *
                     </label>
                     <input
@@ -536,18 +536,18 @@ export default function EncontroEngenheirosPage() {
                       value={formData.phone}
                       onChange={handlePhoneChange}
                       placeholder="(71) 99999-9999"
-                      className={`w-full bg-white/5 border ${
-                        errors.phone ? "border-red-500" : "border-white/15 focus:border-emerald-400"
-                      } rounded-xl px-4 py-3 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-emerald-400/20 transition-all`}
+                      className={`w-full bg-slate-50/60 border ${
+                        errors.phone ? "border-red-500" : "border-slate-300 focus:border-emerald-500"
+                      } rounded-xl px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-all`}
                     />
-                    {errors.phone && <p className="text-red-400 text-xs mt-1.5 font-medium">{errors.phone}</p>}
+                    {errors.phone && <p className="text-red-500 text-xs mt-1.5 font-medium">{errors.phone}</p>}
                   </div>
                 </div>
 
                 {/* Turma / Ano de Formatura */}
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-white/80 mb-2 flex items-center gap-2">
-                    <GraduationCap className="w-3.5 h-3.5 text-amber-400" />
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2 flex items-center gap-2">
+                    <GraduationCap className="w-3.5 h-3.5 text-amber-600" />
                     Ano de Formatura / Vínculo com a UFBA *
                   </label>
                   
@@ -555,15 +555,15 @@ export default function EncontroEngenheirosPage() {
                   <select
                     value={formData.formatura}
                     onChange={(e) => setFormData((p) => ({ ...p, formatura: e.target.value }))}
-                    className="w-full bg-[#161D2B] border border-white/15 focus:border-amber-400 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:ring-2 focus:ring-amber-400/20 transition-all mb-2 cursor-pointer"
+                    className="w-full bg-slate-50/60 border border-slate-300 focus:border-amber-500 rounded-xl px-4 py-3 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-500/20 transition-all mb-2 cursor-pointer"
                   >
                     <option value="">Selecione sua turma ou vínculo...</option>
                     {TURMAS_DESTAQUE.map((item) => (
-                      <option key={item} value={item} className="bg-[#161D2B] text-white">
+                      <option key={item} value={item} className="bg-white text-slate-900">
                         {item}
                       </option>
                     ))}
-                    <option value="Outro">Outro (especificar abaixo)</option>
+                    <option value="Outro" className="bg-white text-slate-900">Outro (especificar abaixo)</option>
                   </select>
 
                   <input
@@ -571,38 +571,38 @@ export default function EncontroEngenheirosPage() {
                     value={formData.turmaCustomizada}
                     onChange={(e) => setFormData((p) => ({ ...p, turmaCustomizada: e.target.value }))}
                     placeholder="Ou digite o ano exato da sua turma (ex: Formando 1994.2)"
-                    className="w-full bg-white/5 border border-white/15 focus:border-amber-400 rounded-xl px-4 py-2 text-xs text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-amber-400/20 transition-all"
+                    className="w-full bg-slate-50/60 border border-slate-300 focus:border-amber-500 rounded-xl px-4 py-2 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500/20 transition-all"
                   />
-                  {errors.formatura && <p className="text-red-400 text-xs mt-1.5 font-medium">{errors.formatura}</p>}
+                  {errors.formatura && <p className="text-red-500 text-xs mt-1.5 font-medium">{errors.formatura}</p>}
                 </div>
 
                 {/* Empresa / Atuação Atual (Opcional) */}
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-white/80 mb-2 flex items-center gap-2">
-                    <Building className="w-3.5 h-3.5 text-amber-400" />
-                    Empresa / Instituição Atual <span className="text-white/40 font-normal lowercase">(opcional para crachá)</span>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2 flex items-center gap-2">
+                    <Building className="w-3.5 h-3.5 text-amber-600" />
+                    Empresa / Instituição Atual <span className="text-slate-500 font-normal lowercase">(opcional para crachá)</span>
                   </label>
                   <input
                     type="text"
                     value={formData.empresa}
                     onChange={(e) => setFormData((p) => ({ ...p, empresa: e.target.value }))}
                     placeholder="Ex: CBPM, Vale, Anglo, UFBA, Consultoria..."
-                    className="w-full bg-white/5 border border-white/15 focus:border-amber-400 rounded-xl px-4 py-3 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-amber-400/20 transition-all"
+                    className="w-full bg-slate-50/60 border border-slate-300 focus:border-amber-500 rounded-xl px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500/20 transition-all"
                   />
                 </div>
 
                 {/* Mensagem aos Colegas (Opcional) */}
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-white/80 mb-2 flex items-center gap-2">
-                    <MessageSquare className="w-3.5 h-3.5 text-amber-400" />
-                    Mensagem ou Homenagem ao Jubileu de Ouro <span className="text-white/40 font-normal lowercase">(opcional)</span>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2 flex items-center gap-2">
+                    <MessageSquare className="w-3.5 h-3.5 text-amber-600" />
+                    Mensagem ou Homenagem ao Jubileu de Ouro <span className="text-slate-500 font-normal lowercase">(opcional)</span>
                   </label>
                   <textarea
                     rows={2}
                     value={formData.mensagem}
                     onChange={(e) => setFormData((p) => ({ ...p, mensagem: e.target.value }))}
                     placeholder="Deixe um recado carinhoso para os pioneiros, colegas de turma e professores..."
-                    className="w-full bg-white/5 border border-white/15 focus:border-amber-400 rounded-xl px-4 py-3 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-amber-400/20 transition-all resize-none"
+                    className="w-full bg-slate-50/60 border border-slate-300 focus:border-amber-500 rounded-xl px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500/20 transition-all resize-none"
                   />
                 </div>
 
@@ -610,11 +610,11 @@ export default function EncontroEngenheirosPage() {
                 <Button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full py-6 bg-gradient-to-r from-amber-500 via-amber-400 to-semin-orange text-semin-dark hover:from-amber-400 hover:to-amber-500 font-extrabold text-base md:text-lg rounded-2xl shadow-xl shadow-amber-500/25 transition-all duration-300 hover:scale-[1.01] active:scale-[0.99] cursor-pointer"
+                  className="w-full py-6 bg-gradient-to-r from-amber-500 via-amber-400 to-semin-orange text-slate-950 hover:from-amber-400 hover:to-amber-500 font-extrabold text-base md:text-lg rounded-2xl shadow-xl shadow-amber-500/25 transition-all duration-300 hover:scale-[1.01] active:scale-[0.99] cursor-pointer"
                 >
                   {isLoading ? (
                     <span className="flex items-center gap-2">
-                      <span className="w-5 h-5 border-2 border-semin-dark border-t-transparent rounded-full animate-spin" />
+                      <span className="w-5 h-5 border-2 border-slate-950 border-t-transparent rounded-full animate-spin" />
                       Emitindo Credencial & Enviando E-mail...
                     </span>
                   ) : (
@@ -637,13 +637,13 @@ export default function EncontroEngenheirosPage() {
             
             {/* Mensagem de Boas-Vindas */}
             <div className="text-center mb-6">
-              <div className="w-16 h-16 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 flex items-center justify-center mx-auto mb-3 shadow-[0_0_30px_rgba(16,185,129,0.3)]">
+              <div className="w-16 h-16 rounded-full bg-emerald-100 border border-emerald-300 text-emerald-700 flex items-center justify-center mx-auto mb-3 shadow-md">
                 <CheckCircle2 className="w-9 h-9" />
               </div>
-              <h2 className="text-2xl sm:text-3xl font-black text-white">
+              <h2 className="text-2xl sm:text-3xl font-black text-slate-900">
                 Inscrição Confirmada com Sucesso!
               </h2>
-              <p className="text-xs sm:text-sm text-white/60 mt-1 max-w-md mx-auto">
+              <p className="text-xs sm:text-sm text-slate-600 mt-1 max-w-md mx-auto">
                 Sua credencial foi registrada e enviada com o QR Code para <strong>{ticketData?.email}</strong>.
               </p>
             </div>
@@ -652,92 +652,92 @@ export default function EncontroEngenheirosPage() {
             <div 
               id="print-area" 
               ref={printRef}
-              className="bg-[#0F1420] border-2 border-amber-500/60 rounded-3xl p-6 sm:p-8 shadow-2xl relative overflow-hidden text-center mb-6"
+              className="bg-white border-2 border-amber-500/70 rounded-3xl p-6 sm:p-8 shadow-2xl relative overflow-hidden text-center mb-6"
             >
               {/* Header do Crachá */}
-              <div className="border-b border-white/10 pb-4 mb-4">
+              <div className="border-b border-amber-100 pb-4 mb-4">
                 <img 
                   src={seminLogo} 
                   alt="SEMIN 50 Anos" 
                   className="h-10 sm:h-12 w-auto mx-auto mb-3 object-contain" 
                 />
-                <span className="text-[10px] font-black uppercase tracking-[0.25em] text-amber-400 block mb-1">
+                <span className="text-[10px] font-black uppercase tracking-[0.25em] text-amber-700 block mb-1">
                   CREDENCIAL OFICIAL &bull; JUBILEU DE OURO (50 ANOS)
                 </span>
-                <h3 className="text-lg sm:text-xl font-black text-white uppercase tracking-tight">
+                <h3 className="text-lg sm:text-xl font-black text-slate-900 uppercase tracking-tight">
                   16º Encontro dos Engenheiros de Minas da Bahia
                 </h3>
-                <p className="text-xs text-amber-300 font-bold mt-1">
+                <p className="text-xs text-amber-800 font-bold mt-1">
                   Da Tetê - Bar &bull; R. Borges dos Reis, 103 - Rio Vermelho, Salvador/BA
                 </p>
-                <p className="text-xs text-white/70 mt-0.5">
+                <p className="text-xs text-slate-600 mt-0.5">
                   Sábado, 14 de Novembro de 2026 &bull; A partir das 18h00
                 </p>
-                <div className="mt-2 inline-block bg-amber-500/15 border border-amber-500/40 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider text-amber-300">
+                <div className="mt-2 inline-block bg-amber-100 border border-amber-300 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider text-amber-900">
                   Open Bar: Stella Pure Gold &bull; Chivas 12 Anos
                 </div>
               </div>
 
               {/* Código Único */}
-              <div className="bg-black/40 border border-amber-500/30 rounded-xl py-2 px-4 inline-block mb-4">
-                <span className="text-[9px] text-amber-400/80 uppercase tracking-widest font-bold block">
+              <div className="bg-amber-50 border border-amber-300 rounded-xl py-2 px-4 inline-block mb-4 shadow-sm">
+                <span className="text-[9px] text-amber-800 uppercase tracking-widest font-bold block">
                   Código da Credencial
                 </span>
-                <span className="font-mono text-2xl font-black text-amber-400 tracking-wider">
+                <span className="font-mono text-2xl font-black text-amber-900 tracking-wider">
                   {ticketData?.codInscricao}
                 </span>
               </div>
 
               {/* QR Code */}
               <div className="flex flex-col items-center justify-center my-3">
-                <div className="p-3 bg-white rounded-2xl shadow-xl inline-block">
+                <div className="p-3 bg-white border border-slate-200 rounded-2xl shadow-md inline-block">
                   {qrCodeUrl && (
                     <img 
                       src={qrCodeUrl} 
                       alt="QR Code da Credencial" 
                       width={180} 
                       height={180}
-                      className="block mx-auto rounded-lg"
+                      className="block mx-auto rounded-lg" 
                     />
                   )}
                 </div>
-                <span className="text-[10px] font-semibold uppercase tracking-wider text-white/50 mt-2">
+                <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-500 mt-2">
                   Apresente este QR Code na portaria a partir das 18h00
                 </span>
               </div>
 
               {/* Dados do Congressista / Participante */}
-              <div className="bg-white/5 border border-white/10 rounded-2xl p-4 text-left space-y-2 text-xs sm:text-sm mt-4">
-                <div className="flex justify-between border-b border-white/5 pb-1.5">
-                  <span className="text-white/50">Engenheiro(a):</span>
-                  <span className="font-bold text-white text-right">{ticketData?.nome}</span>
+              <div className="bg-amber-50/50 border border-amber-200/70 rounded-2xl p-4 text-left space-y-2 text-xs sm:text-sm mt-4">
+                <div className="flex justify-between border-b border-amber-100 pb-1.5">
+                  <span className="text-slate-500">Engenheiro(a):</span>
+                  <span className="font-bold text-slate-900 text-right">{ticketData?.nome}</span>
                 </div>
                 {ticketData?.cpf && (
-                  <div className="flex justify-between border-b border-white/5 pb-1.5">
-                    <span className="text-white/50">CPF:</span>
-                    <span className="font-mono font-semibold text-white/90 text-right">{ticketData?.cpf}</span>
+                  <div className="flex justify-between border-b border-amber-100 pb-1.5">
+                    <span className="text-slate-500">CPF:</span>
+                    <span className="font-mono font-semibold text-slate-800 text-right">{ticketData?.cpf}</span>
                   </div>
                 )}
-                <div className="flex justify-between border-b border-white/5 pb-1.5">
-                  <span className="text-white/50">Turma / Vínculo:</span>
-                  <span className="font-bold text-amber-400 text-right">{ticketData?.formatura}</span>
+                <div className="flex justify-between border-b border-amber-100 pb-1.5">
+                  <span className="text-slate-500">Turma / Vínculo:</span>
+                  <span className="font-bold text-amber-800 text-right">{ticketData?.formatura}</span>
                 </div>
                 {ticketData?.empresa && (
-                  <div className="flex justify-between border-b border-white/5 pb-1.5">
-                    <span className="text-white/50">Empresa / Atuação:</span>
-                    <span className="font-medium text-white/90 text-right">{ticketData?.empresa}</span>
+                  <div className="flex justify-between border-b border-amber-100 pb-1.5">
+                    <span className="text-slate-500">Empresa / Atuação:</span>
+                    <span className="font-medium text-slate-800 text-right">{ticketData?.empresa}</span>
                   </div>
                 )}
                 <div className="flex justify-between pt-0.5">
-                  <span className="text-white/50">Status Oficial:</span>
-                  <span className="font-bold text-emerald-400 flex items-center gap-1">
+                  <span className="text-slate-500">Status Oficial:</span>
+                  <span className="font-bold text-emerald-700 flex items-center gap-1">
                     <CheckCircle2 className="w-3.5 h-3.5" />
                     Confirmado (Entrada Única)
                   </span>
                 </div>
               </div>
 
-              <div className="mt-4 pt-3 border-t border-white/10 text-[10px] text-white/40">
+              <div className="mt-4 pt-3 border-t border-amber-100 text-[10px] text-slate-400">
                 Data do Registro: {ticketData?.dataRegistro} &bull; SEMIN UFBA 2026
               </div>
             </div>
@@ -746,7 +746,7 @@ export default function EncontroEngenheirosPage() {
             <div className="flex flex-col gap-3 no-print">
               <Button
                 onClick={handlePrint}
-                className="w-full py-5 bg-amber-500 hover:bg-amber-400 text-semin-dark font-extrabold text-sm rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 cursor-pointer"
+                className="w-full py-5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-extrabold text-sm rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 cursor-pointer"
               >
                 <Printer className="w-4 h-4" />
                 Imprimir Credencial / Salvar PDF
@@ -757,8 +757,8 @@ export default function EncontroEngenheirosPage() {
 
       </main>
 
-      {/* Footer Simples */}
-      <footer className="border-t border-white/10 bg-[#0A0D14] py-6 text-center text-xs text-white/50 no-print">
+      {/* Footer em tom Bege Suave */}
+      <footer className="border-t border-amber-900/10 bg-[#EFE7DC] py-6 text-center text-xs text-slate-600 no-print">
         <div className="container mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
           <p>© 2026 SEMIN UFBA &bull; Escola Politécnica da UFBA &bull; 50 Anos de Engenharia de Minas</p>
           <p>
@@ -767,7 +767,7 @@ export default function EncontroEngenheirosPage() {
               href="https://www.instagram.com/wellingtonsantos.br/"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-amber-400 hover:underline font-semibold transition-colors"
+              className="text-amber-800 hover:underline font-semibold transition-colors"
             >
               @wellingtonsantos.br
             </a>
