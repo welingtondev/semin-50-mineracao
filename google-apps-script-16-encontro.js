@@ -20,16 +20,17 @@ const EVENTO = {
   NOME: '16º Encontro dos Engenheiros de Minas da Bahia',
   SUBTITULO: 'Festa Oficial do Cinquentenário • Jubileu de Ouro (1976 - 2026)',
   DATA: 'Sábado, 14 de Novembro de 2026',
-  HORARIO: 'A partir das 12h00',
+  HORARIO: 'A partir das 18h00',
   LOCAL: 'Escola Politécnica da UFBA • Salvador / BA',
   LINK_SITE: 'https://seminufba.com.br',
   LINK_VALIDADOR: 'https://seminufba.com.br/credenciamento-festa'
 };
 
-// Cabeçalhos Oficiais da Planilha
+// Cabeçalhos Oficiais da Planilha com CPF
 const CABECALHOS = [
   'Data/Hora Inscrição',
   'Nome Completo',
+  'CPF',
   'E-mail',
   'WhatsApp',
   'Ano Formatura / Vínculo',
@@ -41,9 +42,9 @@ const CABECALHOS = [
 ];
 
 /**
- * Inicializa os cabeçalhos na planilha se estiver vazia
+ * Inicializa os cabeçalhos na planilha e migra coluna CPF se necessário
  */
-function inicializarPlanilha(sheet) {
+function obterIndicesColunas(sheet) {
   if (sheet.getLastRow() === 0) {
     sheet.appendRow(CABECALHOS);
     var headerRange = sheet.getRange(1, 1, 1, CABECALHOS.length);
@@ -52,78 +53,136 @@ function inicializarPlanilha(sheet) {
     headerRange.setFontWeight('bold');
     sheet.setFrozenRows(1);
   }
-}
 
-/**
- * Função de teste: execute para autorizar permissões de envio de e-mail e acesso à planilha
- */
-function autorizarEEnviarTeste() {
-  var meuEmail = Session.getActiveUser().getEmail() || 'contato@seminufba.com.br';
-  Logger.log('Enviando e-mail teste para: ' + meuEmail);
-  
-  var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
-  var sheet = ss.getSheets()[0];
-  inicializarPlanilha(sheet);
-
-  var dadosTeste = {
-    nome: 'Engenheiro Teste',
-    email: meuEmail,
-    telefone: '(71) 99999-9999',
-    formatura: 'Turma 1995',
-    empresa: 'Mineração Bahia',
-    mensagem: 'Parabéns à Engenharia de Minas pelos 50 anos!'
+  var headers = sheet.getRange(1, 1, 1, Math.max(sheet.getLastColumn(), CABECALHOS.length)).getValues()[0];
+  var idx = {
+    dataHora: headers.indexOf('Data/Hora Inscrição'),
+    nome: headers.indexOf('Nome Completo'),
+    cpf: headers.indexOf('CPF'),
+    email: headers.indexOf('E-mail'),
+    telefone: headers.indexOf('WhatsApp'),
+    formatura: headers.indexOf('Ano Formatura / Vínculo'),
+    empresa: headers.indexOf('Empresa / Atuação'),
+    mensagem: headers.indexOf('Mensagem / Homenagem'),
+    codigo: headers.indexOf('Código da Credencial'),
+    status: headers.indexOf('Status Credenciamento'),
+    dataCred: headers.indexOf('Data/Hora Credenciamento')
   };
 
-  enviarEmailCredencial(dadosTeste.nome, dadosTeste.email, '16EM-2026-0001', dadosTeste.formatura, dadosTeste.empresa);
-  Logger.log('Teste concluído com sucesso!');
+  // Se 'CPF' ainda não existe nos cabeçalhos da planilha, insere coluna após 'Nome Completo'
+  if (idx.cpf === -1) {
+    sheet.insertColumnAfter(2);
+    sheet.getRange(1, 3).setValue('CPF').setBackground('#111827').setFontColor('#F59E0B').setFontWeight('bold');
+    headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
+    idx.cpf = 2;
+    idx.email = headers.indexOf('E-mail');
+    idx.telefone = headers.indexOf('WhatsApp');
+    idx.formatura = headers.indexOf('Ano Formatura / Vínculo');
+    idx.empresa = headers.indexOf('Empresa / Atuação');
+    idx.mensagem = headers.indexOf('Mensagem / Homenagem');
+    idx.codigo = headers.indexOf('Código da Credencial');
+    idx.status = headers.indexOf('Status Credenciamento');
+    idx.dataCred = headers.indexOf('Data/Hora Credenciamento');
+  }
+
+  return idx;
 }
 
 /**
  * Endpoint de Consulta e Validação (doGet)
- * Permite que a equipe de recepção consulte participantes pelo código ou e-mail
+ * Permite que a portaria consulte participantes pelo código, e-mail ou CPF
+ * e credencie com trava estrita de 1 único check-in
  */
 function doGet(e) {
   try {
     var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
     var sheet = ss.getSheets()[0];
-    inicializarPlanilha(sheet);
+    var col = obterIndicesColunas(sheet);
 
     var code = (e && e.parameter && e.parameter.code) ? e.parameter.code.trim().toUpperCase() : '';
     var email = (e && e.parameter && e.parameter.email) ? e.parameter.email.trim().toLowerCase() : '';
+    var cpf = (e && e.parameter && e.parameter.cpf) ? e.parameter.cpf.replace(/\D/g, '') : '';
     var action = (e && e.parameter && e.parameter.action) ? e.parameter.action.trim() : '';
 
     var rows = sheet.getDataRange().getValues();
 
-    if (code || email) {
+    // Ação: Verificar se CPF ou e-mail já existem (verificação pré-inscrição)
+    if (action === 'check') {
       for (var i = 1; i < rows.length; i++) {
-        var rowCode = String(rows[i][7] || '').trim().toUpperCase();
-        var rowEmail = String(rows[i][2] || '').trim().toLowerCase();
+        var rowCpf = String(rows[i][col.cpf] || '').replace(/\D/g, '');
+        var rowEmail = String(rows[i][col.email] || '').trim().toLowerCase();
 
-        if ((code && rowCode === code) || (email && rowEmail === email)) {
-          // Se ação for credenciar na portaria
+        if ((cpf && rowCpf === cpf) || (email && rowEmail === email)) {
+          return ContentService.createTextOutput(JSON.stringify({
+            success: true,
+            exists: true,
+            message: 'Já existe uma inscrição confirmada para este CPF ou E-mail.'
+          })).setMimeType(ContentService.MimeType.JSON);
+        }
+      }
+      return ContentService.createTextOutput(JSON.stringify({
+        success: true,
+        exists: false
+      })).setMimeType(ContentService.MimeType.JSON);
+    }
+
+    if (code || email || cpf) {
+      for (var i = 1; i < rows.length; i++) {
+        var rowCode = String(rows[i][col.codigo] || '').trim().toUpperCase();
+        var rowEmail = String(rows[i][col.email] || '').trim().toLowerCase();
+        var rowCpf = String(rows[i][col.cpf] || '').replace(/\D/g, '');
+
+        if ((code && rowCode === code) || (email && rowEmail === email) || (cpf && rowCpf === cpf)) {
+          var statusAtual = String(rows[i][col.status] || '').trim();
+          var dataCredAtual = String(rows[i][col.dataCred] || '').trim();
+          var jaCredenciado = (statusAtual.indexOf('Credenciado') !== -1 || dataCredAtual.length > 0);
+
+          var participanteObj = {
+            dataRegistro: rows[i][col.dataHora],
+            nome: rows[i][col.nome],
+            cpf: rows[i][col.cpf],
+            email: rows[i][col.email],
+            telefone: rows[i][col.telefone],
+            formatura: rows[i][col.formatura],
+            empresa: rows[i][col.empresa],
+            mensagem: rows[i][col.mensagem],
+            codInscricao: rows[i][col.codigo],
+            statusCredenciamento: jaCredenciado ? 'Credenciado / Presente' : (statusAtual || 'Confirmado'),
+            dataCredenciamento: dataCredAtual
+          };
+
+          // AÇÃO DE PORTARIA: CREDENCIAR COM BLOQUEIO DE ENTRADA DUPLICADA
           if (action === 'credenciar') {
+            if (jaCredenciado) {
+              return ContentService.createTextOutput(JSON.stringify({
+                success: false,
+                alreadyCheckedIn: true,
+                message: 'Atenção: Este participante JÁ realizou o credenciamento em ' + (dataCredAtual || 'horário anterior') + '. Entrada duplicada bloqueada!',
+                participante: participanteObj
+              })).setMimeType(ContentService.MimeType.JSON);
+            }
+
+            // Realiza o 1º e único credenciamento
             var dataHoraCred = Utilities.formatDate(new Date(), 'America/Bahia', 'dd/MM/yyyy HH:mm:ss');
-            sheet.getRange(i + 1, 9).setValue('Credenciado / Presente');
-            sheet.getRange(i + 1, 10).setValue(dataHoraCred);
-            rows[i][8] = 'Credenciado / Presente';
-            rows[i][9] = dataHoraCred;
+            sheet.getRange(i + 1, col.status + 1).setValue('Credenciado / Presente');
+            sheet.getRange(i + 1, col.dataCred + 1).setValue(dataHoraCred);
+
+            participanteObj.statusCredenciamento = 'Credenciado / Presente';
+            participanteObj.dataCredenciamento = dataHoraCred;
+
+            return ContentService.createTextOutput(JSON.stringify({
+              success: true,
+              checkInSuccess: true,
+              message: 'Check-in realizado com sucesso!',
+              participante: participanteObj
+            })).setMimeType(ContentService.MimeType.JSON);
           }
 
           return ContentService.createTextOutput(JSON.stringify({
             success: true,
             found: true,
-            participante: {
-              dataRegistro: rows[i][0],
-              nome: rows[i][1],
-              email: rows[i][2],
-              telefone: rows[i][3],
-              formatura: rows[i][4],
-              empresa: rows[i][5],
-              mensagem: rows[i][6],
-              codInscricao: rows[i][7],
-              statusCredenciamento: rows[i][8] || 'Confirmado',
-              dataCredenciamento: rows[i][9] || ''
-            }
+            alreadyCheckedIn: jaCredenciado,
+            participante: participanteObj
           })).setMimeType(ContentService.MimeType.JSON);
         }
       }
@@ -151,6 +210,7 @@ function doGet(e) {
 
 /**
  * Endpoint de Inscrição Oficial (doPost)
+ * Permite apenas 1 inscrição por pessoa (bloqueio rigoroso por CPF e E-mail)
  */
 function doPost(e) {
   var lock = LockService.getScriptLock();
@@ -171,74 +231,72 @@ function doPost(e) {
     }
 
     var nome = (data.nome || '').trim();
+    var cpf = (data.cpf || '').trim();
+    var cpfLimpo = cpf.replace(/\D/g, '');
     var email = (data.email || '').trim().toLowerCase();
     var telefone = (data.telefone || data.phone || '').trim();
     var formatura = (data.formatura || data.anoFormatura || data.turma || 'Engenheiro de Minas').trim();
     var empresa = (data.empresa || '').trim();
     var mensagem = (data.mensagem || '').trim();
 
-    if (!nome || !email) {
+    if (!nome || !email || !cpfLimpo) {
       return ContentService.createTextOutput(JSON.stringify({
         success: false,
-        message: 'Nome completo e e-mail são obrigatórios.'
+        message: 'Nome completo, CPF e e-mail são obrigatórios.'
       })).setMimeType(ContentService.MimeType.JSON);
     }
 
     var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
     var sheet = ss.getSheets()[0];
-    inicializarPlanilha(sheet);
+    var col = obterIndicesColunas(sheet);
 
     var rows = sheet.getDataRange().getValues();
-    var existingRowIndex = -1;
-    var existingCode = '';
 
+    // TRAVA RIGOROSA: APENAS 1 INSCRIÇÃO POR PESSOA (VERIFICAÇÃO POR CPF E E-MAIL)
     for (var i = 1; i < rows.length; i++) {
-      var rowEmail = String(rows[i][2] || '').trim().toLowerCase();
+      var rowCpf = String(rows[i][col.cpf] || '').replace(/\D/g, '');
+      var rowEmail = String(rows[i][col.email] || '').trim().toLowerCase();
+
+      if (rowCpf === cpfLimpo) {
+        return ContentService.createTextOutput(JSON.stringify({
+          success: false,
+          duplicate: true,
+          message: 'Já existe uma inscrição confirmada para este CPF (' + cpf + '). Só é permitida uma inscrição por participante.'
+        })).setMimeType(ContentService.MimeType.JSON);
+      }
+
       if (rowEmail === email) {
-        existingRowIndex = i + 1;
-        existingCode = String(rows[i][7] || '').trim();
-        break;
+        return ContentService.createTextOutput(JSON.stringify({
+          success: false,
+          duplicate: true,
+          message: 'Já existe uma inscrição confirmada para este E-mail (' + email + '). Só é permitida uma inscrição por participante.'
+        })).setMimeType(ContentService.MimeType.JSON);
       }
     }
 
     // Gerador de código sequencial no formato 16EM-2026-0001
-    var codInscricao = '';
-    if (existingCode && existingCode.startsWith('16EM-')) {
-      codInscricao = existingCode;
-    } else {
-      var nextNum = rows.length; // considerando cabeçalho
-      var numFormatado = ("0000" + nextNum).slice(-4);
-      codInscricao = '16EM-2026-' + numFormatado;
-    }
+    var nextNum = rows.length;
+    var numFormatado = ("0000" + nextNum).slice(-4);
+    var codInscricao = '16EM-2026-' + numFormatado;
 
     var dataHora = Utilities.formatDate(new Date(), 'America/Bahia', 'dd/MM/yyyy HH:mm:ss');
     var statusCredenciamento = 'Confirmado';
 
-    if (existingRowIndex > 0) {
-      // Atualiza inscrição existente
-      sheet.getRange(existingRowIndex, 1).setValue(dataHora);
-      sheet.getRange(existingRowIndex, 2).setValue(nome);
-      sheet.getRange(existingRowIndex, 4).setValue(telefone);
-      sheet.getRange(existingRowIndex, 5).setValue(formatura);
-      sheet.getRange(existingRowIndex, 6).setValue(empresa);
-      sheet.getRange(existingRowIndex, 7).setValue(mensagem);
-      sheet.getRange(existingRowIndex, 8).setValue(codInscricao);
-      sheet.getRange(existingRowIndex, 9).setValue(statusCredenciamento);
-    } else {
-      // Insere novo registro
-      sheet.appendRow([
-        dataHora,
-        nome,
-        email,
-        telefone,
-        formatura,
-        empresa,
-        mensagem,
-        codInscricao,
-        statusCredenciamento,
-        ''
-      ]);
-    }
+    // Insere novo registro único
+    var novaLinha = [];
+    novaLinha[col.dataHora] = dataHora;
+    novaLinha[col.nome] = nome;
+    novaLinha[col.cpf] = cpf;
+    novaLinha[col.email] = email;
+    novaLinha[col.telefone] = telefone;
+    novaLinha[col.formatura] = formatura;
+    novaLinha[col.empresa] = empresa;
+    novaLinha[col.mensagem] = mensagem;
+    novaLinha[col.codigo] = codInscricao;
+    novaLinha[col.status] = statusCredenciamento;
+    novaLinha[col.dataCred] = '';
+
+    sheet.appendRow(novaLinha);
 
     // Envia e-mail com QR Code para o participante
     var emailEnviado = false;
@@ -261,6 +319,7 @@ function doPost(e) {
       message: 'Inscrição confirmada com sucesso! Credencial enviada por e-mail.',
       dados: {
         nome: nome,
+        cpf: cpf,
         email: email,
         telefone: telefone,
         formatura: formatura,
@@ -290,7 +349,7 @@ function enviarEmailCredencial(nome, email, codInscricao, formatura, empresa) {
   // URL do QR Code de alta qualidade
   var qrCodeApiUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=' + encodeURIComponent(linkValidacao) + '&color=111827&bgcolor=FFFFFF';
   
-  // Baixa o QR Code para anexar como imagem inline segura (não bloqueada por clientes de e-mail)
+  // Baixa o QR Code para anexar como imagem inline segura
   var qrCodeBlob = null;
   try {
     var response = UrlFetchApp.fetch(qrCodeApiUrl);
@@ -319,7 +378,7 @@ function enviarEmailCredencial(nome, email, codInscricao, formatura, empresa) {
               <!-- Top Banner Dourado / Esmeralda -->
               <tr>
                 <td style="background: linear-gradient(135deg, #D97706 0%, #F59E0B 50%, #B45309 100%); padding: 26px 20px; text-align: center;">
-                  <span style="display: inline-block; background-color: rgba(0,0,0,0.3); color: #FFF; font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; padding: 5px 14px; rounded-radius: 20px; border-radius: 20px; margin-bottom: 8px;">
+                  <span style="display: inline-block; background-color: rgba(0,0,0,0.3); color: #FFF; font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; padding: 5px 14px; border-radius: 20px; margin-bottom: 8px;">
                     JUBILEU DE OURO • 1976 - 2026
                   </span>
                   <h1 style="margin: 4px 0 6px; color: #FFFFFF; font-size: 24px; font-weight: 900; line-height: 1.2; text-shadow: 0 2px 8px rgba(0,0,0,0.3);">
@@ -366,7 +425,7 @@ function enviarEmailCredencial(nome, email, codInscricao, formatura, empresa) {
                           }
                         </div>
                         <p style="font-size: 11px; color: #9CA3AF; margin: 8px 0 0; text-transform: uppercase; letter-spacing: 1px;">
-                          Apresente este QR Code na portaria no dia 14/11
+                          Apresente este QR Code na portaria a partir das 18h00 no dia 14/11
                         </p>
                       </td>
                     </tr>
@@ -391,7 +450,7 @@ function enviarEmailCredencial(nome, email, codInscricao, formatura, empresa) {
                           ` : ''}
                           <tr>
                             <td style="color: #9CA3AF;"><strong>Status:</strong></td>
-                            <td style="color: #10B981; font-weight: bold;">✅ Confirmado</td>
+                            <td style="color: #10B981; font-weight: bold;">✅ Confirmado (Entrada Única)</td>
                           </tr>
                         </table>
                       </td>
@@ -418,7 +477,7 @@ function enviarEmailCredencial(nome, email, codInscricao, formatura, empresa) {
                   <!-- Instruções para o Dia -->
                   <div style="background-color: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.25); border-radius: 10px; padding: 14px 16px; margin-bottom: 24px;">
                     <p style="margin: 0; font-size: 12px; color: #FEF3C7; line-height: 1.5;">
-                      💡 <strong>Dica:</strong> Salve este e-mail nos seus favoritos ou tire um print do QR Code no celular para agilizar sua entrada na portaria da festa.
+                      💡 <strong>Importante:</strong> Esta credencial é pessoal, nominal e intransferível. O check-in na portaria é validado uma única vez por participante através do QR Code.
                     </p>
                   </div>
 

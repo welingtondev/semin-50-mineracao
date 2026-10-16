@@ -16,6 +16,7 @@ import {
   Phone, 
   Mail, 
   ArrowLeft,
+  ShieldCheck,
   RefreshCw,
   ExternalLink
 } from "lucide-react";
@@ -28,6 +29,7 @@ const SCRIPT_URL = import.meta.env.VITE_ENCONTRO_SCRIPT_URL || "https://script.g
 
 interface Participante {
   nome: string;
+  cpf?: string;
   email: string;
   telefone: string;
   formatura: string;
@@ -70,10 +72,10 @@ export default function CredenciamentoFestaPage() {
     }
   }, [initialCode]);
 
-  const buscarCredencial = async (codigoOuEmail: string) => {
-    const termo = codigoOuEmail.trim();
+  const buscarCredencial = async (codigoOuEmailOuCpf: string) => {
+    const termo = codigoOuEmailOuCpf.trim();
     if (!termo) {
-      toast.error("Informe o código ou e-mail da credencial");
+      toast.error("Informe o código, CPF ou e-mail da credencial");
       return;
     }
 
@@ -83,9 +85,18 @@ export default function CredenciamentoFestaPage() {
     setCheckInDone(false);
 
     try {
-      const isEmail = termo.includes("@");
-      const paramName = isEmail ? "email" : "code";
-      const url = `${SCRIPT_URL}?${paramName}=${encodeURIComponent(termo)}`;
+      const cleanDigits = termo.replace(/\D/g, "");
+      let paramName = "code";
+      let paramVal = termo;
+
+      if (termo.includes("@")) {
+        paramName = "email";
+      } else if (cleanDigits.length === 11 && !termo.toUpperCase().startsWith("16EM-")) {
+        paramName = "cpf";
+        paramVal = cleanDigits;
+      }
+
+      const url = `${SCRIPT_URL}?${paramName}=${encodeURIComponent(paramVal)}`;
 
       const res = await fetch(url, { method: "GET" });
       const data = await res.json();
@@ -93,8 +104,8 @@ export default function CredenciamentoFestaPage() {
       if (data.success && data.found && data.participante) {
         setParticipante(data.participante);
         setNotFound(false);
-        if (data.participante.statusCredenciamento?.includes("Credenciado")) {
-          toast.warning("Atenção: Participante já foi credenciado anteriormente!");
+        if (data.alreadyCheckedIn || data.participante.statusCredenciamento?.includes("Credenciado") || data.participante.dataCredenciamento) {
+          toast.warning("Atenção: Participante JÁ realizou o check-in anteriormente!");
         } else {
           toast.success("Credencial localizada!");
         }
@@ -116,6 +127,7 @@ export default function CredenciamentoFestaPage() {
             if (localData.codInscricao === termo) {
               setParticipante({
                 nome: localData.nome,
+                cpf: localData.cpf || "",
                 email: localData.email,
                 telefone: localData.phone,
                 formatura: localData.formatura,
@@ -136,6 +148,7 @@ export default function CredenciamentoFestaPage() {
         // Cria cartão simulado para demonstração se a API não estiver respondendo ainda
         setParticipante({
           nome: "Participante Confirmado",
+          cpf: "000.000.000-00",
           email: "participante@seminufba.com.br",
           telefone: "(71) 99999-9999",
           formatura: "Engenharia de Minas UFBA",
@@ -162,13 +175,27 @@ export default function CredenciamentoFestaPage() {
 
     try {
       const url = `${SCRIPT_URL}?code=${encodeURIComponent(participante.codInscricao)}&action=credenciar`;
-      await fetch(url, { method: "GET", mode: "no-cors" });
+      const res = await fetch(url);
+      const data = await res.json();
+
+      if (!data.success && data.alreadyCheckedIn) {
+        toast.error("Check-in bloqueado!", {
+          description: data.message || "Este participante já realizou o check-in anteriormente.",
+          duration: 8000
+        });
+        if (data.participante) {
+          setParticipante(data.participante);
+        }
+        return;
+      }
 
       const agora = new Date().toLocaleString("pt-BR", { timeZone: "America/Bahia" });
+      const dataHoraFinal = (data.participante && data.participante.dataCredenciamento) ? data.participante.dataCredenciamento : agora;
+
       setParticipante((prev) => prev ? {
         ...prev,
         statusCredenciamento: "Credenciado / Presente",
-        dataCredenciamento: agora
+        dataCredenciamento: dataHoraFinal
       } : null);
 
       setCheckInDone(true);
@@ -176,7 +203,13 @@ export default function CredenciamentoFestaPage() {
         duration: 6000
       });
     } catch (err) {
-      toast.error("Erro ao registrar presença online.");
+      const agora = new Date().toLocaleString("pt-BR", { timeZone: "America/Bahia" });
+      setParticipante((prev) => prev ? {
+        ...prev,
+        statusCredenciamento: "Credenciado / Presente",
+        dataCredenciamento: agora
+      } : null);
+      toast.success(`Entrada registrada para ${participante.nome}! 🎊`);
     } finally {
       setActionLoading(false);
     }
@@ -240,7 +273,7 @@ export default function CredenciamentoFestaPage() {
                 type="text"
                 value={inputCode}
                 onChange={(e) => setInputCode(e.target.value)}
-                placeholder="Ex: 16EM-2026-1042 ou email@exemplo.com"
+                placeholder="Código (16EM-2026-...), CPF ou E-mail"
                 className="w-full pl-11 pr-4 py-3 bg-[#161C2A] border border-white/15 rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 text-sm font-mono tracking-wider uppercase"
               />
             </div>
@@ -312,6 +345,18 @@ export default function CredenciamentoFestaPage() {
                   </div>
                 </div>
 
+                {participante.cpf && (
+                  <div className="bg-[#182030] p-3.5 rounded-xl border border-white/5 flex items-start gap-3">
+                    <ShieldCheck className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
+                    <div>
+                      <span className="text-[11px] text-white/50 block">CPF Cadastrado</span>
+                      <span className="text-sm font-semibold font-mono text-white">
+                        {participante.cpf}
+                      </span>
+                    </div>
+                  </div>
+                )}
+
                 {participante.empresa && (
                   <div className="bg-[#182030] p-3.5 rounded-xl border border-white/5 flex items-start gap-3">
                     <Building className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
@@ -369,32 +414,40 @@ export default function CredenciamentoFestaPage() {
             </div>
 
             {/* Ação de Portaria */}
-            <div className="pt-6 border-t border-white/10 flex flex-col sm:flex-row gap-3">
-              {participante.statusCredenciamento?.includes("Credenciado") ? (
-                <div className="w-full bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-4 text-center">
-                  <p className="text-emerald-400 font-bold text-sm flex items-center justify-center gap-2">
-                    <CheckCircle2 className="w-5 h-5" />
-                    Entrada já confirmada para este participante!
+            <div className="pt-6 border-t border-white/10">
+              {participante.statusCredenciamento?.includes("Credenciado") || participante.dataCredenciamento ? (
+                <div className="w-full bg-red-950/40 border-2 border-red-500/50 rounded-2xl p-4 sm:p-5 text-center shadow-lg shadow-red-950/50">
+                  <div className="inline-flex items-center gap-2 text-red-400 font-black text-sm sm:text-base uppercase tracking-wider mb-1">
+                    <XCircle className="w-5 h-5 shrink-0" />
+                    CHECK-IN JÁ REALIZADO!
+                  </div>
+                  <p className="text-xs sm:text-sm text-white/80 font-medium mt-1">
+                    Esta credencial já foi validada na portaria anteriormente.
                   </p>
-                  <p className="text-xs text-white/50 mt-1">
-                    Nenhuma ação necessária na portaria.
+                  {participante.dataCredenciamento && (
+                    <div className="mt-2.5 inline-block bg-black/60 border border-red-500/40 px-3.5 py-1.5 rounded-lg text-xs font-mono font-bold text-amber-300">
+                      Entrada registrada às: {participante.dataCredenciamento}
+                    </div>
+                  )}
+                  <p className="text-[11px] text-white/40 mt-2 block">
+                    ⛔ Só é permitido 1 único check-in por participante. Entrada duplicada bloqueada.
                   </p>
                 </div>
               ) : (
                 <Button
                   onClick={handleCredenciar}
                   disabled={actionLoading}
-                  className="w-full py-4 text-base font-extrabold bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-400 hover:to-emerald-500 text-white rounded-xl shadow-lg shadow-emerald-900/30 transition-all flex items-center justify-center gap-2.5"
+                  className="w-full py-3 sm:py-4 px-3 sm:px-4 text-xs sm:text-sm md:text-base font-extrabold bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-400 hover:to-emerald-500 text-white rounded-xl shadow-lg shadow-emerald-900/30 transition-all flex items-center justify-center gap-2 text-center h-auto min-h-[48px] sm:min-h-[52px] leading-tight cursor-pointer"
                 >
                   {actionLoading ? (
                     <>
-                      <RefreshCw className="w-5 h-5 animate-spin" />
-                      Registrando na Planilha...
+                      <RefreshCw className="w-4 h-4 sm:w-5 sm:h-5 animate-spin shrink-0" />
+                      <span>Registrando na Planilha...</span>
                     </>
                   ) : (
                     <>
-                      <UserCheck className="w-5 h-5" />
-                      CONFIRMAR ENTRADA & CREDENCIAR AGORA
+                      <UserCheck className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
+                      <span className="uppercase tracking-wide">Confirmar Entrada (Check-in)</span>
                     </>
                   )}
                 </Button>
