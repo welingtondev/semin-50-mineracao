@@ -508,7 +508,7 @@ function enviarEmailCredencial(nome, email, codInscricao, formatura, empresa) {
                       OPEN BAR INCLUSO NA FESTA
                     </span>
                     <div style="font-size: 15px; font-weight: 900; color: #FFFFFF;">
-                      Stella Pure Gold &bull; Chivas Regal 12 Anos
+                      Stella Pure Gold &bull; Chivas Regal 12 Anos &bull; Água, Refrigerante e Suco
                     </div>
                   </div>
 
@@ -526,7 +526,7 @@ function enviarEmailCredencial(nome, email, codInscricao, formatura, empresa) {
                           📍 <strong>Local:</strong> ${EVENTO.LOCAL}
                         </p>
                         <p style="margin: 0; font-size: 12px; color: #FCD34D; font-weight: bold;">
-                          <strong>Bebidas Inclusas:</strong> Open Bar de Stella Pure Gold e Chivas 12 Anos
+                          <strong>Bebidas Inclusas:</strong> Open Bar de Stella Pure Gold, Chivas 12 Anos, Água, Refrigerante e Suco
                         </p>
                       </td>
                     </tr>

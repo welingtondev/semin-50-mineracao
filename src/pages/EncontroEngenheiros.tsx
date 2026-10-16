@@ -446,7 +446,7 @@ export default function EncontroEngenheirosPage() {
                     Open Bar Incluso
                   </span>
                   <p className="text-sm sm:text-base font-extrabold text-slate-900">
-                    Stella Pure Gold &bull; Chivas 12 Anos
+                    Stella Pure Gold &bull; Chivas 12 Anos &bull; Água, Refrigerante e Suco
                   </p>
                 </div>
               </div>
@@ -462,7 +462,7 @@ export default function EncontroEngenheirosPage() {
                   Credenciamento Antecipado Obrigatório
                 </h2>
                 <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                  Preencha seus dados abaixo para receber sua <strong>Credencial Digital com QR Code</strong> diretamente no seu e-mail e garantir seu acesso à festa e à solenidade.
+                  Preencha seus dados abaixo para receber sua <strong>Credencial Digital com QR Code</strong> diretamente no seu e-mail e garantir seu acesso ao 16º Encontro dos Engenheiros de Minas da Bahia.
                 </p>
               </div>
 
@@ -674,7 +674,7 @@ export default function EncontroEngenheirosPage() {
                   Sábado, 14 de Novembro de 2026 &bull; A partir das 18h00
                 </p>
                 <div className="mt-2 inline-block bg-amber-100 border border-amber-300 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider text-amber-900">
-                  Open Bar: Stella Pure Gold &bull; Chivas 12 Anos
+                  Open Bar: Stella Pure Gold &bull; Chivas 12 Anos &bull; Água, Refrigerante e Suco
                 </div>
               </div>
 
