@@ -13,6 +13,8 @@ const QuizPage = React.lazy(() => import("./pages/Quiz"));
 const AdminGallery = React.lazy(() => import("./pages/AdminGallery"));
 const ThankYouPage = React.lazy(() => import("./pages/ThankYou"));
 const InscricaoPage = React.lazy(() => import("./pages/Inscricao"));
+const EncontroEngenheirosPage = React.lazy(() => import("./pages/EncontroEngenheiros"));
+const CredenciamentoFestaPage = React.lazy(() => import("./pages/CredenciamentoFesta"));
 const NotFound = React.lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient();
@@ -30,6 +32,11 @@ const App = () => (
               <Route path="/" element={<Index />} />
               <Route path="/inscricao" element={<InscricaoPage />} />
               <Route path="/inscricoes" element={<InscricaoPage />} />
+              {/* Páginas exclusivas do 16º Encontro dos Engenheiros de Minas (apenas quem tem o link direto) */}
+              <Route path="/16-encontro-engenheiros-minas" element={<EncontroEngenheirosPage />} />
+              <Route path="/encontro-engenheiros" element={<EncontroEngenheirosPage />} />
+              <Route path="/credenciamento-festa" element={<CredenciamentoFestaPage />} />
+              <Route path="/validador" element={<CredenciamentoFestaPage />} />
               <Route path="/desafio-semin" element={<QuizPage />} />
               <Route path="/admin" element={<AdminGallery />} />
               <Route path="/obrigado" element={<ThankYouPage />} />

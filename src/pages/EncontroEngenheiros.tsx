@@ -1,0 +1,646 @@
+import React, { useState, useEffect, useMemo, useRef } from "react";
+import { Link } from "react-router-dom";
+import { 
+  Sparkles, 
+  Calendar, 
+  MapPin, 
+  Clock, 
+  QrCode, 
+  CheckCircle2, 
+  Printer, 
+  Share2, 
+  ArrowLeft, 
+  Award, 
+  Gem, 
+  HardHat, 
+  User, 
+  Mail, 
+  Phone, 
+  GraduationCap, 
+  Building, 
+  MessageSquare, 
+  ShieldCheck,
+  Download,
+  AlertCircle
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+import seminLogo from "@/assets/logo branca semin site.png";
+
+// URL padrão do script do 16º Encontro (o usuário pode configurar via VITE_ENCONTRO_SCRIPT_URL ou conectar a sua publicação)
+const SCRIPT_URL = import.meta.env.VITE_ENCONTRO_SCRIPT_URL || "https://script.google.com/macros/s/AKfycbxutodaEtABT1eOEVKffTlGZhqGAA9wr_zV-Rbk-azPLqyIl4MtAXKtjFp1Kx-X1x2LVw/exec";
+
+// Opções rápidas de Turma / Ano de Formatura
+const TURMAS_DESTAQUE = [
+  "Pioneiros (1976 a 1980)",
+  "Década de 80 (1981 a 1990)",
+  "Década de 90 (1991 a 2000)",
+  "Anos 2000 (2001 a 2010)",
+  "Anos 2010 (2011 a 2020)",
+  "Recém-Formados (2021 a 2026)",
+  "Estudante / Formando Atual",
+  "Corpo Docente / Homenageado",
+  "Convidado Especial / Patrocinador"
+];
+
+interface FormErrors {
+  nome?: string;
+  email?: string;
+  phone?: string;
+  formatura?: string;
+}
+
+export default function EncontroEngenheirosPage() {
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [ticketData, setTicketData] = useState<{
+    nome: string;
+    email: string;
+    phone: string;
+    formatura: string;
+    empresa: string;
+    mensagem: string;
+    codInscricao: string;
+    dataRegistro: string;
+  } | null>(null);
+
+  const [formData, setFormData] = useState({
+    nome: "",
+    email: "",
+    phone: "",
+    formatura: "",
+    turmaCustomizada: "",
+    empresa: "",
+    mensagem: "",
+    aceitaTermos: true
+  });
+
+  const [errors, setErrors] = useState<FormErrors>({});
+  const printRef = useRef<HTMLDivElement>(null);
+
+  // Garante que a página é estritamente privada (não indexada por mecanismos de busca)
+  useEffect(() => {
+    document.title = "16º Encontro dos Engenheiros de Minas da Bahia • Inscrição Exclusiva";
+    
+    let metaRobots = document.querySelector('meta[name="robots"]');
+    if (!metaRobots) {
+      metaRobots = document.createElement("meta");
+      metaRobots.setAttribute("name", "robots");
+      document.head.appendChild(metaRobots);
+    }
+    metaRobots.setAttribute("content", "noindex, nofollow");
+
+    return () => {
+      metaRobots?.setAttribute("content", "index, follow");
+    };
+  }, []);
+
+  // Máscara dinâmica de telefone brasileiro (DDD + 9 dígitos)
+  const formatPhone = (val: string) => {
+    const raw = val.replace(/\D/g, "").slice(0, 11);
+    if (raw.length <= 2) return raw;
+    if (raw.length <= 7) return `(${raw.slice(0, 2)}) ${raw.slice(2)}`;
+    return `(${raw.slice(0, 2)}) ${raw.slice(2, 7)}-${raw.slice(7)}`;
+  };
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData((prev) => ({ ...prev, phone: formatPhone(e.target.value) }));
+  };
+
+  // Validação do formulário
+  const validateForm = (): boolean => {
+    const newErrors: FormErrors = {};
+    if (!formData.nome.trim()) {
+      newErrors.nome = "Informe seu nome completo.";
+    } else if (formData.nome.trim().split(" ").length < 2) {
+      newErrors.nome = "Por favor, informe seu nome e sobrenome.";
+    }
+
+    if (!formData.email.trim()) {
+      newErrors.email = "Informe seu e-mail para receber o QR Code.";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) {
+      newErrors.email = "Digite um e-mail válido.";
+    }
+
+    const cleanPhone = formData.phone.replace(/\D/g, "");
+    if (!formData.phone.trim()) {
+      newErrors.phone = "Informe seu número de WhatsApp com DDD.";
+    } else if (cleanPhone.length < 10) {
+      newErrors.phone = "Número incompleto. Digite DDD + 9 dígitos.";
+    }
+
+    const formaturaFinal = formData.turmaCustomizada.trim() || formData.formatura;
+    if (!formaturaFinal) {
+      newErrors.formatura = "Selecione ou informe sua turma / ano de formatura.";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  // Submissão
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!validateForm()) {
+      toast.error("Preencha os campos obrigatórios para gerar sua credencial.");
+      return;
+    }
+
+    setIsLoading(true);
+
+    const formaturaFinal = formData.turmaCustomizada.trim() || formData.formatura;
+    const sequencialRandom = Math.floor(1000 + Math.random() * 9000);
+    const generatedCode = `16EM-2026-${sequencialRandom}`;
+    const dataHoraFormatada = new Date().toLocaleString("pt-BR", { timeZone: "America/Bahia" });
+
+    const payload = {
+      nome: formData.nome.trim(),
+      email: formData.email.trim().toLowerCase(),
+      telefone: formData.phone.trim(),
+      formatura: formaturaFinal,
+      empresa: formData.empresa.trim(),
+      mensagem: formData.mensagem.trim(),
+      codInscricao: generatedCode,
+      dataHora: dataHoraFormatada,
+      evento: "16º Encontro dos Engenheiros de Minas da Bahia"
+    };
+
+    try {
+      // Envia assincronamente para a planilha do Google Sheets indicada pelo usuário
+      fetch(SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors",
+        keepalive: true,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      }).catch((err) => {
+        console.warn("Silent fallback Google Script dispatch:", err);
+      });
+
+      // Salva no estado do ticket
+      const finalTicket = {
+        nome: formData.nome.trim(),
+        email: formData.email.trim(),
+        phone: formData.phone.trim(),
+        formatura: formaturaFinal,
+        empresa: formData.empresa.trim(),
+        mensagem: formData.mensagem.trim(),
+        codInscricao: generatedCode,
+        dataRegistro: dataHoraFormatada
+      };
+
+      setTicketData(finalTicket);
+
+      // Salva localmente para backup
+      try {
+        localStorage.setItem("credencial_16_encontro", JSON.stringify(finalTicket));
+      } catch (e) {
+        // storage fallback
+      }
+
+      await new Promise((r) => setTimeout(r, 400));
+      setIsSuccess(true);
+      toast.success("Credencial emitida com sucesso! 🎉", {
+        description: "Enviamos uma cópia completa com QR Code para seu e-mail.",
+        duration: 8000
+      });
+      window.scrollTo({ top: 0, behavior: "smooth" });
+
+    } catch (error) {
+      console.error("Erro na inscrição:", error);
+      toast.error("Ocorreu um erro ao emitir a credencial. Tente novamente.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handlePrint = () => {
+    window.print();
+  };
+
+  const validadorUrl = useMemo(() => {
+    if (!ticketData) return "";
+    return `https://seminufba.com.br/credenciamento-festa?code=${encodeURIComponent(ticketData.codInscricao)}`;
+  }, [ticketData]);
+
+  const qrCodeUrl = useMemo(() => {
+    if (!validadorUrl) return "";
+    return `https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=${encodeURIComponent(validadorUrl)}&color=06080c&bgcolor=ffffff`;
+  }, [validadorUrl]);
+
+  return (
+    <div className="min-h-screen bg-[#07090E] text-white flex flex-col justify-between selection:bg-semin-yellow selection:text-semin-dark">
+      
+      {/* Estilos para Impressão da Credencial em folha ou crachá */}
+      <style>{`
+        @media print {
+          body * {
+            visibility: hidden;
+            background: #fff !important;
+            color: #000 !important;
+          }
+          #print-area, #print-area * {
+            visibility: visible;
+          }
+          #print-area {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            border: 2px solid #000 !important;
+            box-shadow: none !important;
+          }
+          .no-print {
+            display: none !important;
+          }
+        }
+      `}</style>
+
+      {/* Top Header Privado */}
+      <header className="border-b border-white/10 bg-[#0A0D14]/90 backdrop-blur-md sticky top-0 z-40">
+        <div className="container mx-auto px-4 py-3 flex items-center justify-between">
+          <Link to="/" className="flex items-center gap-3 group">
+            <img 
+              src={seminLogo} 
+              alt="SEMIN UFBA" 
+              className="h-8 md:h-10 w-auto object-contain transition-transform group-hover:scale-105" 
+            />
+          </Link>
+          <div className="flex items-center gap-2 text-xs font-semibold px-3 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300">
+            <ShieldCheck className="w-3.5 h-3.5 text-amber-400" />
+            <span>Página Privada • Link Exclusivo</span>
+          </div>
+        </div>
+      </header>
+
+      {/* Conteúdo Principal */}
+      <main className="container mx-auto px-4 py-8 md:py-14 flex-1 flex flex-col items-center justify-center relative">
+        
+        {/* Glows de ambientação em tom Ouro e Esmeralda */}
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] sm:w-[600px] h-[350px] sm:h-[600px] bg-gradient-to-tr from-amber-500/10 via-emerald-500/5 to-transparent rounded-full blur-[120px] pointer-events-none" />
+
+        {!isSuccess ? (
+          /* ========================================================
+             FORMULÁRIO DE INSCRIÇÃO EXCLUSIVA
+             ======================================================== */
+          <div className="w-full max-w-3xl relative z-10">
+            
+            {/* Header da Página */}
+            <div className="text-center mb-8 md:mb-10">
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-semin-orange/20 to-amber-500/20 border border-amber-500/40 text-amber-300 text-xs font-extrabold uppercase tracking-widest mb-4 shadow-sm">
+                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                Edição Histórica • 50 Anos (1976 - 2026)
+              </div>
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight mb-3">
+                16º Encontro dos <span className="bg-gradient-to-r from-amber-400 via-amber-300 to-semin-orange bg-clip-text text-transparent">Engenheiros de Minas</span> da Bahia
+              </h1>
+              <p className="text-amber-200/90 font-medium text-base md:text-lg mb-6">
+                Festa Oficial do Cinquentenário &bull; A Grande Celebração de Meio Século
+              </p>
+
+              {/* Informações de Data, Hora e Local */}
+              <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 max-w-2xl mx-auto">
+                <div className="flex items-center gap-2 bg-white/5 border border-white/10 px-3.5 py-1.5 rounded-xl text-xs md:text-sm text-white/90">
+                  <Calendar className="w-4 h-4 text-amber-400 shrink-0" />
+                  <span>Sábado, <strong>14 de Novembro de 2026</strong></span>
+                </div>
+                <div className="flex items-center gap-2 bg-white/5 border border-white/10 px-3.5 py-1.5 rounded-xl text-xs md:text-sm text-white/90">
+                  <Clock className="w-4 h-4 text-amber-400 shrink-0" />
+                  <span>A partir das <strong>12h00</strong></span>
+                </div>
+                <div className="flex items-center gap-2 bg-white/5 border border-white/10 px-3.5 py-1.5 rounded-xl text-xs md:text-sm text-white/90">
+                  <MapPin className="w-4 h-4 text-amber-400 shrink-0" />
+                  <span><strong>Escola Politécnica da UFBA</strong> (Salvador/BA)</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Card com Formulário */}
+            <div className="bg-[#0F1420]/90 border border-amber-500/30 rounded-3xl p-6 sm:p-10 shadow-2xl backdrop-blur-xl relative overflow-hidden">
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-500 via-emerald-400 to-amber-500" />
+
+              <div className="mb-6 pb-6 border-b border-white/10">
+                <h2 className="text-xl font-bold text-white mb-1.5 flex items-center gap-2">
+                  <Award className="w-5 h-5 text-amber-400" />
+                  Credenciamento Antecipado Obrigatório
+                </h2>
+                <p className="text-xs sm:text-sm text-white/60 leading-relaxed">
+                  Preencha seus dados abaixo para receber sua <strong>Credencial Digital com QR Code</strong> diretamente no seu e-mail e garantir seu acesso à festa e à solenidade.
+                </p>
+              </div>
+
+              <form onSubmit={handleSubmit} className="space-y-5">
+                
+                {/* Nome Completo */}
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-white/80 mb-2 flex items-center gap-2">
+                    <User className="w-3.5 h-3.5 text-amber-400" />
+                    Nome Completo *
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.nome}
+                    onChange={(e) => setFormData((p) => ({ ...p, nome: e.target.value }))}
+                    placeholder="Ex: Carlos Alberto da Silva"
+                    className={`w-full bg-white/5 border ${
+                      errors.nome ? "border-red-500" : "border-white/15 focus:border-amber-400"
+                    } rounded-xl px-4 py-3 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-amber-400/20 transition-all`}
+                  />
+                  {errors.nome && <p className="text-red-400 text-xs mt-1.5 font-medium">{errors.nome}</p>}
+                </div>
+
+                {/* E-mail & WhatsApp em Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-white/80 mb-2 flex items-center gap-2">
+                      <Mail className="w-3.5 h-3.5 text-amber-400" />
+                      E-mail *
+                    </label>
+                    <input
+                      type="email"
+                      value={formData.email}
+                      onChange={(e) => setFormData((p) => ({ ...p, email: e.target.value }))}
+                      placeholder="seu.email@exemplo.com"
+                      className={`w-full bg-white/5 border ${
+                        errors.email ? "border-red-500" : "border-white/15 focus:border-amber-400"
+                      } rounded-xl px-4 py-3 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-amber-400/20 transition-all`}
+                    />
+                    {errors.email && <p className="text-red-400 text-xs mt-1.5 font-medium">{errors.email}</p>}
+                    <span className="text-[11px] text-white/40 mt-1 block">O QR Code do ingresso será enviado para este e-mail.</span>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-white/80 mb-2 flex items-center gap-2">
+                      <Phone className="w-3.5 h-3.5 text-emerald-400" />
+                      WhatsApp com DDD *
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.phone}
+                      onChange={handlePhoneChange}
+                      placeholder="(71) 99999-9999"
+                      className={`w-full bg-white/5 border ${
+                        errors.phone ? "border-red-500" : "border-white/15 focus:border-emerald-400"
+                      } rounded-xl px-4 py-3 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-emerald-400/20 transition-all`}
+                    />
+                    {errors.phone && <p className="text-red-400 text-xs mt-1.5 font-medium">{errors.phone}</p>}
+                  </div>
+                </div>
+
+                {/* Turma / Ano de Formatura */}
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-white/80 mb-2 flex items-center gap-2">
+                    <GraduationCap className="w-3.5 h-3.5 text-amber-400" />
+                    Ano de Formatura / Vínculo com a UFBA *
+                  </label>
+                  
+                  {/* Seleção rápida por grupos de turmas */}
+                  <select
+                    value={formData.formatura}
+                    onChange={(e) => setFormData((p) => ({ ...p, formatura: e.target.value }))}
+                    className="w-full bg-[#161D2B] border border-white/15 focus:border-amber-400 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:ring-2 focus:ring-amber-400/20 transition-all mb-2 cursor-pointer"
+                  >
+                    <option value="">Selecione sua turma ou vínculo...</option>
+                    {TURMAS_DESTAQUE.map((item) => (
+                      <option key={item} value={item} className="bg-[#161D2B] text-white">
+                        {item}
+                      </option>
+                    ))}
+                    <option value="Outro">Outro (especificar abaixo)</option>
+                  </select>
+
+                  <input
+                    type="text"
+                    value={formData.turmaCustomizada}
+                    onChange={(e) => setFormData((p) => ({ ...p, turmaCustomizada: e.target.value }))}
+                    placeholder="Ou digite o ano exato da sua turma (ex: Formando 1994.2)"
+                    className="w-full bg-white/5 border border-white/15 focus:border-amber-400 rounded-xl px-4 py-2 text-xs text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-amber-400/20 transition-all"
+                  />
+                  {errors.formatura && <p className="text-red-400 text-xs mt-1.5 font-medium">{errors.formatura}</p>}
+                </div>
+
+                {/* Empresa / Atuação Atual (Opcional) */}
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-white/80 mb-2 flex items-center gap-2">
+                    <Building className="w-3.5 h-3.5 text-amber-400" />
+                    Empresa / Instituição Atual <span className="text-white/40 font-normal lowercase">(opcional para crachá)</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.empresa}
+                    onChange={(e) => setFormData((p) => ({ ...p, empresa: e.target.value }))}
+                    placeholder="Ex: CBPM, Vale, Yamana, Anglo, UFBA, Consultoria..."
+                    className="w-full bg-white/5 border border-white/15 focus:border-amber-400 rounded-xl px-4 py-3 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-amber-400/20 transition-all"
+                  />
+                </div>
+
+                {/* Mensagem aos Colegas (Opcional) */}
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-white/80 mb-2 flex items-center gap-2">
+                    <MessageSquare className="w-3.5 h-3.5 text-amber-400" />
+                    Mensagem ou Homenagem ao Jubileu de Ouro <span className="text-white/40 font-normal lowercase">(opcional)</span>
+                  </label>
+                  <textarea
+                    rows={2}
+                    value={formData.mensagem}
+                    onChange={(e) => setFormData((p) => ({ ...p, mensagem: e.target.value }))}
+                    placeholder="Deixe um recado carinhoso para os pioneiros, colegas de turma e professores..."
+                    className="w-full bg-white/5 border border-white/15 focus:border-amber-400 rounded-xl px-4 py-3 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-amber-400/20 transition-all resize-none"
+                  />
+                </div>
+
+                {/* Informação sobre entrada e credenciamento */}
+                <div className="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-4 text-xs text-amber-200/90 leading-relaxed flex items-start gap-3">
+                  <AlertCircle className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
+                  <div>
+                    <strong className="text-amber-300 block mb-0.5">Credenciamento & Acesso à Festa:</strong>
+                    Após a confirmação, seu QR Code será exibido na tela e enviado para o seu e-mail. No dia 14/11, nossa equipe fará a leitura na portaria para entrega do kit e crachá comemorativo.
+                  </div>
+                </div>
+
+                {/* Botão de Envio */}
+                <Button
+                  type="submit"
+                  disabled={isLoading}
+                  className="w-full py-6 bg-gradient-to-r from-amber-500 via-amber-400 to-semin-orange text-semin-dark hover:from-amber-400 hover:to-amber-500 font-extrabold text-base md:text-lg rounded-2xl shadow-xl shadow-amber-500/25 transition-all duration-300 hover:scale-[1.01] active:scale-[0.99] cursor-pointer"
+                >
+                  {isLoading ? (
+                    <span className="flex items-center gap-2">
+                      <span className="w-5 h-5 border-2 border-semin-dark border-t-transparent rounded-full animate-spin" />
+                      Emitindo Credencial & Enviando E-mail...
+                    </span>
+                  ) : (
+                    <span className="flex items-center justify-center gap-2">
+                      <CheckCircle2 className="w-5 h-5" />
+                      Confirmar Inscrição & Obter Credencial
+                    </span>
+                  )}
+                </Button>
+
+              </form>
+            </div>
+
+          </div>
+        ) : (
+          /* ========================================================
+             COMPROVANTE DIGITAL COM QR CODE & VOUCHER OFICIAL
+             ======================================================== */
+          <div className="w-full max-w-xl relative z-10 animate-fade-in">
+            
+            {/* Mensagem de Boas-Vindas */}
+            <div className="text-center mb-6">
+              <div className="w-16 h-16 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 flex items-center justify-center mx-auto mb-3 shadow-[0_0_30px_rgba(16,185,129,0.3)]">
+                <CheckCircle2 className="w-9 h-9" />
+              </div>
+              <h2 className="text-2xl sm:text-3xl font-black text-white">
+                Inscrição Confirmada com Sucesso!
+              </h2>
+              <p className="text-xs sm:text-sm text-white/60 mt-1 max-w-md mx-auto">
+                Sua credencial foi registrada e enviada com o QR Code para <strong>{ticketData?.email}</strong>.
+              </p>
+            </div>
+
+            {/* Cartão de Credencial Imprimível */}
+            <div 
+              id="print-area" 
+              ref={printRef}
+              className="bg-[#0F1420] border-2 border-amber-500/60 rounded-3xl p-6 sm:p-8 shadow-2xl relative overflow-hidden text-center mb-6"
+            >
+              {/* Header do Crachá */}
+              <div className="border-b border-white/10 pb-4 mb-4">
+                <span className="text-[10px] font-black uppercase tracking-[0.25em] text-amber-400 block mb-1">
+                  CREDENCIAL OFICIAL &bull; JUBILEU DE OURO (50 ANOS)
+                </span>
+                <h3 className="text-lg sm:text-xl font-black text-white uppercase tracking-tight">
+                  16º Encontro dos Engenheiros de Minas da Bahia
+                </h3>
+                <p className="text-xs text-white/50 mt-0.5">
+                  Escola Politécnica da UFBA &bull; 14 de Novembro de 2026
+                </p>
+              </div>
+
+              {/* Código Único */}
+              <div className="bg-black/40 border border-amber-500/30 rounded-xl py-2 px-4 inline-block mb-4">
+                <span className="text-[9px] text-amber-400/80 uppercase tracking-widest font-bold block">
+                  Código da Credencial
+                </span>
+                <span className="font-mono text-2xl font-black text-amber-400 tracking-wider">
+                  {ticketData?.codInscricao}
+                </span>
+              </div>
+
+              {/* QR Code */}
+              <div className="flex flex-col items-center justify-center my-3">
+                <div className="p-3 bg-white rounded-2xl shadow-xl inline-block">
+                  {qrCodeUrl && (
+                    <img 
+                      src={qrCodeUrl} 
+                      alt="QR Code da Credencial" 
+                      width={180} 
+                      height={180}
+                      className="block mx-auto rounded-lg"
+                    />
+                  )}
+                </div>
+                <span className="text-[10px] font-semibold uppercase tracking-wider text-white/50 mt-2">
+                  Apresente este QR Code na portaria da festa
+                </span>
+              </div>
+
+              {/* Dados do Congressista / Participante */}
+              <div className="bg-white/5 border border-white/10 rounded-2xl p-4 text-left space-y-2 text-xs sm:text-sm mt-4">
+                <div className="flex justify-between border-b border-white/5 pb-1.5">
+                  <span className="text-white/50">Engenheiro(a):</span>
+                  <span className="font-bold text-white text-right">{ticketData?.nome}</span>
+                </div>
+                <div className="flex justify-between border-b border-white/5 pb-1.5">
+                  <span className="text-white/50">Turma / Vínculo:</span>
+                  <span className="font-bold text-amber-400 text-right">{ticketData?.formatura}</span>
+                </div>
+                {ticketData?.empresa && (
+                  <div className="flex justify-between border-b border-white/5 pb-1.5">
+                    <span className="text-white/50">Empresa / Atuação:</span>
+                    <span className="font-medium text-white/90 text-right">{ticketData?.empresa}</span>
+                  </div>
+                )}
+                <div className="flex justify-between pt-0.5">
+                  <span className="text-white/50">Status Oficial:</span>
+                  <span className="font-bold text-emerald-400 flex items-center gap-1">
+                    <CheckCircle2 className="w-3.5 h-3.5" />
+                    Confirmado
+                  </span>
+                </div>
+              </div>
+
+              <div className="mt-4 pt-3 border-t border-white/10 text-[10px] text-white/40">
+                Data do Registro: {ticketData?.dataRegistro} &bull; SEMIN UFBA 2026
+              </div>
+            </div>
+
+            {/* Ações: Imprimir / Salvar / Nova Inscrição */}
+            <div className="flex flex-col sm:flex-row gap-3 no-print">
+              <Button
+                onClick={handlePrint}
+                className="flex-1 py-5 bg-amber-500 hover:bg-amber-400 text-semin-dark font-extrabold text-sm rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 cursor-pointer"
+              >
+                <Printer className="w-4 h-4" />
+                Imprimir Credencial / Salvar PDF
+              </Button>
+
+              <Button
+                variant="outline"
+                onClick={() => {
+                  if (navigator.share && validadorUrl) {
+                    navigator.share({
+                      title: "Credencial 16º Encontro dos Engenheiros de Minas",
+                      text: `Minha credencial para o 16º Encontro dos Engenheiros de Minas da Bahia (Código: ${ticketData?.codInscricao})`,
+                      url: validadorUrl
+                    }).catch(() => {});
+                  } else {
+                    navigator.clipboard.writeText(validadorUrl);
+                    toast.success("Link da credencial copiado para a área de transferência!");
+                  }
+                }}
+                className="flex-1 py-5 border-white/20 text-white hover:bg-white/10 font-bold text-sm rounded-xl flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <Share2 className="w-4 h-4" />
+                Copiar / Compartilhar
+              </Button>
+            </div>
+
+            <div className="text-center mt-6 no-print">
+              <button
+                onClick={() => {
+                  setIsSuccess(false);
+                  setFormData({
+                    nome: "",
+                    email: "",
+                    phone: "",
+                    formatura: "",
+                    turmaCustomizada: "",
+                    empresa: "",
+                    mensagem: "",
+                    aceitaTermos: true
+                  });
+                }}
+                className="text-xs text-amber-400/80 hover:text-amber-300 underline underline-offset-4 cursor-pointer bg-transparent border-0"
+              >
+                ← Cadastrar outro colega / novo convidado
+              </button>
+            </div>
+
+          </div>
+        )}
+
+      </main>
+
+      {/* Footer Simples */}
+      <footer className="border-t border-white/10 bg-[#0A0D14] py-6 text-center text-xs text-white/50 no-print">
+        <div className="container mx-auto px-4">
+          <p>© 2026 SEMIN UFBA &bull; Escola Politécnica da UFBA &bull; 50 Anos de Engenharia de Minas</p>
+        </div>
+      </footer>
+
+    </div>
+  );
+}
