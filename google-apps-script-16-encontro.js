@@ -21,7 +21,7 @@ const EVENTO = {
   SUBTITULO: 'Festa Oficial do Cinquentenário • Jubileu de Ouro (1976 - 2026)',
   DATA: 'Sábado, 14 de Novembro de 2026',
   HORARIO: 'A partir das 18h00',
-  LOCAL: 'Escola Politécnica da UFBA • Salvador / BA',
+  LOCAL: 'Da Tetê - Bar • R. Borges dos Reis, 103 - Rio Vermelho, Salvador - BA, 41950-600',
   LINK_SITE: 'https://seminufba.com.br',
   LINK_VALIDADOR: 'https://seminufba.com.br/credenciamento-festa'
 };
@@ -457,6 +457,16 @@ function enviarEmailCredencial(nome, email, codInscricao, formatura, empresa) {
                     </tr>
                   </table>
 
+                  <!-- Destaque Open Bar -->
+                  <div style="background: linear-gradient(135deg, rgba(217, 119, 6, 0.25) 0%, rgba(16, 185, 129, 0.2) 100%); border: 1px solid #D97706; border-radius: 12px; padding: 14px 16px; margin-bottom: 20px; text-align: center;">
+                    <span style="font-size: 11px; font-weight: 800; color: #FCD34D; text-transform: uppercase; letter-spacing: 1.5px; display: block; margin-bottom: 4px;">
+                      ✨ OPEN BAR PREMIUM INCLUSO NA FESTA ✨
+                    </span>
+                    <div style="font-size: 15px; font-weight: 900; color: #FFFFFF;">
+                      🍺 Stella Pure Gold &bull; 🥃 Chivas Regal 12 Anos
+                    </div>
+                  </div>
+
                   <!-- Caixa de Informações do Evento -->
                   <table role="presentation" width="100%" style="background-color: #182234; border-left: 4px solid #F59E0B; border-radius: 8px; padding: 14px 16px; margin-bottom: 24px;" cellspacing="0" cellpadding="0" border="0">
                     <tr>
@@ -467,8 +477,11 @@ function enviarEmailCredencial(nome, email, codInscricao, formatura, empresa) {
                         <p style="margin: 0 0 6px; font-size: 13px; color: #FFFFFF;">
                           ⏰ <strong>Horário:</strong> ${EVENTO.HORARIO}
                         </p>
-                        <p style="margin: 0; font-size: 13px; color: #FFFFFF;">
+                        <p style="margin: 0 0 6px; font-size: 13px; color: #FFFFFF;">
                           📍 <strong>Local:</strong> ${EVENTO.LOCAL}
+                        </p>
+                        <p style="margin: 0; font-size: 12px; color: #FCD34D; font-weight: bold;">
+                          🍻 <strong>Bebidas Inclusas:</strong> Open Bar de Stella Pure Gold e Chivas 12 Anos
                         </p>
                       </td>
                     </tr>

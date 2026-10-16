@@ -386,7 +386,22 @@ export default function EncontroEngenheirosPage() {
                 </div>
                 <div className="flex items-center gap-2 bg-white/5 border border-white/10 px-3.5 py-1.5 rounded-xl text-xs md:text-sm text-white/90">
                   <MapPin className="w-4 h-4 text-amber-400 shrink-0" />
-                  <span><strong>Escola Politécnica da UFBA</strong> (Salvador/BA)</span>
+                  <span><strong>Da Tetê - Bar</strong> (Rio Vermelho)</span>
+                </div>
+              </div>
+
+              {/* Destaque Exclusivo: Open Bar & Endereço Completo */}
+              <div className="mt-5 max-w-xl mx-auto bg-gradient-to-r from-amber-500/15 via-emerald-500/10 to-amber-500/15 border border-amber-500/40 rounded-2xl p-4 text-center backdrop-blur-md shadow-lg shadow-amber-500/5">
+                <div className="inline-flex items-center gap-1.5 text-amber-300 font-extrabold text-xs uppercase tracking-wider mb-1">
+                  <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                  Open Bar Incluso na Festa
+                </div>
+                <p className="text-sm sm:text-base font-black text-white">
+                  🍺 Stella Pure Gold &bull; 🥃 Chivas 12 Anos
+                </p>
+                <div className="flex items-center justify-center gap-1.5 text-xs text-white/70 mt-2 pt-2 border-t border-white/10">
+                  <MapPin className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                  <span>R. Borges dos Reis, 103 - Rio Vermelho, Salvador - BA, 41950-600</span>
                 </div>
               </div>
             </div>
@@ -610,9 +625,15 @@ export default function EncontroEngenheirosPage() {
                 <h3 className="text-lg sm:text-xl font-black text-white uppercase tracking-tight">
                   16º Encontro dos Engenheiros de Minas da Bahia
                 </h3>
-                <p className="text-xs text-white/50 mt-0.5">
-                  Escola Politécnica da UFBA &bull; 14 de Novembro de 2026 &bull; A partir das 18h00
+                <p className="text-xs text-amber-300 font-bold mt-1">
+                  Da Tetê - Bar &bull; R. Borges dos Reis, 103 - Rio Vermelho, Salvador/BA
                 </p>
+                <p className="text-xs text-white/70 mt-0.5">
+                  Sábado, 14 de Novembro de 2026 &bull; A partir das 18h00
+                </p>
+                <div className="mt-2 inline-block bg-amber-500/15 border border-amber-500/40 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider text-amber-300">
+                  🍻 Open Bar: Stella Pure Gold &bull; Chivas 12 Anos
+                </div>
               </div>
 
               {/* Código Único */}

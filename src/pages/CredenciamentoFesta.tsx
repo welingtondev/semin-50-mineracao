@@ -254,7 +254,7 @@ export default function CredenciamentoFestaPage() {
             Credenciamento da Festa do Cinquentenário
           </h1>
           <p className="text-sm text-white/60 max-w-lg mx-auto mt-2">
-            Aponte a câmera do celular para o QR Code do convidado ou digite o código/e-mail abaixo para registrar a entrada.
+            Portaria oficial no <strong>Da Tetê - Bar</strong> (Rio Vermelho) &bull; A partir das <strong>18h00</strong>. Aponte a câmera para o QR Code ou digite o código/CPF para liberar a entrada.
           </p>
         </div>
 
