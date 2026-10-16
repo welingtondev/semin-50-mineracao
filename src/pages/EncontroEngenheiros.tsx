@@ -542,7 +542,7 @@ export default function EncontroEngenheirosPage() {
                     type="text"
                     value={formData.empresa}
                     onChange={(e) => setFormData((p) => ({ ...p, empresa: e.target.value }))}
-                    placeholder="Ex: CBPM, Vale, Yamana, Anglo, UFBA, Consultoria..."
+                    placeholder="Ex: CBPM, Vale, Anglo, UFBA, Consultoria..."
                     className="w-full bg-white/5 border border-white/15 focus:border-amber-400 rounded-xl px-4 py-3 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-amber-400/20 transition-all"
                   />
                 </div>
