@@ -67,7 +67,7 @@ const ThankYouPage = () => {
         </div>
       </div>
       <footer className="absolute bottom-4 w-full text-center text-xs text-white/40 z-20">
-        by{" "}
+        developt by{" "}
         <a
           href="https://www.instagram.com/wellingtonsantos.br/"
           target="_blank"

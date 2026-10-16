@@ -80,7 +80,7 @@ const Footer = () => (
       <div className="border-t border-white/10 pt-5 md:pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
         <p className="font-body text-[10px] md:text-xs text-white/50">© 2026 SEMIN UFBA – Semana de Mineração da UFBA. Todos os direitos reservados.</p>
         <p className="font-body text-[10px] md:text-xs text-white/50">
-          by{" "}
+          developt by{" "}
           <a
             href="https://www.instagram.com/wellingtonsantos.br/"
             target="_blank"

@@ -19,7 +19,7 @@ const NotFound = () => {
         </a>
       </div>
       <footer className="text-center text-xs text-muted-foreground">
-        by{" "}
+        developt by{" "}
         <a
           href="https://www.instagram.com/wellingtonsantos.br/"
           target="_blank"

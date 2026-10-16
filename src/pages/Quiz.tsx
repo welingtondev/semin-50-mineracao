@@ -1811,7 +1811,7 @@ const QuizPage = () => {
         </AnimatePresence>
       </div>
       <footer className="w-full text-center py-4 text-xs text-white/40">
-        by{" "}
+        developt by{" "}
         <a
           href="https://www.instagram.com/wellingtonsantos.br/"
           target="_blank"

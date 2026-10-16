@@ -895,7 +895,7 @@ export default function InscricaoPage() {
             <Link to="/" className="hover:text-semin-yellow transition-colors">Página Inicial</Link>
             <a href="mailto:contato@seminufba.com.br" className="hover:text-semin-yellow transition-colors">contato@seminufba.com.br</a>
             <span>
-              by{" "}
+              developt by{" "}
               <a
                 href="https://www.instagram.com/wellingtonsantos.br/"
                 target="_blank"
