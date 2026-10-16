@@ -18,9 +18,7 @@ import {
   GraduationCap, 
   Building, 
   MessageSquare, 
-  ShieldCheck,
-  Download,
-  AlertCircle
+  ShieldCheck
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -374,8 +372,8 @@ export default function EncontroEngenheirosPage() {
                 Festa Oficial do Cinquentenário &bull; A Grande Celebração de Meio Século
               </p>
 
-              {/* Informações de Data, Hora e Local */}
-              <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 max-w-2xl mx-auto">
+              {/* Informações de Data e Hora */}
+              <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 max-w-2xl mx-auto mb-4">
                 <div className="flex items-center gap-2 bg-white/5 border border-white/10 px-3.5 py-1.5 rounded-xl text-xs md:text-sm text-white/90">
                   <Calendar className="w-4 h-4 text-amber-400 shrink-0" />
                   <span>Sábado, <strong>14 de Novembro de 2026</strong></span>
@@ -384,24 +382,28 @@ export default function EncontroEngenheirosPage() {
                   <Clock className="w-4 h-4 text-amber-400 shrink-0" />
                   <span>A partir das <strong>18h00</strong></span>
                 </div>
-                <div className="flex items-center gap-2 bg-white/5 border border-white/10 px-3.5 py-1.5 rounded-xl text-xs md:text-sm text-white/90">
-                  <MapPin className="w-4 h-4 text-amber-400 shrink-0" />
-                  <span><strong>Da Tetê - Bar</strong> (Rio Vermelho)</span>
-                </div>
               </div>
 
-              {/* Destaque Exclusivo: Open Bar & Endereço Completo */}
-              <div className="mt-5 max-w-xl mx-auto bg-gradient-to-r from-amber-500/15 via-emerald-500/10 to-amber-500/15 border border-amber-500/40 rounded-2xl p-4 text-center backdrop-blur-md shadow-lg shadow-amber-500/5">
-                <div className="inline-flex items-center gap-1.5 text-amber-300 font-extrabold text-xs uppercase tracking-wider mb-1">
-                  <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-                  Open Bar Incluso na Festa
+              {/* Destaque Oficial: Da Tetê - Bar & Rio Vermelho e Open Bar */}
+              <div className="max-w-xl mx-auto bg-gradient-to-b from-[#131A29] to-[#0D121D] border-2 border-amber-500/50 rounded-2xl p-5 text-center shadow-xl shadow-amber-500/10 mb-2">
+                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-amber-400 block mb-1">
+                  LOCAL DA FESTA
+                </span>
+                <h2 className="text-2xl sm:text-3xl font-black text-white tracking-wide uppercase">
+                  Da Tetê - Bar
+                </h2>
+                <div className="flex items-center justify-center gap-1.5 text-xs sm:text-sm text-amber-200/90 font-medium mt-1">
+                  <MapPin className="w-4 h-4 text-amber-400 shrink-0" />
+                  <span>R. Borges dos Reis, 103 &bull; Rio Vermelho, Salvador - BA</span>
                 </div>
-                <p className="text-sm sm:text-base font-black text-white">
-                  🍺 Stella Pure Gold &bull; 🥃 Chivas 12 Anos
-                </p>
-                <div className="flex items-center justify-center gap-1.5 text-xs text-white/70 mt-2 pt-2 border-t border-white/10">
-                  <MapPin className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-                  <span>R. Borges dos Reis, 103 - Rio Vermelho, Salvador - BA, 41950-600</span>
+
+                <div className="mt-4 pt-3.5 border-t border-white/10">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-white/60 block mb-0.5">
+                    Open Bar Incluso
+                  </span>
+                  <p className="text-sm sm:text-base font-extrabold text-white">
+                    Stella Pure Gold &bull; Chivas 12 Anos
+                  </p>
                 </div>
               </div>
             </div>
@@ -560,15 +562,6 @@ export default function EncontroEngenheirosPage() {
                   />
                 </div>
 
-                {/* Informação sobre entrada e credenciamento */}
-                <div className="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-4 text-xs text-amber-200/90 leading-relaxed flex items-start gap-3">
-                  <AlertCircle className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
-                  <div>
-                    <strong className="text-amber-300 block mb-0.5">Credenciamento & Acesso à Festa:</strong>
-                    Após a confirmação, seu QR Code será exibido na tela e enviado para o seu e-mail. No dia 14/11, nossa equipe fará a leitura na portaria para entrega do kit e crachá comemorativo.
-                  </div>
-                </div>
-
                 {/* Botão de Envio */}
                 <Button
                   type="submit"
@@ -632,7 +625,7 @@ export default function EncontroEngenheirosPage() {
                   Sábado, 14 de Novembro de 2026 &bull; A partir das 18h00
                 </p>
                 <div className="mt-2 inline-block bg-amber-500/15 border border-amber-500/40 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider text-amber-300">
-                  🍻 Open Bar: Stella Pure Gold &bull; Chivas 12 Anos
+                  Open Bar: Stella Pure Gold &bull; Chivas 12 Anos
                 </div>
               </div>
 

@@ -460,10 +460,10 @@ function enviarEmailCredencial(nome, email, codInscricao, formatura, empresa) {
                   <!-- Destaque Open Bar -->
                   <div style="background: linear-gradient(135deg, rgba(217, 119, 6, 0.25) 0%, rgba(16, 185, 129, 0.2) 100%); border: 1px solid #D97706; border-radius: 12px; padding: 14px 16px; margin-bottom: 20px; text-align: center;">
                     <span style="font-size: 11px; font-weight: 800; color: #FCD34D; text-transform: uppercase; letter-spacing: 1.5px; display: block; margin-bottom: 4px;">
-                      ✨ OPEN BAR PREMIUM INCLUSO NA FESTA ✨
+                      OPEN BAR INCLUSO NA FESTA
                     </span>
                     <div style="font-size: 15px; font-weight: 900; color: #FFFFFF;">
-                      🍺 Stella Pure Gold &bull; 🥃 Chivas Regal 12 Anos
+                      Stella Pure Gold &bull; Chivas Regal 12 Anos
                     </div>
                   </div>
 
@@ -481,7 +481,7 @@ function enviarEmailCredencial(nome, email, codInscricao, formatura, empresa) {
                           📍 <strong>Local:</strong> ${EVENTO.LOCAL}
                         </p>
                         <p style="margin: 0; font-size: 12px; color: #FCD34D; font-weight: bold;">
-                          🍻 <strong>Bebidas Inclusas:</strong> Open Bar de Stella Pure Gold e Chivas 12 Anos
+                          <strong>Bebidas Inclusas:</strong> Open Bar de Stella Pure Gold e Chivas 12 Anos
                         </p>
                       </td>
                     </tr>
