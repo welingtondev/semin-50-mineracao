@@ -1013,7 +1013,7 @@ export default function CredenciamentoFestaPage() {
         <div className="container mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
           <p>16º Encontro dos Engenheiros de Minas da Bahia &bull; Sistema Interno de Recepção</p>
           <p>
-            developt by{" "}
+            developed by{" "}
             <a
               href="https://www.instagram.com/wellingtonsantos.br/"
               target="_blank"

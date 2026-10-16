@@ -887,7 +887,7 @@ export default function EncontroEngenheirosPage() {
         <div className="container mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
           <p>© 2026 SEMIN UFBA &bull; Escola Politécnica da UFBA &bull; 50 Anos de Engenharia de Minas</p>
           <p>
-            developt by{" "}
+            developed by{" "}
             <a
               href="https://www.instagram.com/wellingtonsantos.br/"
               target="_blank"
