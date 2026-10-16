@@ -549,11 +549,11 @@ export default function CredenciamentoFestaPage() {
               </span>
               <Button
                 onClick={handleLogout}
-                variant="outline"
+                variant="ghost"
                 size="sm"
-                className="border-white/20 text-white/80 hover:text-white hover:bg-white/10 text-xs flex items-center gap-1.5 py-1.5 px-3 rounded-lg cursor-pointer"
+                className="bg-red-500/15 hover:bg-red-500/25 border border-red-500/30 text-red-300 hover:text-red-200 text-xs flex items-center gap-1.5 py-1.5 px-3 rounded-xl transition-all cursor-pointer font-bold shadow-sm"
               >
-                <LogOut className="w-3.5 h-3.5" />
+                <LogOut className="w-3.5 h-3.5 text-red-400" />
                 <span>Bloquear / Sair</span>
               </Button>
             </div>
