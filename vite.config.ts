@@ -22,6 +22,7 @@ export default defineConfig(({ mode }) => ({
       input: {
         main: path.resolve(__dirname, "index.html"),
         encontro: path.resolve(__dirname, "16-encontro-engenheiros-minas.html"),
+        encontroCurto: path.resolve(__dirname, "encontro-engenheiros.html"),
       },
       output: {
         manualChunks(id) {

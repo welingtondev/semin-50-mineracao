@@ -1,7 +1,7 @@
 {
   "rewrites": [
     { "source": "/16-encontro-engenheiros-minas", "destination": "/16-encontro-engenheiros-minas.html" },
-    { "source": "/encontro-engenheiros", "destination": "/16-encontro-engenheiros-minas.html" },
+    { "source": "/encontro-engenheiros", "destination": "/encontro-engenheiros.html" },
     { "source": "/(.*)", "destination": "/index.html" }
   ],
   "headers": [
