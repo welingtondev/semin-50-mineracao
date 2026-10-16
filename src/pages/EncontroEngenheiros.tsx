@@ -123,11 +123,11 @@ export default function EncontroEngenheirosPage() {
 
     setMetaTag("og:title", "16º Encontro dos Engenheiros de Minas da Bahia");
     setMetaTag("og:description", "Festa Oficial do Cinquentenário (1976 - 2026) • 14 de Novembro no Da Tetê - Bar (Rio Vermelho, Salvador). Open Bar: Stella Pure Gold, Chivas 12 Anos, Água, Refrigerante e Suco.");
-    setMetaTag("og:image", "https://seminufba.com.br/og-16-encontro.jpg");
+    setMetaTag("og:image", "https://seminufba.com.br/50anos_logo.png");
     setMetaTag("og:url", "https://seminufba.com.br/16-encontro-engenheiros-minas");
     setMetaTag("twitter:title", "16º Encontro dos Engenheiros de Minas da Bahia");
     setMetaTag("twitter:description", "Festa Oficial do Cinquentenário (1976 - 2026) • 14 de Novembro no Da Tetê - Bar (Rio Vermelho).");
-    setMetaTag("twitter:image", "https://seminufba.com.br/og-16-encontro.jpg");
+    setMetaTag("twitter:image", "https://seminufba.com.br/50anos_logo.png");
     setMetaTag("description", "Festa Oficial do Cinquentenário (1976 - 2026) • Sábado, 14 de Novembro no Da Tetê - Bar. Open Bar Incluso!");
 
     return () => {
