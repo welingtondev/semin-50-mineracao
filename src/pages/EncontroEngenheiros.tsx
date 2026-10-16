@@ -8,7 +8,6 @@ import {
   QrCode, 
   CheckCircle2, 
   Printer, 
-  Share2, 
   ArrowLeft, 
   Award, 
   Gem, 
@@ -578,33 +577,13 @@ export default function EncontroEngenheirosPage() {
             </div>
 
             {/* Ações: Imprimir / Salvar / Nova Inscrição */}
-            <div className="flex flex-col sm:flex-row gap-3 no-print">
+            <div className="flex flex-col gap-3 no-print">
               <Button
                 onClick={handlePrint}
-                className="flex-1 py-5 bg-amber-500 hover:bg-amber-400 text-semin-dark font-extrabold text-sm rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 cursor-pointer"
+                className="w-full py-5 bg-amber-500 hover:bg-amber-400 text-semin-dark font-extrabold text-sm rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 cursor-pointer"
               >
                 <Printer className="w-4 h-4" />
                 Imprimir Credencial / Salvar PDF
-              </Button>
-
-              <Button
-                variant="outline"
-                onClick={() => {
-                  if (navigator.share && validadorUrl) {
-                    navigator.share({
-                      title: "Credencial 16º Encontro dos Engenheiros de Minas",
-                      text: `Minha credencial para o 16º Encontro dos Engenheiros de Minas da Bahia (Código: ${ticketData?.codInscricao})`,
-                      url: validadorUrl
-                    }).catch(() => {});
-                  } else {
-                    navigator.clipboard.writeText(validadorUrl);
-                    toast.success("Link da credencial copiado para a área de transferência!");
-                  }
-                }}
-                className="flex-1 py-5 border-white/20 text-white hover:bg-white/10 font-bold text-sm rounded-xl flex items-center justify-center gap-2 cursor-pointer"
-              >
-                <Share2 className="w-4 h-4" />
-                Copiar / Compartilhar
               </Button>
             </div>
 
