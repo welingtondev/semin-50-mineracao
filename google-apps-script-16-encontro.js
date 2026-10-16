@@ -422,6 +422,7 @@ function enviarEmailCredencial(nome, email, codInscricao, formatura, empresa) {
               <!-- Top Banner Dourado / Esmeralda -->
               <tr>
                 <td style="background: linear-gradient(135deg, #D97706 0%, #F59E0B 50%, #B45309 100%); padding: 26px 20px; text-align: center;">
+                  <img src="https://seminufba.com.br/50anos_logo.png" alt="SEMIN 50 Anos" height="50" style="display: block; margin: 0 auto 12px; max-height: 50px; width: auto; border: 0;" />
                   <span style="display: inline-block; background-color: rgba(0,0,0,0.3); color: #FFF; font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; padding: 5px 14px; border-radius: 20px; margin-bottom: 8px;">
                     JUBILEU DE OURO • 1976 - 2026
                   </span>

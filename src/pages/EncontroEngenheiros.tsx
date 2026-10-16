@@ -22,7 +22,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import seminLogo from "@/assets/logo branca semin site.png";
+import seminLogo from "@/assets/50anos_logo.png";
 
 // URL oficial de produção do script do 16º Encontro (Google Sheets & Envio de QR Code)
 const SCRIPT_URL = import.meta.env.VITE_ENCONTRO_SCRIPT_URL || "https://script.google.com/macros/s/AKfycbyB2t4BHlwhkl1lFb4OmFNCBpVINvEVYEeNO1LUpfvmJ1koWppPAdCSGXHwR8OteBfd/exec";
@@ -653,6 +653,11 @@ export default function EncontroEngenheirosPage() {
             >
               {/* Header do Crachá */}
               <div className="border-b border-white/10 pb-4 mb-4">
+                <img 
+                  src={seminLogo} 
+                  alt="SEMIN 50 Anos" 
+                  className="h-10 sm:h-12 w-auto mx-auto mb-3 object-contain" 
+                />
                 <span className="text-[10px] font-black uppercase tracking-[0.25em] text-amber-400 block mb-1">
                   CREDENCIAL OFICIAL &bull; JUBILEU DE OURO (50 ANOS)
                 </span>
