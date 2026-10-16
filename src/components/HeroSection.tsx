@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ChevronDown, Mountain, Pickaxe, Gem, HardHat, ArrowRight, Heart } from "lucide-react";
 import CheckoutModal from "./CheckoutModal";
 import { SponsorModal } from "./SponsorModal";
+import seminLogoWhite from "@/assets/logo branca semin site.png";
 
 const Counter = ({ end, label, prefix = "", suffix = "" }: { end: number; label: string; prefix?: string; suffix?: string }) => {
   const [count, setCount] = useState(() => {
@@ -43,11 +44,13 @@ const Counter = ({ end, label, prefix = "", suffix = "" }: { end: number; label:
   }, [end]);
 
   return (
-    <div ref={ref} className="text-center">
-      <div className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-display font-bold text-semin-yellow drop-shadow-[0_0_20px_rgba(210,155,33,0.3)]">
+    <div ref={ref} className="inline-flex items-center gap-1.5 sm:gap-2 whitespace-nowrap">
+      <span className="text-lg sm:text-xl md:text-2xl font-display font-extrabold text-semin-yellow drop-shadow-sm leading-none">
         {prefix}{count}{suffix}
-      </div>
-      <div className="text-white/50 font-body text-[9px] sm:text-xs md:text-sm mt-1 md:mt-2 tracking-wider uppercase">{label}</div>
+      </span>
+      <span className="text-white/70 font-body text-[10px] sm:text-xs md:text-sm font-medium tracking-wide">
+        {label}
+      </span>
     </div>
   );
 };
@@ -72,7 +75,7 @@ const HeroSection = () => {
   return (
     <section
       id="inicio"
-      className="relative min-h-[100svh] flex flex-col justify-start md:justify-center items-center overflow-hidden bg-semin-dark pt-32 pb-16 sm:pt-36 sm:pb-20 md:py-32"
+      className="relative min-h-[100svh] flex flex-col justify-center items-center overflow-hidden bg-semin-dark pt-20 pb-8 sm:pt-24 sm:pb-12 md:pt-24 md:pb-12"
     >
       {/* Background */}
       <div className="absolute inset-0 bg-[#06080c]">
@@ -105,86 +108,86 @@ const HeroSection = () => {
 
       <div className="container mx-auto px-4 relative z-10 text-center">
         <div className="animate-fade-in-up opacity-0 [animation-delay:100ms]">
-          <div className="relative inline-flex items-center mb-5 sm:mb-8 md:mb-12 group cta-float">
-            {/* Glow ring outsite */}
-            <div className="absolute inset-0 bg-gradient-to-r from-semin-orange to-amber-500 opacity-30 blur-2xl rounded-full" />
+          <div className="relative inline-flex items-center mb-3 sm:mb-4 group cta-float">
+            {/* Glow ring outside */}
+            <div className="absolute inset-0 bg-gradient-to-r from-semin-orange to-amber-500 opacity-30 blur-xl rounded-full" />
             
-            <div className="relative inline-flex items-center gap-2 md:gap-3 px-4 py-2 sm:px-8 sm:py-3 md:px-10 md:py-4 border-2 border-semin-orange/60 rounded-full bg-semin-dark/95 backdrop-blur-xl shadow-[0_0_30px_rgba(224,115,19,0.25)]">
-              <Gem className="h-3.5 w-3.5 sm:h-4 sm:w-4 md:h-5 md:w-5 text-semin-orange drop-shadow-md animate-pulse shrink-0" />
-              <span className="bg-gradient-to-r from-semin-orange to-amber-500 bg-clip-text text-transparent font-display text-[10px] sm:text-xs md:text-sm font-extrabold tracking-[0.18em] sm:tracking-[0.25em] md:tracking-[0.3em] uppercase">
+            <div className="relative inline-flex items-center gap-1.5 sm:gap-2.5 px-3 py-1 sm:px-6 sm:py-1.5 border border-semin-orange/60 rounded-full bg-semin-dark/95 backdrop-blur-xl shadow-[0_0_20px_rgba(224,115,19,0.25)]">
+              <Gem className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-semin-orange drop-shadow-md animate-pulse shrink-0" />
+              <span className="bg-gradient-to-r from-semin-orange to-amber-500 bg-clip-text text-transparent font-display text-[9px] sm:text-xs md:text-sm font-extrabold tracking-[0.16em] sm:tracking-[0.25em] uppercase">
                 1976 - 2026 • Edição Histórica • 50 Anos
               </span>
-              <Gem className="h-3.5 w-3.5 sm:h-4 sm:w-4 md:h-5 md:w-5 text-semin-orange drop-shadow-md shrink-0" />
+              <Gem className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-semin-orange drop-shadow-md shrink-0" />
             </div>
           </div>
 
-          <h1 className="text-4xl sm:text-6xl md:text-8xl lg:text-[10rem] font-black mb-4 md:mb-6 leading-tight tracking-tighter">
-            <span className="text-golden-mirror filter drop-shadow-[0_0_15px_rgba(210,155,33,0.4)] block mb-1">
-              SEMIN UFBA
-            </span>
-            <span className="block text-xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-wide bg-gradient-to-r from-semin-orange to-amber-500 bg-clip-text text-transparent drop-shadow-sm mt-2 sm:mt-3">
-              50 Anos • Jubileu de Ouro
-            </span>
-            <span className="block text-[11px] sm:text-sm md:text-base font-semibold mt-3 sm:mt-4 tracking-widest text-white/50 uppercase">
-              Edição Histórica • Semana de Mineração da UFBA
-            </span>
+          <h1 className="flex flex-col items-center mb-3 sm:mb-4">
+            <span className="sr-only">SEMIN UFBA - 50 Anos Jubileu de Ouro</span>
+            <div className="relative mx-auto flex justify-center items-center px-2">
+              <img 
+                src={seminLogoWhite} 
+                alt="SEMIN UFBA 2026" 
+                className="w-full max-w-[260px] sm:max-w-[380px] md:max-w-[480px] lg:max-w-[560px] h-auto object-contain mx-auto filter drop-shadow-[0_8px_25px_rgba(0,0,0,0.6)] transition-transform duration-300 hover:scale-[1.02]" 
+                fetchPriority="high" 
+              />
+            </div>
           </h1>
 
-          <div className="flex items-center justify-center gap-3 mb-6 md:mb-8">
-            <div className="w-10 md:w-16 h-[1.5px] bg-gradient-to-r from-transparent via-semin-orange/40 to-semin-orange rounded-full" />
-            <Gem className="h-4 w-4 text-semin-orange drop-shadow-md" />
-            <div className="w-10 md:w-16 h-[1.5px] bg-gradient-to-l from-transparent via-semin-orange/40 to-semin-orange rounded-full" />
+          <div className="flex items-center justify-center gap-2.5 mb-2.5 sm:mb-3.5">
+            <div className="w-8 md:w-12 h-[1px] bg-gradient-to-r from-transparent via-semin-orange/40 to-semin-orange rounded-full" />
+            <Gem className="h-3.5 w-3.5 text-semin-orange drop-shadow-md" />
+            <div className="w-8 md:w-12 h-[1px] bg-gradient-to-l from-transparent via-semin-orange/40 to-semin-orange rounded-full" />
           </div>
 
-          <p className="font-body text-sm sm:text-lg md:text-xl lg:text-2xl text-white/80 max-w-4xl mx-auto mb-8 md:mb-12 leading-relaxed px-4 font-medium">
+          <p className="font-body text-xs sm:text-sm md:text-base text-white/80 max-w-2xl mx-auto mb-3.5 sm:mb-4.5 leading-relaxed px-4 font-medium">
             Celebre conosco o marco de <strong>50 anos do curso de Engenharia de Minas</strong>, honrando nossa rica trajetória, unindo gerações de pioneiros e moldando o futuro da nossa profissão.
           </p>
 
           {/* Contador Regressivo de Escassez / Evento */}
-          <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-6 mb-8 md:mb-12">
-            <div className="bg-white/5 border border-semin-yellow/20 backdrop-blur-md px-4 py-2 sm:px-6 sm:py-3 rounded-2xl text-center shadow-lg">
-              <span className="block font-display text-2xl sm:text-4xl font-black text-semin-yellow">09 a 14</span>
-              <span className="text-[10px] sm:text-xs font-body font-bold text-white/70 uppercase tracking-widest">Novembro 2026</span>
+          <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3.5 mb-4 sm:mb-5">
+            <div className="bg-white/5 border border-semin-yellow/20 backdrop-blur-md px-3 py-1 sm:px-4 sm:py-2 rounded-xl text-center shadow-md">
+              <span className="block font-display text-base sm:text-xl md:text-2xl font-black text-semin-yellow leading-tight">09 a 14</span>
+              <span className="text-[8px] sm:text-[10px] font-body font-bold text-white/70 uppercase tracking-widest">Novembro 2026</span>
             </div>
-            <div className="bg-white/5 border border-semin-orange/20 backdrop-blur-md px-4 py-2 sm:px-6 sm:py-3 rounded-2xl text-center shadow-lg">
-              <span className="block font-display text-2xl sm:text-4xl font-black text-semin-orange">Salvador</span>
-              <span className="text-[10px] sm:text-xs font-body font-bold text-white/70 uppercase tracking-widest">Escola Politécnica UFBA</span>
+            <div className="bg-white/5 border border-semin-orange/20 backdrop-blur-md px-3 py-1 sm:px-4 sm:py-2 rounded-xl text-center shadow-md">
+              <span className="block font-display text-base sm:text-xl md:text-2xl font-black text-semin-orange leading-tight">Salvador</span>
+              <span className="text-[8px] sm:text-[10px] font-body font-bold text-white/70 uppercase tracking-widest">Escola Politécnica UFBA</span>
             </div>
-            <div className="bg-gradient-to-r from-semin-orange/20 to-amber-500/20 border border-semin-orange/40 backdrop-blur-md px-4 py-2 sm:px-6 sm:py-3 rounded-2xl text-center shadow-lg">
-              <span className="block font-display text-2xl sm:text-4xl font-black text-amber-400">100% Gratuito</span>
-              <span className="text-[10px] sm:text-xs font-body font-bold text-amber-300 uppercase tracking-widest animate-pulse">Vagas Esgotando</span>
+            <div className="bg-gradient-to-r from-semin-orange/20 to-amber-500/20 border border-semin-orange/40 backdrop-blur-md px-3 py-1 sm:px-4 sm:py-2 rounded-xl text-center shadow-md">
+              <span className="block font-display text-base sm:text-xl md:text-2xl font-black text-amber-400 leading-tight">100% Gratuito</span>
+              <span className="text-[8px] sm:text-[10px] font-body font-bold text-amber-300 uppercase tracking-widest animate-pulse">Vagas Esgotando</span>
             </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 md:gap-5 mb-14 md:mb-16 px-4 sm:px-0">
-            <Link to="/inscricao" className="relative inline-flex w-auto sm:w-auto cta-float cursor-pointer">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-5 sm:mb-6 px-4 sm:px-0">
+            <Link to="/inscricao" className="relative inline-flex w-full sm:w-auto cta-float cursor-pointer justify-center">
               {/* Glow ring behind CTA */}
-              <div className="absolute -inset-1 md:-inset-1.5 rounded-2xl bg-gradient-to-r from-semin-yellow via-semin-orange to-semin-yellow opacity-40 blur-md cta-glow" />
+              <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-semin-yellow via-semin-orange to-semin-yellow opacity-40 blur-md cta-glow" />
               <Button
                 size="lg"
-                className="cta-shine relative w-auto min-w-[240px] sm:w-auto md:w-[320px] bg-gradient-to-r from-semin-yellow via-amber-400 to-semin-orange text-semin-dark hover:from-semin-orange hover:via-amber-500 hover:to-semin-yellow font-display font-bold text-sm md:text-lg px-8 py-4 md:py-8 rounded-2xl shadow-2xl shadow-semin-yellow/20 transition-all duration-300 hover:shadow-semin-orange/30 active:scale-95 md:hover:scale-105 group cursor-pointer"
+                className="cta-shine relative w-full sm:w-auto min-w-[200px] md:min-w-[250px] bg-gradient-to-r from-semin-yellow via-amber-400 to-semin-orange text-semin-dark hover:from-semin-orange hover:via-amber-500 hover:to-semin-yellow font-display font-bold text-sm sm:text-base px-6 py-3.5 sm:py-5 rounded-xl shadow-xl shadow-semin-yellow/20 transition-all duration-300 hover:shadow-semin-orange/30 active:scale-95 md:hover:scale-105 group cursor-pointer"
               >
-                <HardHat className="h-4 w-4 md:h-6 md:w-6 mr-2 group-hover:rotate-12 transition-transform duration-300" />
+                <HardHat className="h-4 w-4 md:h-5 md:w-5 mr-2 group-hover:rotate-12 transition-transform duration-300" />
                 Inscrição
                 <ArrowRight className="ml-2 h-4 w-4 md:h-5 md:w-5 group-hover:translate-x-1 transition-transform duration-300" />
               </Button>
             </Link>
 
-            <a href="#apoie" className="relative inline-flex w-auto sm:w-auto cursor-pointer">
-              <div className="absolute -inset-[1px] rounded-2xl bg-gradient-to-r from-semin-orange/60 via-amber-500/40 to-semin-orange/60 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <a href="#apoie" className="relative inline-flex w-full sm:w-auto cursor-pointer justify-center">
+              <div className="absolute -inset-[1px] rounded-xl bg-gradient-to-r from-semin-orange/60 via-amber-500/40 to-semin-orange/60 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               <Button
                 size="lg"
                 variant="outline"
-                className="relative w-auto min-w-[240px] sm:w-auto md:w-[320px] border-2 border-semin-orange/40 text-black hover:bg-semin-orange/20 hover:border-semin-orange font-display font-bold text-sm md:text-lg px-8 py-4 md:py-8 rounded-2xl backdrop-blur-md transition-all duration-300 active:scale-95 md:hover:scale-105 group hover:shadow-lg hover:shadow-semin-orange/25"
+                className="relative w-full sm:w-auto min-w-[200px] md:min-w-[250px] border-2 border-semin-orange/50 text-white bg-white/5 hover:bg-semin-orange/20 hover:border-semin-orange font-display font-bold text-sm sm:text-base px-6 py-3.5 sm:py-5 rounded-xl backdrop-blur-md transition-all duration-300 active:scale-95 md:hover:scale-105 group hover:shadow-lg hover:shadow-semin-orange/25"
               >
-                <Heart className="h-4 w-4 md:h-6 md:w-6 mr-2 text-semin-orange group-hover:scale-110 transition-transform duration-300" fill="currentColor" />
+                <Heart className="h-4 w-4 md:h-5 md:w-5 mr-2 text-semin-orange group-hover:scale-110 transition-transform duration-300" fill="currentColor" />
                 Apoie os 50 Anos
               </Button>
             </a>
           </div>
 
           {/* Alternativas de Apoio e Patrocínio */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 text-xs md:text-sm text-white/50 font-body font-medium mb-12 animate-fade-in-up opacity-0 [animation-delay:400ms]">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-1.5 sm:gap-2.5 text-xs text-white/50 font-body font-medium mb-6 sm:mb-8 animate-fade-in-up opacity-0 [animation-delay:400ms]">
             <span>Quer apoiar de outras formas?</span>
             <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3">
               <button 
@@ -204,19 +207,20 @@ const HeroSection = () => {
             </div>
           </div>
 
-          <div className="flex justify-center gap-8 sm:gap-12 md:gap-16 lg:gap-24 bg-white/5 border border-white/10 backdrop-blur-xl p-6 md:p-8 rounded-3xl max-w-4xl mx-auto shadow-2xl">
+          <div className="inline-flex flex-wrap items-center justify-center gap-3 sm:gap-5 md:gap-7 bg-white/[0.04] border border-white/10 backdrop-blur-lg px-4 py-2 sm:px-6 sm:py-2 rounded-full max-w-full mx-auto shadow-md">
             <Counter end={50} label="Anos de história" />
-            <Counter end={6} label="Dias de imersão" />
+            <div className="hidden sm:block w-px h-4 bg-white/15" />
             <Counter end={120} label="Vagas confirmadas" prefix="+" />
+            <div className="hidden sm:block w-px h-4 bg-white/15" />
             <Counter end={10} label="Empresas parceiras" suffix="+" />
           </div>
         </div>
 
         <a
           href="#sobre"
-          className="absolute bottom-4 md:bottom-8 left-1/2 -translate-x-1/2 text-white/30 hover:text-semin-yellow transition-colors animate-bounce p-2"
+          className="absolute bottom-2 sm:bottom-4 left-1/2 -translate-x-1/2 text-white/30 hover:text-semin-yellow transition-colors animate-bounce p-1"
         >
-          <ChevronDown className="h-6 w-6 md:h-8 md:w-8" />
+          <ChevronDown className="h-5 w-5 md:h-6 md:w-6" />
         </a>
       </div>
       <CheckoutModal isOpen={isCheckoutOpen} onClose={() => setIsCheckoutOpen(false)} />

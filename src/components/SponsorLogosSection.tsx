@@ -8,7 +8,7 @@ import jmcLogo from "@/assets/jmc_logo.webp";
 import creaLogo from "@/assets/crea_logo.webp";
 import suporteMineLogo from "@/assets/suporte_mine_logo.webp";
 import grupoIguanaLogo from "@/assets/grupo_iguana.webp";
-import minerallisLogo from "@/assets/minerallis_logo.webp";
+import minerallisLogo from "@/assets/minerallis_logo.png";
 import geosolLogo from "@/assets/geosol_logo.png";
 import drillgeoLogo from "@/assets/drillgeo_logo.png";
 import ibramLogo from "@/assets/ibram_logo.jpg";

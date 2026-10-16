@@ -1,4 +1,4 @@
-import { BookOpen, Film, PartyPopper, Award, Gem, Sparkles } from "lucide-react";
+import { BookOpen, PartyPopper, Award, Gem, Sparkles } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
@@ -19,7 +19,7 @@ const JubileeSection = () => {
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-semin-yellow/30 bg-semin-yellow/10 backdrop-blur-md mb-6 shadow-[0_0_15px_rgba(210,155,33,0.2)]">
             <Sparkles className="h-4 w-4 text-semin-yellow" />
             <span className="font-body text-xs md:text-sm uppercase tracking-[0.2em] font-bold bg-gradient-to-r from-semin-yellow to-semin-orange bg-clip-text text-transparent">
-              13 & 14 de Novembro
+              14 de Novembro
             </span>
           </div>
           
@@ -38,12 +38,12 @@ const JubileeSection = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 max-w-6xl mx-auto">
           {/* Card 1: Homenagem */}
           <div className={`transition-all duration-700 delay-100 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"}`}>
             <Card className="h-full bg-white/5 md:backdrop-blur-md border border-white/10 hover:border-semin-yellow/40 hover:shadow-[0_0_30px_rgba(210,155,33,0.15)] group-hover:bg-white/10 transition-all duration-500 overflow-hidden group relative">
               <div className="absolute inset-0 bg-gradient-to-br from-semin-yellow/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <CardContent className="p-6 md:p-10 relative z-10">
+              <CardContent className="p-6 md:p-8 relative z-10">
                 <div className="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-gradient-to-br from-semin-yellow/20 to-semin-orange/20 flex items-center justify-center mb-6 border border-semin-yellow/30 group-hover:scale-110 transition-transform duration-500">
                   <Award className="h-7 w-7 md:h-8 md:w-8 text-semin-yellow" />
                 </div>
@@ -59,7 +59,7 @@ const JubileeSection = () => {
           <div className={`transition-all duration-700 delay-200 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"}`}>
             <Card className="h-full bg-white/5 md:backdrop-blur-md border border-white/10 hover:border-semin-yellow/40 hover:shadow-[0_0_30px_rgba(210,155,33,0.15)] group-hover:bg-white/10 transition-all duration-500 overflow-hidden group relative">
               <div className="absolute inset-0 bg-gradient-to-br from-semin-yellow/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <CardContent className="p-6 md:p-10 relative z-10">
+              <CardContent className="p-6 md:p-8 relative z-10">
                 <div className="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-gradient-to-br from-semin-yellow/20 to-semin-orange/20 flex items-center justify-center mb-6 border border-semin-yellow/30 group-hover:scale-110 transition-transform duration-500">
                   <BookOpen className="h-7 w-7 md:h-8 md:w-8 text-semin-yellow" />
                 </div>
@@ -71,28 +71,12 @@ const JubileeSection = () => {
             </Card>
           </div>
 
-          {/* Card 3: Documentário */}
+          {/* Card 3: Festa */}
           <div className={`transition-all duration-700 delay-300 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"}`}>
-            <Card className="h-full bg-white/5 md:backdrop-blur-md border border-white/10 hover:border-semin-yellow/40 hover:shadow-[0_0_30px_rgba(210,155,33,0.15)] group-hover:bg-white/10 transition-all duration-500 overflow-hidden group relative">
-              <div className="absolute inset-0 bg-gradient-to-br from-semin-yellow/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <CardContent className="p-6 md:p-10 relative z-10">
-                <div className="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-gradient-to-br from-semin-yellow/20 to-semin-orange/20 flex items-center justify-center mb-6 border border-semin-yellow/30 group-hover:scale-110 transition-transform duration-500">
-                  <Film className="h-7 w-7 md:h-8 md:w-8 text-semin-yellow" />
-                </div>
-                <h3 className="text-xl md:text-2xl font-bold text-white mb-4">Documentário Histórico</h3>
-                <p className="font-body text-sm md:text-base text-white/60 leading-relaxed">
-                  A estreia do filme em comemoração aos 50 anos do curso. Através de depoimentos de figuras marcantes, imagens de arquivo e filmagens de campo, o documentário imortaliza o legado e a vanguarda tecnológica da UFBA na formação de lideranças para a mineração nacional.
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Card 4: Festa */}
-          <div className={`transition-all duration-700 delay-400 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"}`}>
             <Card className="h-full bg-white/5 md:backdrop-blur-md border border-white/10 hover:border-semin-yellow/40 hover:shadow-[0_0_30px_rgba(210,155,33,0.15)] group-hover:bg-white/10 transition-all duration-500 overflow-hidden group relative">
               {/* Highlight gradient for party */}
               <div className="absolute inset-0 bg-gradient-to-br from-semin-orange/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <CardContent className="p-8 md:p-10 relative z-10">
+              <CardContent className="p-6 md:p-8 relative z-10">
                 <div className="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-gradient-to-br from-semin-yellow/20 to-semin-orange/20 flex items-center justify-center mb-6 border border-semin-yellow/30 group-hover:scale-110 transition-transform duration-500">
                   <PartyPopper className="h-7 w-7 md:h-8 md:w-8 text-semin-yellow" />
                 </div>

@@ -70,15 +70,21 @@ const Index = () => {
         <AboutSection />
       </Suspense>
 
+      {/* Chamada: O maior encontro da nossa história está chegando */}
+      <Suspense fallback={<div className="min-h-[20vh]" />}>
+        <ShortRegistrationBanner />
+      </Suspense>
+
       {/* 2. História, Orgulho & Legado dos 50 Anos (#jubileu & #legado) */}
       <Suspense fallback={<div className="min-h-[40vh]" />}>
         <JubileeSection />
         <LegacySection />
       </Suspense>
 
-      <Suspense fallback={<div className="min-h-[40vh]" />}>
+      {/* Seção do Documentário oculta a pedido */}
+      {/* <Suspense fallback={<div className="min-h-[40vh]" />}>
         <DocumentarySection />
-      </Suspense>
+      </Suspense> */}
 
       {/* 3. Programação Oficial & 4 Grandes Painéis (#programacao) */}
       <Suspense fallback={<div className="min-h-[50vh]" />}>
@@ -90,7 +96,6 @@ const Index = () => {
         <div id="inscricao">
           <RegistrationSection />
         </div>
-        <ShortRegistrationBanner />
       </Suspense>
 
       {/* 5. Apoie / Crowdfunding (#apoie) */}
@@ -98,10 +103,10 @@ const Index = () => {
         <CrowdfundingSection />
       </Suspense>
 
-      {/* 6. Desafio SEMIN & Dia do Engenheiro (#desafio) */}
+      {/* 6. Desafio SEMIN (#desafio) */}
       <Suspense fallback={<div className="min-h-[30vh]" />}>
         <ChallengeSection />
-        <EngineerDaySection />
+        {/* <EngineerDaySection /> - Oculto a pedido */}
       </Suspense>
 
       <div className="w-full h-px bg-[linear-gradient(90deg,#06080c_0%,#06080c_35%,#d29b21_50%,#06080c_65%,#06080c_100%)] opacity-80" />
