@@ -689,28 +689,6 @@ export default function EncontroEngenheirosPage() {
                 Imprimir Credencial / Salvar PDF
               </Button>
             </div>
-
-            <div className="text-center mt-6 no-print">
-              <button
-                onClick={() => {
-                  setIsSuccess(false);
-                  setFormData({
-                    nome: "",
-                    email: "",
-                    phone: "",
-                    formatura: "",
-                    turmaCustomizada: "",
-                    empresa: "",
-                    mensagem: "",
-                    aceitaTermos: true
-                  });
-                }}
-                className="text-xs text-amber-400/80 hover:text-amber-300 underline underline-offset-4 cursor-pointer bg-transparent border-0"
-              >
-                ← Cadastrar outro colega / novo convidado
-              </button>
-            </div>
-
           </div>
         )}
 
