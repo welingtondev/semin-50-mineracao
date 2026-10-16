@@ -313,10 +313,13 @@ function doPost(e) {
       }
     }
 
-    // Gerador de código sequencial no formato 16EM-2026-0001
-    var nextNum = rows.length;
-    var numFormatado = ("0000" + nextNum).slice(-4);
-    var codInscricao = '16EM-2026-' + numFormatado;
+    // Código da credencial: prioriza o código gerado no frontend se existir, senão gera sequencial
+    var codInscricao = (data.codInscricao || '').trim();
+    if (!codInscricao) {
+      var nextNum = rows.length;
+      var numFormatado = ("0000" + nextNum).slice(-4);
+      codInscricao = '16EM-2026-' + numFormatado;
+    }
 
     var dataHora = Utilities.formatDate(new Date(), 'America/Bahia', 'dd/MM/yyyy HH:mm:ss');
     var statusCredenciamento = 'Confirmado';

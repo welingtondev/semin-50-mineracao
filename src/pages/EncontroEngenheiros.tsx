@@ -381,7 +381,20 @@ export default function EncontroEngenheirosPage() {
         {/* Glows de ambientação em tom Ouro e Esmeralda */}
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] sm:w-[600px] h-[350px] sm:h-[600px] bg-gradient-to-tr from-amber-500/10 via-emerald-500/5 to-transparent rounded-full blur-[120px] pointer-events-none" />
 
-        {!isSuccess ? (
+        {isLoading && !isSuccess && ticketParam ? (
+          /* Loading State para Consulta de Credencial via Link */
+          <div className="w-full max-w-md mx-auto py-20 text-center relative z-10 animate-fade-in">
+            <div className="w-16 h-16 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-400 flex items-center justify-center mx-auto mb-4 animate-spin">
+              <RefreshCw className="w-8 h-8" />
+            </div>
+            <h2 className="text-2xl font-black text-white mb-2">
+              Carregando Inscrição Online...
+            </h2>
+            <p className="text-xs text-white/60">
+              Buscando credencial oficial <strong className="text-amber-400 font-mono">{ticketParam}</strong> na base do Cinquentenário.
+            </p>
+          </div>
+        ) : !isSuccess ? (
           /* ========================================================
              FORMULÁRIO DE INSCRIÇÃO EXCLUSIVA
              ======================================================== */

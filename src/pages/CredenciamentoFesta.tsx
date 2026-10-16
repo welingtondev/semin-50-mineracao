@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useSearchParams, Link } from "react-router-dom";
+import { useSearchParams, Link, useNavigate } from "react-router-dom";
 import { 
   CheckCircle2, 
   XCircle, 
@@ -45,8 +45,9 @@ interface Participante {
 }
 
 export default function CredenciamentoFestaPage() {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const initialCode = searchParams.get("code") || "";
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const initialCode = searchParams.get("code") || searchParams.get("ticket") || "";
 
   // Controle de Acesso Restrito da Portaria
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
@@ -79,7 +80,15 @@ export default function CredenciamentoFestaPage() {
     metaRobots.setAttribute("content", "noindex, nofollow");
   }, []);
 
-  // Se tiver código na URL ao carregar e estiver autenticado, busca automaticamente
+  // Se um participante tentar acessar /credenciamento-festa vindo de link antigo (?code=...),
+  // redireciona-o automaticamente para a sua Inscrição Online Oficial!
+  useEffect(() => {
+    if (initialCode && !isAuthenticated) {
+      navigate(`/16-encontro-engenheiros-minas?ticket=${encodeURIComponent(initialCode)}`, { replace: true });
+    }
+  }, [initialCode, isAuthenticated, navigate]);
+
+  // Se tiver código na URL ao carregar e estiver autenticado como portaria, busca automaticamente
   useEffect(() => {
     if (initialCode && isAuthenticated) {
       buscarCredencial(initialCode);
