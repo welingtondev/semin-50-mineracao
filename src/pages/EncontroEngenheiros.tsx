@@ -876,8 +876,8 @@ export default function EncontroEngenheirosPage() {
               </div>
             </div>
 
-            {/* Ações: Imprimir / Salvar / Nova Inscrição */}
-            <div className="flex flex-col gap-3 no-print">
+            {/* Ações: Imprimir / Salvar / Convidar */}
+            <div className="flex flex-col gap-2.5 no-print">
               <Button
                 onClick={handlePrint}
                 className="w-full py-5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-extrabold text-sm rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 cursor-pointer"
@@ -885,6 +885,16 @@ export default function EncontroEngenheirosPage() {
                 <Printer className="w-4 h-4" />
                 Imprimir Credencial / Salvar PDF
               </Button>
+
+              <a
+                href={`https://api.whatsapp.com/send?text=${encodeURIComponent("Venha comemorar os 50 Anos da Engenharia de Minas da UFBA no 16º Encontro dos Engenheiros! Garanta seu credenciamento exclusivo com Open Bar incluso: https://seminufba.com.br/16-encontro-engenheiros-minas?v=2")}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm rounded-xl flex items-center justify-center gap-2 shadow cursor-pointer transition-colors"
+              >
+                <MessageSquare className="w-4 h-4" />
+                Convidar Colegas no WhatsApp
+              </a>
             </div>
           </div>
         )}
