@@ -756,8 +756,19 @@ export default function EncontroEngenheirosPage() {
 
       {/* Footer Simples */}
       <footer className="border-t border-white/10 bg-[#0A0D14] py-6 text-center text-xs text-white/50 no-print">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
           <p>© 2026 SEMIN UFBA &bull; Escola Politécnica da UFBA &bull; 50 Anos de Engenharia de Minas</p>
+          <p>
+            by{" "}
+            <a
+              href="https://www.instagram.com/wellingtonsantos.br/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-amber-400 hover:underline font-semibold transition-colors"
+            >
+              @wellingtonsantos.br
+            </a>
+          </p>
         </div>
       </footer>
 

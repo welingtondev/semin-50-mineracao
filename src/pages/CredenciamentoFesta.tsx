@@ -656,7 +656,20 @@ export default function CredenciamentoFestaPage() {
 
       {/* Footer */}
       <footer className="border-t border-white/10 py-6 text-center text-xs text-white/40">
-        <p>16º Encontro dos Engenheiros de Minas da Bahia &bull; Sistema Interno de Recepção</p>
+        <div className="container mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
+          <p>16º Encontro dos Engenheiros de Minas da Bahia &bull; Sistema Interno de Recepção</p>
+          <p>
+            by{" "}
+            <a
+              href="https://www.instagram.com/wellingtonsantos.br/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-amber-400 hover:underline font-semibold transition-colors"
+            >
+              @wellingtonsantos.br
+            </a>
+          </p>
+        </div>
       </footer>
     </div>
   );

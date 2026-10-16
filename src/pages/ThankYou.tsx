@@ -66,6 +66,17 @@ const ThankYouPage = () => {
           </Link>
         </div>
       </div>
+      <footer className="absolute bottom-4 w-full text-center text-xs text-white/40 z-20">
+        by{" "}
+        <a
+          href="https://www.instagram.com/wellingtonsantos.br/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-semin-yellow hover:underline font-semibold"
+        >
+          @wellingtonsantos.br
+        </a>
+      </footer>
     </div>
   );
 };

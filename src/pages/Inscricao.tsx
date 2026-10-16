@@ -891,9 +891,20 @@ export default function InscricaoPage() {
       <footer className="relative z-20 border-t border-white/10 py-5 text-center text-xs text-white/40">
         <div className="container mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p>© 2026 SEMIN UFBA – Semana de Mineração da UFBA (50 Anos).</p>
-          <div className="flex items-center gap-4">
+          <div className="flex flex-wrap items-center justify-center gap-4 text-xs">
             <Link to="/" className="hover:text-semin-yellow transition-colors">Página Inicial</Link>
             <a href="mailto:contato@seminufba.com.br" className="hover:text-semin-yellow transition-colors">contato@seminufba.com.br</a>
+            <span>
+              by{" "}
+              <a
+                href="https://www.instagram.com/wellingtonsantos.br/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-semin-yellow hover:underline font-semibold"
+              >
+                @wellingtonsantos.br
+              </a>
+            </span>
           </div>
         </div>
       </footer>
