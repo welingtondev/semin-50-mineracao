@@ -29,7 +29,7 @@ import seminLogo from "@/assets/50anos_logo.png";
 // URL oficial de produção do script do 16º Encontro (Google Sheets & Envio de QR Code)
 const SCRIPT_URL = import.meta.env.VITE_ENCONTRO_SCRIPT_URL || "https://script.google.com/macros/s/AKfycbyB2t4BHlwhkl1lFb4OmFNCBpVINvEVYEeNO1LUpfvmJ1koWppPAdCSGXHwR8OteBfd/exec";
 
-// Opções rápidas de Turma / Ano de Formatura
+// Opções de Turma / Ano de Formatura (seleção exclusiva)
 const TURMAS_DESTAQUE = [
   "Pioneiros (1976 a 1980)",
   "Década de 80 (1981 a 1990)",
@@ -38,8 +38,10 @@ const TURMAS_DESTAQUE = [
   "Anos 2010 (2011 a 2020)",
   "Recém-Formados (2021 a 2026)",
   "Estudante / Formando Atual",
-  "Corpo Docente / Homenageado",
-  "Convidado Especial / Patrocinador"
+  "Corpo Docente / Professor",
+  "Homenageado Especial",
+  "Convidado Especial / Patrocinador",
+  "Outro Vínculo com a Engenharia de Minas"
 ];
 
 interface FormErrors {
@@ -92,9 +94,7 @@ export default function EncontroEngenheirosPage() {
     email: "",
     phone: "",
     formatura: "",
-    turmaCustomizada: "",
     empresa: "",
-    mensagem: "",
     aceitaTermos: true
   });
 
@@ -275,9 +275,8 @@ export default function EncontroEngenheirosPage() {
       newErrors.phone = "Número incompleto. Digite DDD + 9 dígitos.";
     }
 
-    const formaturaFinal = formData.turmaCustomizada.trim() || formData.formatura;
-    if (!formaturaFinal) {
-      newErrors.formatura = "Selecione ou informe sua turma / ano de formatura.";
+    if (!formData.formatura.trim()) {
+      newErrors.formatura = "Selecione sua turma ou vínculo na lista.";
     }
 
     setErrors(newErrors);
@@ -319,7 +318,7 @@ export default function EncontroEngenheirosPage() {
       console.warn("Verificação prévia offline ou ignorada:", checkErr);
     }
 
-    const formaturaFinal = formData.turmaCustomizada.trim() || formData.formatura;
+    const formaturaFinal = formData.formatura.trim();
     const sequencialRandom = Math.floor(1000 + Math.random() * 9000);
     const generatedCode = `16EM-2026-${sequencialRandom}`;
     const dataHoraFormatada = new Date().toLocaleString("pt-BR", { timeZone: "America/Bahia" });
@@ -331,7 +330,7 @@ export default function EncontroEngenheirosPage() {
       telefone: formData.phone.trim(),
       formatura: formaturaFinal,
       empresa: formData.empresa.trim(),
-      mensagem: formData.mensagem.trim(),
+      mensagem: "",
       codInscricao: generatedCode,
       dataHora: dataHoraFormatada,
       evento: "16º Encontro dos Engenheiros de Minas da Bahia"
@@ -357,7 +356,7 @@ export default function EncontroEngenheirosPage() {
         phone: formData.phone.trim(),
         formatura: formaturaFinal,
         empresa: formData.empresa.trim(),
-        mensagem: formData.mensagem.trim(),
+        mensagem: "",
         codInscricao: generatedCode,
         dataRegistro: dataHoraFormatada
       };
@@ -587,7 +586,7 @@ export default function EncontroEngenheirosPage() {
             </div>
 
             {/* Card com Formulário */}
-            <div className="bg-white/95 border border-amber-200/90 rounded-3xl p-6 sm:p-10 shadow-xl shadow-amber-900/5 relative overflow-hidden text-slate-800">
+            <div className="bg-white/95 border border-amber-200/90 rounded-3xl p-4 sm:p-8 md:p-10 shadow-xl shadow-amber-900/5 relative overflow-hidden text-slate-800">
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-500 via-amber-400 to-semin-orange" />
 
               <div className="mb-6 pb-6 border-b border-slate-100">
@@ -678,18 +677,22 @@ export default function EncontroEngenheirosPage() {
                   </div>
                 </div>
 
-                {/* Turma / Ano de Formatura */}
+                {/* Turma / Ano de Formatura (Apenas seleção exclusiva) */}
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2 flex items-center gap-2">
                     <GraduationCap className="w-3.5 h-3.5 text-amber-600" />
                     Ano de Formatura / Vínculo com a UFBA *
                   </label>
                   
-                  {/* Seleção rápida por grupos de turmas */}
                   <select
                     value={formData.formatura}
-                    onChange={(e) => setFormData((p) => ({ ...p, formatura: e.target.value }))}
-                    className="w-full bg-slate-50/60 border border-slate-300 focus:border-amber-500 rounded-xl px-4 py-3 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-500/20 transition-all mb-2 cursor-pointer"
+                    onChange={(e) => {
+                      setFormData((p) => ({ ...p, formatura: e.target.value }));
+                      if (errors.formatura) setErrors((p) => ({ ...p, formatura: undefined }));
+                    }}
+                    className={`w-full bg-slate-50/60 border ${
+                      errors.formatura ? "border-red-500" : "border-slate-300 focus:border-amber-500"
+                    } rounded-xl px-4 py-3 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-500/20 transition-all cursor-pointer`}
                   >
                     <option value="">Selecione sua turma ou vínculo...</option>
                     {TURMAS_DESTAQUE.map((item) => (
@@ -697,16 +700,7 @@ export default function EncontroEngenheirosPage() {
                         {item}
                       </option>
                     ))}
-                    <option value="Outro" className="bg-white text-slate-900">Outro (especificar abaixo)</option>
                   </select>
-
-                  <input
-                    type="text"
-                    value={formData.turmaCustomizada}
-                    onChange={(e) => setFormData((p) => ({ ...p, turmaCustomizada: e.target.value }))}
-                    placeholder="Ou digite o ano exato da sua turma (ex: Formando 1994.2)"
-                    className="w-full bg-slate-50/60 border border-slate-300 focus:border-amber-500 rounded-xl px-4 py-2 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500/20 transition-all"
-                  />
                   {errors.formatura && <p className="text-red-500 text-xs mt-1.5 font-medium">{errors.formatura}</p>}
                 </div>
 
@@ -725,39 +719,26 @@ export default function EncontroEngenheirosPage() {
                   />
                 </div>
 
-                {/* Mensagem aos Colegas (Opcional) */}
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2 flex items-center gap-2">
-                    <MessageSquare className="w-3.5 h-3.5 text-amber-600" />
-                    Mensagem ou Homenagem ao Jubileu de Ouro <span className="text-slate-500 font-normal lowercase">(opcional)</span>
-                  </label>
-                  <textarea
-                    rows={2}
-                    value={formData.mensagem}
-                    onChange={(e) => setFormData((p) => ({ ...p, mensagem: e.target.value }))}
-                    placeholder="Deixe um recado carinhoso para os pioneiros, colegas de turma e professores..."
-                    className="w-full bg-slate-50/60 border border-slate-300 focus:border-amber-500 rounded-xl px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500/20 transition-all resize-none"
-                  />
+                {/* Botão de Envio Responsivo para Mobile */}
+                <div className="w-full pt-1">
+                  <Button
+                    type="submit"
+                    disabled={isLoading}
+                    className="w-full py-4 sm:py-5 px-4 bg-gradient-to-r from-amber-500 via-amber-400 to-semin-orange text-slate-950 hover:from-amber-400 hover:to-amber-500 font-extrabold text-sm sm:text-base rounded-2xl shadow-xl shadow-amber-500/25 transition-all duration-300 hover:scale-[1.01] active:scale-[0.99] cursor-pointer flex items-center justify-center gap-2 text-center"
+                  >
+                    {isLoading ? (
+                      <span className="flex items-center justify-center gap-2">
+                        <span className="w-4 h-4 border-2 border-slate-950 border-t-transparent rounded-full animate-spin shrink-0" />
+                        <span>Confirmando...</span>
+                      </span>
+                    ) : (
+                      <span className="flex items-center justify-center gap-2">
+                        <CheckCircle2 className="w-4 h-4 shrink-0" />
+                        <span>Confirmar Inscrição</span>
+                      </span>
+                    )}
+                  </Button>
                 </div>
-
-                {/* Botão de Envio */}
-                <Button
-                  type="submit"
-                  disabled={isLoading}
-                  className="w-full py-6 bg-gradient-to-r from-amber-500 via-amber-400 to-semin-orange text-slate-950 hover:from-amber-400 hover:to-amber-500 font-extrabold text-base md:text-lg rounded-2xl shadow-xl shadow-amber-500/25 transition-all duration-300 hover:scale-[1.01] active:scale-[0.99] cursor-pointer"
-                >
-                  {isLoading ? (
-                    <span className="flex items-center gap-2">
-                      <span className="w-5 h-5 border-2 border-slate-950 border-t-transparent rounded-full animate-spin" />
-                      Emitindo Credencial & Enviando E-mail...
-                    </span>
-                  ) : (
-                    <span className="flex items-center justify-center gap-2">
-                      <CheckCircle2 className="w-5 h-5" />
-                      Confirmar Inscrição & Obter Credencial
-                    </span>
-                  )}
-                </Button>
 
               </form>
             </div>
