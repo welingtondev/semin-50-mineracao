@@ -336,27 +336,55 @@ export default function EncontroEngenheirosPage() {
   return (
     <div className="min-h-screen bg-[#F6EFE6] text-slate-800 flex flex-col justify-between selection:bg-semin-yellow selection:text-semin-dark">
       
-      {/* Estilos para Impressão da Credencial em folha ou crachá */}
+      {/* Estilos para Impressão da Credencial estritamente em UMA PÁGINA */}
       <style>{`
         @media print {
+          @page {
+            size: A4 portrait;
+            margin: 0 !important;
+          }
+          html, body {
+            height: 100vh !important;
+            max-height: 100vh !important;
+            overflow: hidden !important;
+            background: #ffffff !important;
+            color: #0f172a !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+          }
           body * {
-            visibility: hidden;
-            background: #fff !important;
-            color: #000 !important;
+            visibility: hidden !important;
           }
           #print-area, #print-area * {
-            visibility: visible;
+            visibility: visible !important;
           }
           #print-area {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 100%;
-            border: 2px solid #000 !important;
+            position: absolute !important;
+            left: 50% !important;
+            top: 50% !important;
+            transform: translate(-50%, -50%) !important;
+            width: 170mm !important;
+            max-width: 90vw !important;
+            box-sizing: border-box !important;
+            border: 2px solid #b45309 !important;
+            border-radius: 16px !important;
             box-shadow: none !important;
+            page-break-inside: avoid !important;
+            break-inside: avoid !important;
+            page-break-after: avoid !important;
+            break-after: avoid !important;
+            page-break-before: avoid !important;
+            break-before: avoid !important;
+            background: #ffffff !important;
+            padding: 14px 18px !important;
           }
           .no-print {
             display: none !important;
+            height: 0 !important;
+            margin: 0 !important;
+            padding: 0 !important;
           }
         }
       `}</style>
@@ -652,78 +680,78 @@ export default function EncontroEngenheirosPage() {
             <div 
               id="print-area" 
               ref={printRef}
-              className="bg-white border-2 border-amber-500/70 rounded-3xl p-6 sm:p-8 shadow-2xl relative overflow-hidden text-center mb-6"
+              className="bg-white border-2 border-amber-500/70 rounded-3xl p-5 sm:p-7 shadow-2xl relative overflow-hidden text-center mb-6"
             >
               {/* Header do Crachá */}
-              <div className="border-b border-amber-100 pb-4 mb-4">
+              <div className="border-b border-amber-100 pb-3 mb-3">
                 <img 
                   src={seminLogo} 
                   alt="SEMIN 50 Anos" 
-                  className="h-10 sm:h-12 w-auto mx-auto mb-3 object-contain" 
+                  className="h-9 sm:h-11 w-auto mx-auto mb-2 object-contain" 
                 />
                 <span className="text-[10px] font-black uppercase tracking-[0.25em] text-amber-700 block mb-1">
                   CREDENCIAL OFICIAL &bull; JUBILEU DE OURO (50 ANOS)
                 </span>
-                <h3 className="text-lg sm:text-xl font-black text-slate-900 uppercase tracking-tight">
+                <h3 className="text-base sm:text-lg font-black text-slate-900 uppercase tracking-tight">
                   16º Encontro dos Engenheiros de Minas da Bahia
                 </h3>
-                <p className="text-xs text-amber-800 font-bold mt-1">
+                <p className="text-xs text-amber-800 font-bold mt-0.5">
                   Da Tetê - Bar &bull; R. Borges dos Reis, 103 - Rio Vermelho, Salvador/BA
                 </p>
                 <p className="text-xs text-slate-600 mt-0.5">
                   Sábado, 14 de Novembro de 2026 &bull; A partir das 18h00
                 </p>
-                <div className="mt-2 inline-block bg-amber-100 border border-amber-300 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider text-amber-900">
+                <div className="mt-1.5 inline-block bg-amber-100 border border-amber-300 px-3 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider text-amber-900">
                   Open Bar: Stella Pure Gold &bull; Chivas 12 Anos &bull; Água, Refrigerante e Suco
                 </div>
               </div>
 
               {/* Código Único */}
-              <div className="bg-amber-50 border border-amber-300 rounded-xl py-2 px-4 inline-block mb-4 shadow-sm">
+              <div className="bg-amber-50 border border-amber-300 rounded-xl py-1.5 px-4 inline-block mb-3 shadow-sm">
                 <span className="text-[9px] text-amber-800 uppercase tracking-widest font-bold block">
                   Código da Credencial
                 </span>
-                <span className="font-mono text-2xl font-black text-amber-900 tracking-wider">
+                <span className="font-mono text-xl sm:text-2xl font-black text-amber-900 tracking-wider">
                   {ticketData?.codInscricao}
                 </span>
               </div>
 
               {/* QR Code */}
-              <div className="flex flex-col items-center justify-center my-3">
-                <div className="p-3 bg-white border border-slate-200 rounded-2xl shadow-md inline-block">
+              <div className="flex flex-col items-center justify-center my-2">
+                <div className="p-2.5 bg-white border border-slate-200 rounded-2xl shadow-sm inline-block">
                   {qrCodeUrl && (
                     <img 
                       src={qrCodeUrl} 
                       alt="QR Code da Credencial" 
-                      width={180} 
-                      height={180}
-                      className="block mx-auto rounded-lg" 
+                      width={140} 
+                      height={140}
+                      className="w-[125px] sm:w-[140px] h-[125px] sm:h-[140px] block mx-auto rounded-lg" 
                     />
                   )}
                 </div>
-                <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-500 mt-2">
+                <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-500 mt-1.5">
                   Apresente este QR Code na portaria a partir das 18h00
                 </span>
               </div>
 
               {/* Dados do Congressista / Participante */}
-              <div className="bg-amber-50/50 border border-amber-200/70 rounded-2xl p-4 text-left space-y-2 text-xs sm:text-sm mt-4">
-                <div className="flex justify-between border-b border-amber-100 pb-1.5">
+              <div className="bg-amber-50/50 border border-amber-200/70 rounded-2xl p-3 sm:p-4 text-left space-y-1.5 text-xs sm:text-sm mt-3">
+                <div className="flex justify-between border-b border-amber-100 pb-1">
                   <span className="text-slate-500">Engenheiro(a):</span>
                   <span className="font-bold text-slate-900 text-right">{ticketData?.nome}</span>
                 </div>
                 {ticketData?.cpf && (
-                  <div className="flex justify-between border-b border-amber-100 pb-1.5">
+                  <div className="flex justify-between border-b border-amber-100 pb-1">
                     <span className="text-slate-500">CPF:</span>
                     <span className="font-mono font-semibold text-slate-800 text-right">{ticketData?.cpf}</span>
                   </div>
                 )}
-                <div className="flex justify-between border-b border-amber-100 pb-1.5">
+                <div className="flex justify-between border-b border-amber-100 pb-1">
                   <span className="text-slate-500">Turma / Vínculo:</span>
                   <span className="font-bold text-amber-800 text-right">{ticketData?.formatura}</span>
                 </div>
                 {ticketData?.empresa && (
-                  <div className="flex justify-between border-b border-amber-100 pb-1.5">
+                  <div className="flex justify-between border-b border-amber-100 pb-1">
                     <span className="text-slate-500">Empresa / Atuação:</span>
                     <span className="font-medium text-slate-800 text-right">{ticketData?.empresa}</span>
                   </div>
@@ -737,7 +765,7 @@ export default function EncontroEngenheirosPage() {
                 </div>
               </div>
 
-              <div className="mt-4 pt-3 border-t border-amber-100 text-[10px] text-slate-400">
+              <div className="mt-3 pt-2 border-t border-amber-100 text-[10px] text-slate-400">
                 Data do Registro: {ticketData?.dataRegistro} &bull; SEMIN UFBA 2026
               </div>
             </div>
