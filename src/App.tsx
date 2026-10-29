@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import React, { Suspense } from "react";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ResetPasswordModal } from "@/components/ResetPasswordModal";
@@ -40,6 +40,7 @@ const App = () => (
               <Route path="/desafio-semin" element={<QuizPage />} />
               <Route path="/admin" element={<AdminGallery />} />
               <Route path="/obrigado" element={<ThankYouPage />} />
+              <Route path="/patrocinio" element={<Navigate to="/" replace />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

@@ -8,8 +8,6 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import CheckoutModal from "./CheckoutModal";
 
-const SponsorModal = lazy(() => import("./SponsorModal").then(m => ({ default: m.SponsorModal })));
-
 const RECENT_TESTIMONIALS = [
   { text: "Orgulho incomensurável de fazer parte desses 50 anos que moldaram minha história e profissão.", author: "Eng. Turma 1986" },
   { text: "Pela formação de excelência que a Poli nos proporcionou. Vamos juntos fazer a maior edição da história!", author: "Ex-aluno & Apoiador" },
@@ -190,24 +188,6 @@ const CrowdfundingSection = () => {
                   <ShieldCheck className="w-4 h-4 text-emerald-400" />
                   <span>Ambiente Protegido ASAAS</span>
                 </div>
-              </div>
-
-              {/* Corporate Sponsorship Alternative */}
-              <div className="mt-8 pt-6 border-t border-white/5">
-                <p className="text-xs text-white/50 mb-3">
-                  Representa uma empresa, mineradora ou fornecedor e busca patrocínio institucional com estande e palestras?
-                </p>
-                <Suspense fallback={null}>
-                  <SponsorModal>
-                    <Button
-                      variant="ghost"
-                      className="text-amber-400 hover:text-amber-300 hover:bg-amber-400/10 font-bold text-xs md:text-sm rounded-xl px-5 py-2 transition-all gap-2"
-                    >
-                      <Gem className="w-4 h-4" />
-                      Conhecer Oportunidades de Patrocínio Corporativo
-                    </Button>
-                  </SponsorModal>
-                </Suspense>
               </div>
 
             </div>

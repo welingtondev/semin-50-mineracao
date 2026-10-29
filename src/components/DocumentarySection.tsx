@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Play, Sparkles, Diamond, Crown, Clapperboard, Loader2 } from "lucide-react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { Button } from "@/components/ui/button";
-import { SponsorModal } from "./SponsorModal";
 import { toast } from "sonner";
 import documentaryPoster from "@/assets/documentary-poster.webp";
 
@@ -144,20 +143,12 @@ const DocumentarySection = () => {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-5">
-              <SponsorModal>
-                <Button size="lg" className="h-16 px-8 rounded-2xl bg-semin-yellow text-semin-dark font-black text-lg hover:bg-semin-blue hover:text-white transition-all shadow-[0_10px_30px_rgba(210,155,33,0.25)] group hover:scale-[1.02] active:scale-[0.98]">
-                  Seja um Mecenas
+              <a href="#apoie">
+                <Button size="lg" className="h-16 px-8 rounded-2xl bg-semin-yellow text-semin-dark font-black text-lg hover:bg-semin-blue hover:text-white transition-all shadow-[0_10px_30px_rgba(210,155,33,0.25)] group hover:scale-[1.02] active:scale-[0.98] cursor-pointer">
+                  Apoiar Produção dos 50 Anos
                   <Sparkles className="ml-2 h-5 w-5 group-hover:rotate-12 transition-transform" />
                 </Button>
-              </SponsorModal>
-              
-              <div className="flex items-center gap-4 px-6 border border-black/5 rounded-2xl bg-white shadow-sm">
-                <div className="flex -space-x-3">
-                  <div className="w-8 h-8 rounded-full border-2 border-white bg-semin-yellow/20 flex items-center justify-center"><Diamond className="h-4 w-4 text-semin-orange" /></div>
-                  <div className="w-8 h-8 rounded-full border-2 border-white bg-semin-orange/20 flex items-center justify-center"><Crown className="h-4 w-4 text-semin-orange" /></div>
-                </div>
-                <span className="text-xs font-bold text-semin-blue/50 uppercase tracking-widest">Apoio exclusivo Cota Diamante</span>
-              </div>
+              </a>
             </div>
           </div>
         </div>

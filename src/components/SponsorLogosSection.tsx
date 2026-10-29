@@ -1,7 +1,5 @@
 import { Heart, Mountain, Diamond, Gem, Sparkles, Crown, Star } from "lucide-react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
-import { SponsorModal } from "./SponsorModal";
-import { Button } from "@/components/ui/button";
 import ufbaLogo from "@/assets/ufba_logo.webp";
 import sindimibaLogo from "@/assets/sindimiba-logo.webp";
 import jmcLogo from "@/assets/jmc_logo.webp";
@@ -10,6 +8,7 @@ import suporteMineLogo from "@/assets/suporte_mine_logo.webp";
 import grupoIguanaLogo from "@/assets/grupo_iguana.webp";
 import minerallisLogo from "@/assets/minerallis_logo.png";
 import geosolLogo from "@/assets/geosol_logo.png";
+import atlanticNickelLogo from "@/assets/logo_AtlanticNickel.png";
 import drillgeoLogo from "@/assets/drillgeo_logo.png";
 import ibramLogo from "@/assets/ibram_logo.jpg";
 import sandvikLogo from "@/assets/sandvik_logo.png";
@@ -19,6 +18,7 @@ import corecaseLogo from "@/assets/corecase_logo.png";
 import cbpmLogo from "@/assets/cbpm_logo.png";
 import anmLogo from "@/assets/anm_logo.png";
 import sindibritaLogo from "@/assets/sindibrita_logo.png";
+import valmonLogo from "@/assets/logo_valmon.png";
 
 type SponsorLogo = {
   name: string;
@@ -60,8 +60,7 @@ const sponsorsByTier: TierGroup[] = [
     ringColor: "ring-rose-400/20",
     sponsors: [
       { name: "Geosol", logo: geosolLogo },
-      { name: "Patrocinador Córindon 2" },
-      { name: "Patrocinador Córindon 3" },
+      { name: "Atlantic Nickel", logo: atlanticNickelLogo },
     ],
   },
   {
@@ -79,6 +78,7 @@ const sponsorsByTier: TierGroup[] = [
       { name: "DrillGeo", logo: drillgeoLogo },
       { name: "JMC", logo: jmcLogo },
       { name: "Support Mining Engenharia", logo: suporteMineLogo },
+      { name: "Valmon", logo: valmonLogo },
     ],
   },
   {
@@ -197,11 +197,7 @@ const SponsorLogosSection = () => {
 
                     return (
                       <div key={sponsor.name + idx} className="w-[calc(50%-6px)] sm:w-[calc(50%-12px)] md:w-64 h-24 sm:h-32 md:h-40">
-                        {sponsor.logo ? (
-                          cardContent
-                        ) : (
-                          <SponsorModal>{cardContent}</SponsorModal>
-                        )}
+                        {cardContent}
                       </div>
                     );
                   });
@@ -209,26 +205,6 @@ const SponsorLogosSection = () => {
               </div>
             </div>
           ))}
-        </div>
-
-        {/* Banner CTA para novos patrocinadores */}
-        <div className={`mt-20 max-w-4xl mx-auto transition-all duration-700 delay-500 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
-          <div className="relative group overflow-hidden rounded-[2rem] bg-gradient-to-br from-semin-blue to-[#0b1329] border border-semin-yellow/20 p-8 md:p-10 shadow-2xl text-center md:text-left md:flex items-center justify-between gap-6">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-semin-yellow/5 rounded-full blur-[60px] pointer-events-none" />
-            <div className="mb-6 md:mb-0 max-w-xl">
-              <h3 className="font-display text-2xl md:text-3xl font-black text-semin-yellow mb-2">Sua Empresa no Cinquentenário</h3>
-              <p className="font-body text-sm md:text-base text-white/75 leading-relaxed">
-                Associe sua marca à celebração histórica de 50 anos da Engenharia de Minas da UFBA. Receba nosso Mídia Kit com todos os benefícios de patrocínio disponíveis.
-              </p>
-            </div>
-            <div className="shrink-0 flex justify-center w-full md:w-auto">
-              <SponsorModal>
-                <Button className="w-full md:w-auto bg-gradient-to-r from-semin-yellow via-amber-500 to-semin-orange hover:from-semin-orange hover:via-amber-500 hover:to-semin-yellow text-semin-dark font-display font-black text-sm md:text-base px-8 py-5 md:py-6 rounded-xl shadow-lg transition-all duration-300 hover:scale-[1.03] active:scale-95 cursor-pointer">
-                  Quero Patrocinar
-                </Button>
-              </SponsorModal>
-            </div>
-          </div>
         </div>
 
         {/* ── Apoio Institucional ── */}

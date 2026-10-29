@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ChevronDown, Mountain, Pickaxe, Gem, HardHat, ArrowRight, Heart } from "lucide-react";
 import CheckoutModal from "./CheckoutModal";
-import { SponsorModal } from "./SponsorModal";
 import seminLogoWhite from "@/assets/logo branca semin site.png";
 
 const Counter = ({ end, label, prefix = "", suffix = "" }: { end: number; label: string; prefix?: string; suffix?: string }) => {
@@ -188,7 +187,7 @@ const HeroSection = () => {
 
           {/* Alternativas de Apoio e Patrocínio */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-1.5 sm:gap-2.5 text-xs text-white/50 font-body font-medium mb-6 sm:mb-8 animate-fade-in-up opacity-0 [animation-delay:400ms]">
-            <span>Quer apoiar de outras formas?</span>
+            <span>Quer apoiar o evento?</span>
             <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3">
               <button 
                 onClick={() => setIsCheckoutOpen(true)}
@@ -196,14 +195,6 @@ const HeroSection = () => {
               >
                 Contribua como Pessoa Física
               </button>
-              <span className="text-white/25 hidden sm:inline">|</span>
-              <SponsorModal>
-                <button 
-                  className="text-semin-yellow hover:text-white underline underline-offset-4 transition-colors font-bold cursor-pointer bg-transparent border-0 p-0"
-                >
-                  Patrocine como Empresa
-                </button>
-              </SponsorModal>
             </div>
           </div>
 

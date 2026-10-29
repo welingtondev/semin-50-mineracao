@@ -830,7 +830,7 @@ export default function InscricaoPage() {
                       </div>
                       <p className="text-white/80 font-medium">Palestras & Grandes Painéis:</p>
                       <p className="text-white/50 text-[11px] leading-relaxed">
-                        • Palestras: <b>Vitor Viana</b>, <b>Tomra</b>, <b>Sandvik</b>, <b>Drillgeo</b>, <b>Support Mining</b><br />
+                        • Palestras: <b>Vitor Viana</b>, <b>Tomra</b>, <b>Sandvik</b>, <b>Pan American</b>, <b>Atlantic Nickel</b><br />
                         • Painéis: <b>Indústria de Agregados</b> e <b>Desmonte & Perfuração</b>
                       </p>
                     </div>
@@ -843,7 +843,7 @@ export default function InscricaoPage() {
                       </div>
                       <p className="text-white/80 font-medium">Palestras & Grandes Painéis:</p>
                       <p className="text-white/50 text-[11px] leading-relaxed">
-                        • Palestras: <b>Sandro Lima Fontes</b>, <b>Jéssica Morgana</b>, <b>Eriberto Leite</b>, <b>Pan American</b>, <b>Geosol</b><br />
+                        • Palestras: <b>Sandro Lima Fontes</b>, <b>Jéssica Morgana</b>, <b>Sâmara Pinho</b>, <b>Drillgeo</b>, <b>Geosol</b><br />
                         • Painéis: <b>Painel de Gestores</b> e <b>Beneficiamento Mineral</b>
                       </p>
                     </div>

@@ -27,7 +27,6 @@ const navItems: NavItem[] = [
   { label: "50 Anos", targetId: "jubileu" },
   { label: "Programação & Painéis", targetId: "programacao" },
   { label: "Galeria", targetId: "galeria" },
-  { label: "Patrocínio", targetId: "", isRoute: true, to: "/patrocinio", highlight: true },
   { label: "Apoie", targetId: "apoie" },
 ];
 

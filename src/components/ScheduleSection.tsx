@@ -161,15 +161,15 @@ const schedule: Record<string, ScheduleItem[]> = {
     { 
       time: "14:00 - 14:40", 
       activity: "Palestra", 
-      title: "Palestra Técnica: Drillgeo", 
-      speakerOrDesc: "Cases operacionais, sondagem e geotecnia com a Drillgeo", 
+      title: "Palestra Técnica: Pan American", 
+      speakerOrDesc: "Operações e perspectivas minerais com a Pan American", 
       type: "palestra" 
     },
     { 
       time: "14:45 - 15:25", 
       activity: "Palestra", 
-      title: "Palestra Técnica: Support Mining", 
-      speakerOrDesc: "Soluções operacionais e inovações com a Support Mining", 
+      title: "Palestra Técnica: Atlantic Nickel", 
+      speakerOrDesc: "Operações, sustentabilidade e inovação mineral com a Atlantic Nickel", 
       type: "palestra" 
     },
     { 
@@ -219,8 +219,8 @@ const schedule: Record<string, ScheduleItem[]> = {
     { 
       time: "10:50 - 11:30", 
       activity: "Palestra", 
-      title: "Palestra: Eriberto Leite", 
-      speakerOrDesc: "Palestrante Convidado: Eriberto Leite", 
+      title: "Palestra: Sâmara Pinho", 
+      speakerOrDesc: "Palestrante Convidada: Sâmara Pinho", 
       type: "palestra" 
     },
     { 
@@ -240,8 +240,8 @@ const schedule: Record<string, ScheduleItem[]> = {
     { 
       time: "14:00 - 14:40", 
       activity: "Palestra", 
-      title: "Palestra Técnica: Pan American", 
-      speakerOrDesc: "Operações e perspectivas minerais com a Pan American", 
+      title: "Palestra Técnica: Drillgeo", 
+      speakerOrDesc: "Cases operacionais, sondagem e geotecnia com a Drillgeo", 
       type: "palestra" 
     },
     { 
@@ -383,11 +383,10 @@ const ScheduleSection = () => {
                 </h3>
               </div>
               <div className="flex items-center gap-2">
-                <a href="/patrocinio" className="inline-flex items-center gap-2 text-xs md:text-sm font-bold text-semin-orange hover:text-amber-600 bg-amber-500/10 hover:bg-amber-500/20 px-4 py-2 rounded-xl transition-all">
+                <div className="inline-flex items-center gap-2 text-xs md:text-sm font-bold text-semin-orange bg-amber-500/10 px-4 py-2 rounded-xl">
                   <ShieldCheck className="w-4 h-4" />
-                  Mediação: Cotas Diamante & Córindon
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </a>
+                  Mediação Especializada & Liderança
+                </div>
               </div>
             </div>
 

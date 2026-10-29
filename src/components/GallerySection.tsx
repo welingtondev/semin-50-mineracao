@@ -24,6 +24,27 @@ type PhotoItem = {
   is_placeholder?: boolean;
 };
 
+// Importa dinamicamente todas as 50 fotos históricas locais
+const galleryModules = import.meta.glob('@/assets/gallery/gallery_*.webp', { eager: true, import: 'default' });
+
+const historicalPhotos: PhotoItem[] = Object.entries(galleryModules).map(([path, module]) => {
+  const match = path.match(/gallery_(\d+)\.webp/);
+  const num = match ? match[1] : '1';
+  return {
+    id: `hist-${num}`,
+    caption: `Acervo Histórico UFBA #${num}`,
+    author: "Memória Mineração UFBA",
+    year: "50 Anos (1976 - 2026)",
+    image_base64: module as string,
+    likes_count: 0,
+    comments_count: 0
+  };
+}).sort((a, b) => {
+  const numA = parseInt(String(a.id).replace('hist-', '')) || 0;
+  const numB = parseInt(String(b.id).replace('hist-', '')) || 0;
+  return numA - numB;
+});
+
 // Cards elegantes de convite para a comunidade enviar registros das turmas
 const communityInvitePlaceholders: PhotoItem[] = [
   {
@@ -270,8 +291,8 @@ const GallerySection = () => {
     setIntroPlayed(true);
   };
 
-  // Estado inicial: fotos da comunidade / convite de acervo
-  const [photos, setPhotos] = useState<PhotoItem[]>(communityInvitePlaceholders);
+  // Estado inicial: acervo histórico pré-carregado instantaneamente para nunca exibir tela vazia
+  const [photos, setPhotos] = useState<PhotoItem[]>(historicalPhotos);
 
   // Estados de Interação da Comunidade
   const [selectedPhoto, setSelectedPhoto] = useState<PhotoItem | null>(null);
@@ -353,54 +374,102 @@ const GallerySection = () => {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Busca fotos aprovadas enviadas exclusivamente pela comunidade para o Acervo dos 50 anos
+  // Busca fotos aprovadas enviadas pela comunidade para o Acervo dos 50 anos em lotes seguros
   useEffect(() => {
+    let isCancelled = false;
+
     const fetchPhotos = async () => {
       try {
         const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://dtdfzpsaxowfxybebykp.supabase.co';
         const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR0ZGZ6cHNheG93Znh5YmVieWtwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYyOTU2MzQsImV4cCI6MjA5MTg3MTYzNH0.ZUu7Jv4Ist3Sjhx_cXHn8UMCOkcKqGnjwRbhmtjNe1g';
         
-        const url = `${supabaseUrl}/rest/v1/gallery_photos?select=*&status=eq.approved&order=created_at.desc`;
-        const res = await fetch(url, {
-          headers: {
-            'apikey': supabaseAnonKey,
-            'Authorization': `Bearer ${supabaseAnonKey}`
-          }
-        });
-
-        if (res.ok) {
-          const data = await res.json();
-          if (data && data.length > 0) {
-            const formattedCommunityPhotos: PhotoItem[] = data.map((dbPhoto: any) => ({
-              id: dbPhoto.id.toString(),
-              caption: dbPhoto.description || "Acervo da Comunidade",
-              author: dbPhoto.author_name,
-              year: dbPhoto.year_cohort,
-              image_base64: dbPhoto.image_base64,
-              likes_count: dbPhoto.likes_count || 0,
-              comments_count: 0
-            }));
-            
-            // Se houver fotos enviadas pela comunidade, exibe-as; se forem poucas, complementa com os convites
-            if (formattedCommunityPhotos.length < 4) {
-              setPhotos([...formattedCommunityPhotos, ...communityInvitePlaceholders.slice(formattedCommunityPhotos.length)]);
-            } else {
-              setPhotos(formattedCommunityPhotos);
+        // 1. Busca contagem de comentários aprovados
+        let commentCountsMap: Record<string, number> = {};
+        try {
+          const commentsRes = await fetch(`${supabaseUrl}/rest/v1/gallery_comments?select=photo_id&status=eq.approved`, {
+            headers: {
+              'apikey': supabaseAnonKey,
+              'Authorization': `Bearer ${supabaseAnonKey}`
             }
+          });
+          if (commentsRes.ok) {
+            const commentsData = await commentsRes.json();
+            commentsData.forEach((c: any) => {
+              if (c.photo_id) {
+                const pid = c.photo_id.toString();
+                commentCountsMap[pid] = (commentCountsMap[pid] || 0) + 1;
+              }
+            });
+          }
+        } catch (e) {
+          console.warn("Contagem de comentários:", e);
+        }
+
+        // 2. Busca fotos aprovadas em lotes seguros para evitar timeout de banco no Supabase
+        const BATCH_SIZE = 16;
+        let offset = 0;
+        let hasMore = true;
+        let allCommunityPhotos: PhotoItem[] = [];
+
+        while (hasMore && !isCancelled) {
+          const url = `${supabaseUrl}/rest/v1/gallery_photos?select=id,description,author_name,year_cohort,image_base64,likes_count,created_at&status=eq.approved&author_name=neq.SYSTEM_FUNDRAISING&order=created_at.desc&limit=${BATCH_SIZE}&offset=${offset}`;
+          
+          const res = await fetch(url, {
+            headers: {
+              'apikey': supabaseAnonKey,
+              'Authorization': `Bearer ${supabaseAnonKey}`
+            }
+          });
+
+          if (!res.ok) {
+            console.warn(`Lote da galeria na offset ${offset} falhou com status ${res.status}`);
+            break;
+          }
+
+          const batch = await res.json();
+          if (!batch || batch.length === 0) {
+            hasMore = false;
+            break;
+          }
+
+          const formattedBatch: PhotoItem[] = batch.map((dbPhoto: any) => ({
+            id: dbPhoto.id.toString(),
+            caption: dbPhoto.description || "Acervo da Comunidade",
+            author: dbPhoto.author_name,
+            year: dbPhoto.year_cohort,
+            image_base64: dbPhoto.image_base64,
+            likes_count: dbPhoto.likes_count || 0,
+            comments_count: commentCountsMap[dbPhoto.id.toString()] || 0
+          }));
+
+          allCommunityPhotos = [...allCommunityPhotos, ...formattedBatch];
+
+          // Atualiza a galeria: fotos da comunidade no início, seguidas pelo acervo histórico
+          setPhotos([...allCommunityPhotos, ...historicalPhotos]);
+
+          if (batch.length < BATCH_SIZE) {
+            hasMore = false;
+          } else {
+            offset += BATCH_SIZE;
           }
         }
       } catch (err) {
-        console.warn("Galeria da comunidade carregada.", err);
+        console.warn("Galeria da comunidade carregada parcialmente:", err);
       }
     };
 
     fetchPhotos();
+
+    return () => {
+      isCancelled = true;
+    };
   }, []);
 
   const fetchComments = async (photoId: string | number) => {
-    if (photoId.toString().startsWith("invite-")) {
+    if (photoId.toString().startsWith("invite-") || photoId.toString().startsWith("hist-")) {
       setComments([]);
       setReactions({});
+      setLoadingComments(false);
       return;
     }
     setLoadingComments(true);
@@ -469,6 +538,25 @@ const GallerySection = () => {
   const handleLike = async (photo: PhotoItem) => {
     if (photo.is_placeholder || photo.id.toString().startsWith("invite-")) {
       toast.info("Este é um espaço reservado para fotos da comunidade! Envie a foto da sua turma ⛏️");
+      return;
+    }
+
+    if (photo.id.toString().startsWith("hist-")) {
+      const idStr = photo.id.toString();
+      const isLiked = likedPhotos.includes(idStr);
+      const newLikes = isLiked ? Math.max((photo.likes_count || 0) - 1, 0) : (photo.likes_count || 0) + 1;
+      
+      const newLikedPhotos = isLiked ? likedPhotos.filter(id => id !== idStr) : [...likedPhotos, idStr];
+      setLikedPhotos(newLikedPhotos);
+      try {
+        localStorage.setItem("semin_liked_photos", JSON.stringify(newLikedPhotos));
+      } catch (e) {}
+
+      setPhotos(prev => prev.map(p => p.id === photo.id ? { ...p, likes_count: newLikes } : p));
+      if (selectedPhoto && selectedPhoto.id === photo.id) {
+        setSelectedPhoto({ ...selectedPhoto, likes_count: newLikes });
+      }
+      toast.success(isLiked ? "Curtida removida." : "Foto histórica curtida! ❤️");
       return;
     }
 
@@ -637,6 +725,11 @@ const GallerySection = () => {
     e.preventDefault();
     if (!newCommentText.trim()) return;
     if (!selectedPhoto) return;
+
+    if (selectedPhoto.id.toString().startsWith("invite-") || selectedPhoto.id.toString().startsWith("hist-")) {
+      toast.info("Comentários disponíveis para fotos enviadas pela comunidade!");
+      return;
+    }
 
     if (!profile) {
       toast.info("Faça login para publicar seu comentário!");

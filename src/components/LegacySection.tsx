@@ -72,20 +72,65 @@ const episodes: Episode[] = [
   {
     id: 7,
     title: "O Legado - Capítulo 7",
-    name: "Viviane Franco",
-    role: "Engenheira de Minas",
-    company: "Planejamento de Mina (Austrália)",
-    description: "No sétimo episódio da série O Legado, recebemos Viviane Franco, Engenheira de Minas formada pela Universidade Federal da Bahia (UFBA), onde ingressou em 2013. Natural de Piripá, no interior baiano, Viviane conta como a afinidade com a área de exatas e o contato inicial com a disciplina de recuperação de áreas degradadas em um curso técnico ambiental despertaram sua paixão por uma engenharia diferenciada. Ela relembra os desafios de adaptação na chegada a Salvador, momento transformado em uma experiência enriquecedora graças ao acolhimento de amigos de várias regiões e ao suporte próximo de professores como Luiz Rogério, China e Erisvaldo, fortalecendo os laços que fazem do curso uma verdadeira família. Na carreira profissional, construiu uma sólida trajetória na indústria, com forte base em operações subterrâneas no Brasil e passagens por Open Pit. Há quase três anos radicada na Austrália, Viviane atua com planejamento de mina subterrânea e celebra as portas abertas pela sua formação na UFBA, destacando que o curso lhe entregou uma carreira internacional, conexões para a vida e um legado de oportunidades que faz questão de retribuir apoiando as próximas gerações.",
-    youtubeId: "n3nO4CYaQKQ",
+    name: "Antônio Márcio",
+    role: "Engenheiro de Minas",
+    company: "",
+    description: "No sétimo episódio da série O Legado, recebemos Antônio Márcio, Engenheiro de Minas formado pela Universidade Federal da Bahia (UFBA). Neste bate-papo enriquecedor, Antônio compartilha momentos marcantes de sua trajetória acadêmica na Escola Politécnica, sua experiência e atuação profissional no setor mineral, refletindo sobre os desafios e o orgulho de pertencer à história de 50 anos da Engenharia de Minas na UFBA.",
+    youtubeId: "gTkA0QoPT5I",
   },
   {
     id: 8,
+    title: "O Legado - Capítulo 8",
+    name: "Viviane Franco",
+    role: "Engenheira de Minas",
+    company: "Planejamento de Mina (Austrália)",
+    description: "No oitavo episódio da série O Legado, recebemos Viviane Franco, Engenheira de Minas formada pela Universidade Federal da Bahia (UFBA), onde ingressou em 2013. Natural de Piripá, no interior baiano, Viviane conta como a afinidade com a área de exatas e o contato inicial com a disciplina de recuperação de áreas degradadas em um curso técnico ambiental despertaram sua paixão por uma engenharia diferenciada. Ela relembra os desafios de adaptação na chegada a Salvador, momento transformado em uma experiência enriquecedora graças ao acolhimento de amigos de várias regiões e ao suporte próximo de professores como Luiz Rogério, China e Erisvaldo, fortalecendo os laços que fazem do curso uma verdadeira família. Na carreira profissional, construiu uma sólida trajetória na indústria, com forte base em operações subterrâneas no Brasil e passagens por Open Pit. Há quase três anos radicada na Austrália, Viviane atua com planejamento de mina subterrânea e celebra as portas abertas pela sua formação na UFBA, destacando que o curso lhe entregou uma carreira internacional, conexões para a vida e um legado de oportunidades que faz questão de retribuir apoiando as próximas gerações.",
+    youtubeId: "n3nO4CYaQKQ",
+  },
+  {
+    id: 9,
+    title: "O Legado - Capítulo 9",
+    name: "Fernando Martinez",
+    role: "Engenheiro de Minas",
+    company: "",
+    description: "No nono episódio da série O Legado, recebemos Fernando Martinez, Engenheiro de Minas formado pela Universidade Federal da Bahia (UFBA). Neste bate-papo, Fernando compartilha sua trajetória desde os tempos de graduação na Escola Politécnica, passando pelas experiências que moldaram sua visão do setor mineral, até os desafios e conquistas que marcaram sua carreira profissional. Uma conversa rica em memórias, aprendizados e o orgulho de fazer parte da história da Engenharia de Minas na Bahia.",
+    youtubeId: "8sBie-boe_c",
+  },
+  {
+    id: 10,
+    title: "O Legado - Capítulo 10",
+    name: "Vitor Viana",
+    role: "Engenheiro de Minas",
+    company: "",
+    description: "No décimo episódio da série O Legado, recebemos Vitor Viana, Engenheiro de Minas formado pela Universidade Federal da Bahia (UFBA). Neste episódio, Vitor revisita sua jornada acadêmica e profissional, compartilhando as experiências que construíram sua carreira no setor mineral. Dos corredores da Escola Politécnica aos desafios do campo, ele destaca a importância da formação sólida recebida na UFBA e das amizades que se tornaram parcerias para a vida toda.",
+    youtubeId: "afwKSrz-of4",
+  },
+  {
+    id: 11,
+    title: "O Legado - Capítulo 11",
+    name: "Vitor Carneiro",
+    role: "Engenheiro de Minas",
+    company: "",
+    description: "No décimo primeiro episódio da série O Legado, recebemos Vitor Carneiro, Engenheiro de Minas formado pela Universidade Federal da Bahia (UFBA). Neste capítulo, Vitor compartilha sua trajetória desde a decisão de cursar Engenharia de Minas, passando por momentos marcantes da vida universitária, até sua atuação profissional no mercado. Uma conversa inspiradora sobre vocação, resiliência e o legado que cada engenheiro de minas da UFBA carrega consigo.",
+    youtubeId: "txqnJIIpHig",
+  },
+  {
+    id: 12,
     title: "O Legado - Capítulo 12",
     name: "Silvano Andrade",
     role: "Engenheiro de Minas / CEO",
     company: "Ferbasa",
     description: "No 12º episódio da série O Legado, recebemos Silvano Andrade, Engenheiro de Minas formado pela Universidade Federal da Bahia (UFBA) e Diretor-Presidente (CEO) da Ferbasa. Com mais de três décadas de sólida atuação e liderança na mineração brasileira, acumulando passagens de destaque por grandes companhias como Mineração Caraíba, Mineração Rio do Norte (MRN) e Beadell Brasil, Silvano compartilha suas memórias dos tempos de graduação na Escola Politécnica, a importância das amizades e da rede de apoio forjada no curso, além de reflexões valiosas sobre liderança, gestão e superação de desafios ao longo de sua trajetória executiva. Um testemunho marcante sobre o impacto transformador da formação na UFBA e o orgulho de celebrar os 50 anos do curso.",
     youtubeId: "0G9f4reQrYQ",
+  },
+  {
+    id: 13,
+    title: "O Legado - Capítulo 14",
+    name: "Camila Reis",
+    role: "Engenheira de Minas / Professora",
+    company: "IFBA",
+    description: "No décimo quarto episódio da série O Legado, recebemos Camila Reis, Engenheira de Minas formada pela UFBA na turma de 2014.2 e professora do Instituto Federal da Bahia (IFBA - Campus Brumado). Neste bate-papo, Camila compartilha sua trajetória acadêmica e profissional, da atuação técnica na mineração (com passagens pela Yamana e consultoria) à docência no SENAI e IFBA, além de sua destacada liderança em entidades como a AREM e em iniciativas de valorização e ampliação da presença feminina na engenharia.",
+    youtubeId: "ZR5sYLJONwY",
   }
 ];
 
@@ -172,10 +217,12 @@ const LegacySection = () => {
                       <User className="h-3.5 w-3.5 text-semin-orange" />
                       {activeEpisode.role}
                     </span>
-                    <span className="flex items-center gap-1.5 text-xs md:text-sm font-body font-semibold uppercase tracking-wider">
-                      <Building2 className="h-3.5 w-3.5 text-semin-orange" />
-                      {activeEpisode.company}
-                    </span>
+                    {activeEpisode.company && (
+                      <span className="flex items-center gap-1.5 text-xs md:text-sm font-body font-semibold uppercase tracking-wider">
+                        <Building2 className="h-3.5 w-3.5 text-semin-orange" />
+                        {activeEpisode.company}
+                      </span>
+                    )}
                   </div>
                 </div>
                 <div className="px-4 py-2 rounded-full border border-semin-orange/20 bg-semin-orange/5 text-semin-orange text-[10px] md:text-xs font-bold uppercase tracking-widest self-start md:self-auto">
@@ -221,7 +268,9 @@ const LegacySection = () => {
                     <div className="flex flex-col justify-center min-w-0">
                       <span className="text-[10px] uppercase tracking-widest text-semin-orange/80 font-bold mb-1">{episode.title}</span>
                       <h5 className="text-semin-blue font-display font-bold group-hover:text-semin-orange transition-colors truncate">{episode.name}</h5>
-                      <span className="text-[11px] text-semin-blue/50 truncate font-medium">{episode.company}</span>
+                      {episode.company && (
+                        <span className="text-[11px] text-semin-blue/50 truncate font-medium">{episode.company}</span>
+                      )}
                     </div>
                   </CardContent>
                 </Card>
