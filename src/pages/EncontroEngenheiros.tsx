@@ -29,19 +29,12 @@ import seminLogo from "@/assets/50anos_logo.png";
 // URL oficial de produção do script do 16º Encontro (Google Sheets & Envio de QR Code)
 const SCRIPT_URL = import.meta.env.VITE_ENCONTRO_SCRIPT_URL || "https://script.google.com/macros/s/AKfycbyB2t4BHlwhkl1lFb4OmFNCBpVINvEVYEeNO1LUpfvmJ1koWppPAdCSGXHwR8OteBfd/exec";
 
-// Opções de Turma / Ano de Formatura (seleção exclusiva)
+// Opções de Vínculo com a UFBA / Ano de Formatura (seleção exclusiva)
 const TURMAS_DESTAQUE = [
-  "Pioneiros (1976 a 1980)",
-  "Década de 80 (1981 a 1990)",
-  "Década de 90 (1991 a 2000)",
-  "Anos 2000 (2001 a 2010)",
-  "Anos 2010 (2011 a 2020)",
-  "Recém-Formados (2021 a 2026)",
-  "Estudante / Formando Atual",
-  "Corpo Docente / Professor",
-  "Homenageado Especial",
-  "Convidado Especial / Patrocinador",
-  "Outro Vínculo com a Engenharia de Minas"
+  "Egressos",
+  "Estudantes",
+  "Professores",
+  "Empresa Convidado Especial / Patrocinador"
 ];
 
 interface FormErrors {
