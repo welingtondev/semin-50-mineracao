@@ -551,7 +551,7 @@ export default function EncontroEngenheirosPage() {
                 </div>
                 <div className="flex items-center gap-2 bg-white/80 border border-amber-200/80 shadow-sm px-3.5 py-1.5 rounded-xl text-xs md:text-sm text-slate-800">
                   <Clock className="w-4 h-4 text-amber-600 shrink-0" />
-                  <span>A partir das <strong>18h00</strong></span>
+                  <span>A partir das <strong>17:30h</strong></span>
                 </div>
               </div>
 
@@ -702,7 +702,7 @@ export default function EncontroEngenheirosPage() {
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2 flex items-center gap-2">
                     <Building className="w-3.5 h-3.5 text-amber-600" />
-                    Empresa / Instituição Atual <span className="text-slate-500 font-normal lowercase">(opcional para crachá)</span>
+                    Empresa / Instituição Atual
                   </label>
                   <input
                     type="text"
@@ -780,7 +780,7 @@ export default function EncontroEngenheirosPage() {
                   Da Tetê - Bar &bull; R. Borges dos Reis, 103 - Rio Vermelho, Salvador/BA
                 </p>
                 <p className="text-xs text-slate-600 mt-0.5">
-                  Sábado, 14 de Novembro de 2026 &bull; A partir das 18h00
+                  Sábado, 14 de Novembro de 2026 &bull; A partir das 17:30h
                 </p>
                 <div className="mt-1.5 inline-block bg-amber-100 border border-amber-300 px-3 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider text-amber-900">
                   Open Bar: Stella Pure Gold &bull; Chivas 12 Anos &bull; Água, Refrigerante e Suco
@@ -811,7 +811,7 @@ export default function EncontroEngenheirosPage() {
                   )}
                 </div>
                 <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-500 mt-1.5">
-                  Apresente este QR Code na portaria a partir das 18h00
+                  Apresente este QR Code na portaria a partir das 17:30h
                 </span>
               </div>
 
